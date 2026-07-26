@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Contrat éditorial canonique d'une idée dans Idea Commons.">
+  <title>Idea Commons — Schéma canonique d'une idée v0.1</title>
+  <style>
+    :root {
+      --ink: #17221d;
+      --muted: #5e6b65;
+      --paper: #f5f4ec;
+      --card: #fffef8;
+      --line: #d7ddd4;
+      --green: #176b4d;
+      --green-soft: #dcece4;
+      --amber: #9b5d0b;
+      --amber-soft: #f7e8c8;
+      --blue: #245f83;
+      --blue-soft: #deebf2;
+      --red: #913b35;
+      --red-soft: #f2dfdc;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font: 16px/1.62 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .shell { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+    header { padding: 68px 0 42px; border-bottom: 1px solid var(--line); }
+    .eyebrow { color: var(--green); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: .78rem; }
+    h1 { max-width: 900px; margin: 10px 0 18px; font: 700 clamp(2.5rem, 7vw, 5.2rem)/1 Georgia, serif; letter-spacing: -.04em; }
+    .lead { max-width: 840px; color: var(--muted); font-size: 1.18rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 24px; }
+    .pill { padding: 6px 10px; border: 1px solid var(--line); border-radius: 99px; background: var(--card); font-size: .84rem; }
+    nav { position: sticky; top: 0; z-index: 3; background: color-mix(in srgb, var(--paper) 90%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    nav .shell { display: flex; gap: 20px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px; }
+    nav a { color: var(--muted); text-decoration: none; white-space: nowrap; font-size: .88rem; }
+    main { padding: 28px 0 78px; }
+    section { scroll-margin-top: 68px; padding: 34px 0; }
+    h2 { margin: 0 0 17px; font: 700 clamp(1.8rem, 4vw, 3rem)/1.1 Georgia, serif; letter-spacing: -.025em; }
+    h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    p { margin: 0 0 13px; }
+    ul, ol { margin: 8px 0 0; padding-left: 22px; }
+    li + li { margin-top: 5px; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 15px; }
+    .card { grid-column: span 4; padding: 21px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+    .card.wide { grid-column: span 6; }
+    .card.full { grid-column: 1 / -1; }
+    .tag { display: inline-block; margin-bottom: 11px; padding: 4px 8px; border-radius: 6px; font-size: .71rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .required { color: var(--green); background: var(--green-soft); }
+    .optional { color: var(--blue); background: var(--blue-soft); }
+    .rule { color: var(--red); background: var(--red-soft); }
+    .example { color: var(--amber); background: var(--amber-soft); }
+    table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); }
+    th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
+    td code { color: var(--green); font-weight: 700; }
+    pre { margin: 0; padding: 20px; overflow-x: auto; color: #edf4ef; background: #17221d; border-radius: var(--radius); font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .callout { padding: 20px; border-left: 4px solid var(--green); background: var(--green-soft); }
+    .warning { border-left-color: var(--red); background: var(--red-soft); }
+    footer { padding: 26px 0 46px; border-top: 1px solid var(--line); color: var(--muted); }
+    @media (max-width: 780px) {
+      .shell { width: min(100% - 24px, 1160px); }
+      header { padding-top: 46px; }
+      .card, .card.wide { grid-column: 1 / -1; }
+      table { display: block; overflow-x: auto; }
+    }
+    @media print { nav { display: none; } body { background: white; } .card, table, pre { break-inside: avoid; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell">
+      <div class="eyebrow">IC-02 · Contrat éditorial · version 0.1</div>
+      <h1>Une idée est un objet éditorial prouvable.</h1>
+      <p class="lead">Ce document définit ce qu'Idea Commons appelle une idée, les informations qu'elle porte et la manière dont ses affirmations, variantes et versions restent compréhensibles. Il ne choisit ni base de données ni framework.</p>
+      <div class="meta">
+        <span class="pill">Statut : validé</span>
+        <span class="pill">Portée : contenu canonique</span>
+        <span class="pill">Dernière revue : 26 juillet 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <nav aria-label="Sommaire">
+    <div class="shell">
+      <a href="#spec">Spécification</a>
+      <a href="#principles">Principes</a>
+      <a href="#entities">Entités</a>
+      <a href="#fields">Champs</a>
+      <a href="#claims">Preuves</a>
+      <a href="#variants">Variantes</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#examples">Exemples</a>
+      <a href="#acceptance">Acceptation</a>
+    </div>
+  </nav>
+
+  <main class="shell">
+    <section id="spec">
+      <h2>1. Cadre de la spécification</h2>
+      <div class="grid">
+        <article class="card wide"><h3>Contexte</h3><p>Le catalogue, la recherche, les contributions, les adaptations locales et les workflows IA doivent partager une même définition de l'idée.</p></article>
+        <article class="card wide"><h3>Objectif</h3><p>Établir un contrat éditorial stable qui puisse ensuite être traduit en schéma de données, formulaires, API et index de recherche.</p></article>
+        <article class="card wide"><h3>Non-objectifs</h3><ul><li>Choisir une base de données.</li><li>Définir les écrans.</li><li>Figer une taxonomie complète.</li><li>Produire une vérité de marché automatique.</li></ul></article>
+        <article class="card wide"><h3>Résultat attendu</h3><p>Une idée minimale et une idée complète peuvent être décrites sans ambiguïté ; chaque affirmation a un statut de preuve ; une adaptation locale reste reliée à sa source.</p></article>
+      </div>
+    </section>
+
+    <section id="principles">
+      <h2>2. Principes normatifs</h2>
+      <div class="grid">
+        <article class="card"><span class="tag rule">Règle</span><h3>Idée ≠ projet</h3><p>L'idée est un bien éditorial public. Le projet est une appropriation privée, contextualisée et évolutive.</p></article>
+        <article class="card"><span class="tag rule">Règle</span><h3>Fait ≠ hypothèse</h3><p>Une phrase factuelle publiée doit pointer vers une source. Sans source, elle change de catégorie ou n'est pas publiée.</p></article>
+        <article class="card"><span class="tag rule">Règle</span><h3>Base ≠ variante</h3><p>Une adaptation régionale conserve la référence à l'idée de base et ne redéfinit que ce que le contexte modifie.</p></article>
+        <article class="card"><span class="tag rule">Règle</span><h3>Version immuable</h3><p>Une version publiée est figée. Toute correction crée une nouvelle version et conserve la précédente dans l'historique.</p></article>
+        <article class="card"><span class="tag rule">Règle</span><h3>IA traçable</h3><p>Un contenu assisté par IA n'acquiert aucune autorité particulière et doit suivre les mêmes règles de preuve et de revue.</p></article>
+        <article class="card"><span class="tag rule">Règle</span><h3>Licence explicite</h3><p>Aucune fiche ne peut être publiée sans droits d'utilisation et d'attribution compatibles avec la politique du catalogue.</p></article>
+      </div>
+    </section>
+
+    <section id="entities">
+      <h2>3. Entités du contrat</h2>
+      <table>
+        <thead><tr><th>Entité</th><th>Responsabilité</th><th>Relation</th></tr></thead>
+        <tbody>
+          <tr><td><code>Idea</code></td><td>Identité stable de l'idée et pointeur vers sa version publiée courante.</td><td>Possède plusieurs versions, variantes et contributions.</td></tr>
+          <tr><td><code>IdeaVersion</code></td><td>Instantané éditorial immuable contenant la fiche structurée.</td><td>Appartient à une idée et référence auteurs, claims et sources.</td></tr>
+          <tr><td><code>Claim</code></td><td>Affirmation atomique classée par nature et niveau de validation.</td><td>Peut référencer zéro ou plusieurs sources selon sa nature.</td></tr>
+          <tr><td><code>Source</code></td><td>Élément vérifiable utilisé pour soutenir une affirmation.</td><td>Peut soutenir plusieurs claims et possède ses métadonnées d'accès.</td></tr>
+          <tr><td><code>RegionalVariant</code></td><td>Adaptation ciblée qui surcharge une partie de la fiche de base.</td><td>Référence une idée et une version source précises.</td></tr>
+          <tr><td><code>Contribution</code></td><td>Proposition de création ou modification avant revue éditoriale.</td><td>Produit éventuellement une nouvelle version après acceptation.</td></tr>
+          <tr><td><code>EditorialReview</code></td><td>Décision motivée d'un reviewer avec checklist et date.</td><td>S'applique à une contribution ou version candidate.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="fields">
+      <h2>4. Structure d'une IdeaVersion</h2>
+      <h3>Conventions de type</h3>
+      <table style="margin-bottom:18px">
+        <thead><tr><th>Concept</th><th>Type logique</th><th>Contrainte</th></tr></thead>
+        <tbody>
+          <tr><td>Identifiant</td><td>Chaîne opaque</td><td>Stable, unique, non dérivée du titre affiché.</td></tr>
+          <tr><td>Version</td><td>Entier positif</td><td>Strictement croissant pour une même idée.</td></tr>
+          <tr><td>Date</td><td>Date-heure ISO 8601</td><td>Stockée avec fuseau ; affichage localisé séparément.</td></tr>
+          <tr><td>Langue</td><td>Code BCP 47</td><td>Exemples : <code>fr</code>, <code>fr-BJ</code>, <code>en</code>.</td></tr>
+          <tr><td>Devise</td><td>Code ISO 4217</td><td>Obligatoire pour toute estimation monétaire.</td></tr>
+          <tr><td>Liste</td><td>Collection ordonnée</td><td>Sans doublon logique ; références par identifiant lorsqu'une entité existe.</td></tr>
+          <tr><td>Visibilité</td><td>Énumération</td><td><code>public</code>, <code>private</code> ou <code>unlisted</code>.</td></tr>
+          <tr><td>Type de claim</td><td>Énumération</td><td><code>fact</code>, <code>hypothesis</code>, <code>estimate</code>, <code>recommendation</code> ou <code>validation_question</code>.</td></tr>
+          <tr><td>Validation d'un claim</td><td>Énumération</td><td><code>untested</code>, <code>partially_supported</code>, <code>supported</code>, <code>refuted</code> ou <code>stale</code>.</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <thead><tr><th>Bloc</th><th>Champs principaux</th><th>Exigence</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>Identité</td><td><code>ideaId</code>, <code>version</code>, <code>slug</code>, <code>title</code>, <code>oneLineSummary</code>, <code>language</code></td><td>Obligatoire</td><td>Identifier et présenter la fiche sans ambiguïté.</td></tr>
+          <tr><td>Éditorial</td><td><code>status</code>, <code>visibility</code>, <code>contentLicense</code>, <code>authors</code>, <code>contributors</code>, <code>reviewedBy</code>, dates</td><td>Obligatoire</td><td>Établir publication, droits, attribution et responsabilité.</td></tr>
+          <tr><td>Classification</td><td><code>projectKinds</code>, <code>sectors</code>, <code>targetAudiences</code>, <code>deliveryModes</code>, <code>relationshipTypes</code>, <code>tags</code></td><td>Partiel</td><td>Permettre navigation et filtres sans remplacer le contenu.</td></tr>
+          <tr><td>Problème</td><td><code>problemStatement</code>, <code>affectedActors</code>, <code>usageContext</code>, <code>problemClaims</code></td><td>Obligatoire</td><td>Décrire le besoin avant la solution.</td></tr>
+          <tr><td>Proposition</td><td><code>proposedApproach</code>, <code>valueProposition</code>, <code>expectedOutcomes</code>, <code>alternatives</code>, <code>whyNowClaims</code></td><td>Obligatoire sauf alternatives</td><td>Expliquer la réponse proposée et ses limites.</td></tr>
+          <tr><td>Exécution</td><td><code>mvpScope</code>, <code>initialExclusions</code>, <code>requiredCapabilities</code>, <code>stakeholders</code>, <code>expenseEstimates</code>, <code>timeToFirstTest</code></td><td>Obligatoire pour MVP et exclusions</td><td>Rendre l'idée actionnable sans la transformer en projet privé.</td></tr>
+          <tr><td>Validation</td><td><code>coreAssumptions</code>, <code>validationQuestions</code>, <code>suggestedExperiments</code>, <code>successSignals</code>, <code>failureSignals</code></td><td>Obligatoire pour hypothèses et questions</td><td>Empêcher la présentation de l'idée comme déjà validée.</td></tr>
+          <tr><td>Risques</td><td><code>risks</code>, <code>constraints</code>, <code>dependencies</code>, <code>regulatoryTopics</code></td><td>Au moins un risque</td><td>Faire apparaître les limites et conditions de faisabilité.</td></tr>
+          <tr><td>Contexte</td><td><code>baseRegions</code>, <code>adaptationDimensions</code>, <code>infrastructureAssumptions</code>, <code>currencyContext</code></td><td>Partiel</td><td>Rendre explicite le contexte de référence.</td></tr>
+          <tr><td>Ressources</td><td><code>claims</code>, <code>sources</code>, <code>relatedIdeas</code>, <code>suggestedPromptSkills</code></td><td>Claims obligatoire</td><td>Relier preuves, inspirations internes et méthodes.</td></tr>
+        </tbody>
+      </table>
+      <div class="callout" style="margin-top:16px"><strong>Minimum publiable :</strong> titre, résumé, problème, public, approche, MVP, exclusions initiales, trois hypothèses centrales, questions de validation, un risque, auteur, licence, statut de revue et claims correctement classés.</div>
+    </section>
+
+    <section id="claims">
+      <h2>5. Système de preuve</h2>
+      <table>
+        <thead><tr><th>Type</th><th>Signification</th><th>Source requise</th><th>Exemple de formulation</th></tr></thead>
+        <tbody>
+          <tr><td><code>fact</code></td><td>Affirmation vérifiable présentée comme vraie dans un périmètre défini.</td><td>Oui, au moins une.</td><td>« Le service X est disponible dans la zone Y à la date Z. »</td></tr>
+          <tr><td><code>hypothesis</code></td><td>Croyance à tester avant d'investir davantage.</td><td>Non, mais une justification peut être liée.</td><td>« Les boutiques accepteraient de confirmer leurs stocks chaque matin. »</td></tr>
+          <tr><td><code>estimate</code></td><td>Valeur approximative avec méthode, date, devise et périmètre.</td><td>Base de calcul obligatoire ; source externe selon le cas.</td><td>« Le test initial pourrait coûter entre 50 000 et 100 000 FCFA. »</td></tr>
+          <tr><td><code>recommendation</code></td><td>Choix conseillé et motivé, non présenté comme vérité universelle.</td><td>Non, justification obligatoire.</td><td>« Commencer par WhatsApp réduirait la portée technique du test. »</td></tr>
+          <tr><td><code>validation_question</code></td><td>Incertitude formulée pour guider une recherche ou expérience.</td><td>Non.</td><td>« Qui met aujourd'hui les informations de stock à jour ? »</td></tr>
+        </tbody>
+      </table>
+
+      <div class="grid" style="margin-top:16px">
+        <article class="card wide"><h3>Claim</h3><p>Contient <code>id</code>, <code>type</code>, <code>statement</code>, <code>scope</code>, <code>sourceIds</code>, <code>validationStatus</code>, <code>rationale</code>, <code>createdAt</code> et <code>lastReviewedAt</code>.</p></article>
+        <article class="card wide"><h3>Source</h3><p>Contient <code>id</code>, <code>sourceType</code>, <code>title</code>, <code>publisherOrAuthor</code>, <code>urlOrReference</code>, <code>publishedAt</code>, <code>accessedAt</code>, <code>license</code> et <code>notes</code>.</p></article>
+      </div>
+      <div class="callout warning" style="margin-top:16px"><strong>Interdiction éditoriale :</strong> inventer une étude, un répondant, une métrique, un témoignage, un client, une validation ou une source. Un contenu généré par IA ne constitue jamais une source.</div>
+    </section>
+
+    <section id="variants">
+      <h2>6. Adaptations régionales</h2>
+      <p>Une variante est une couche de contexte, pas une copie complète. Elle référence <code>baseIdeaId</code> et <code>baseVersion</code>, définit un <code>targetContext</code>, puis fournit uniquement les blocs modifiés et leur justification.</p>
+      <div class="grid">
+        <article class="card"><h3>Contexte cible</h3><p>Pays ou zone, langue, devise, niveau d'infrastructure, canaux, contraintes réglementaires et budget de référence.</p></article>
+        <article class="card"><h3>Surcharges autorisées</h3><p>Public, usage, canal, MVP, coûts, parties prenantes, risques, validation et stack suggérée.</p></article>
+        <article class="card"><h3>Héritage</h3><p>Tout bloc non surchargé reste lu depuis la version source ; la variante devient « à revoir » si sa base change matériellement.</p></article>
+      </div>
+    </section>
+
+    <section id="workflow">
+      <h2>7. Versionnement et workflow éditorial</h2>
+      <table>
+        <thead><tr><th>Statut</th><th>Usage</th><th>Transition possible</th></tr></thead>
+        <tbody>
+          <tr><td><code>draft</code></td><td>Création privée ou interne incomplète.</td><td>submitted, archived</td></tr>
+          <tr><td><code>submitted</code></td><td>Contribution candidate figée pour revue.</td><td>in_review, withdrawn</td></tr>
+          <tr><td><code>in_review</code></td><td>Contrôle éditorial, preuves, droits et cohérence.</td><td>changes_requested, approved, rejected</td></tr>
+          <tr><td><code>approved</code></td><td>Version acceptée mais pas encore rendue publique.</td><td>published</td></tr>
+          <tr><td><code>published</code></td><td>Version publique immuable.</td><td>needs_review, superseded, archived</td></tr>
+          <tr><td><code>needs_review</code></td><td>Contenu public signalé comme potentiellement obsolète.</td><td>published, superseded, archived</td></tr>
+          <tr><td><code>rejected</code></td><td>Contribution refusée avec motif conservé.</td><td>Aucune ; nouvelle soumission requise.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px">Une version publiée ne se modifie pas. Une contribution acceptée crée la version suivante, et <code>changeSummary</code> explique ce qui a changé et pourquoi.</p>
+    </section>
+
+    <section id="examples">
+      <h2>8. Exemples conformes</h2>
+      <div class="callout"><strong>Important :</strong> les exemples ci-dessous sont fictifs. Ils démontrent le contrat et ne constituent ni une étude de marché ni une validation de faisabilité.</div>
+
+      <h3 style="margin-top:22px">Exemple minimal — annuaire local de réparation</h3>
+      <pre>{
+  "ideaId": "idea_repair_directory",
+  "version": 1,
+  "title": "Annuaire local de réparateurs disponibles",
+  "oneLineSummary": "Aider un habitant à trouver un réparateur proche et joignable.",
+  "language": "fr",
+  "contentLicense": "pending-project-license-decision",
+  "status": "draft",
+  "authors": ["example-author"],
+  "targetAudiences": ["habitants d'une zone urbaine", "artisans réparateurs"],
+  "problemStatement": "Trouver rapidement un artisan disponible peut demander plusieurs appels et recommandations informelles.",
+  "proposedApproach": "Un répertoire simple avec métier, zone, disponibilité déclarée et contact.",
+  "mvpScope": ["répertoire de 20 artisans", "recherche par métier", "contact direct"],
+  "initialExclusions": ["paiement", "messagerie interne", "notation publique"],
+  "coreAssumptions": [
+    "Les artisans accepteraient de mettre leur disponibilité à jour.",
+    "Les habitants utiliseraient un répertoire avant leur réseau personnel.",
+    "Un contact direct suffit pour le premier test."
+  ],
+  "validationQuestions": [
+    "Comment les habitants trouvent-ils aujourd'hui un réparateur ?",
+    "À quelle fréquence les artisans peuvent-ils actualiser leur disponibilité ?"
+  ],
+  "risks": ["informations rapidement obsolètes"],
+  "claims": [
+    {"type": "hypothesis", "statement": "Les artisans accepteraient une mise à jour régulière.", "sourceIds": []}
+  ],
+  "sources": []
+}</pre>
+
+      <h3 style="margin-top:22px">Exemple complet — assistant de stock conversationnel</h3>
+      <pre>{
+  "ideaId": "idea_chat_stock_helper",
+  "version": 3,
+  "title": "Assistant conversationnel de suivi de stock",
+  "oneLineSummary": "Permettre à une petite boutique de noter entrées, ventes et alertes depuis un canal familier.",
+  "language": "fr",
+  "status": "draft",
+  "visibility": "private",
+  "contentLicense": "pending-project-license-decision",
+  "authors": ["example-author"],
+  "reviewedBy": ["example-reviewer"],
+  "projectKinds": ["service", "software"],
+  "sectors": ["commerce de proximité"],
+  "targetAudiences": ["gérants de petites boutiques"],
+  "deliveryModes": ["conversationnel", "mobile"],
+  "problemStatement": "Le suivi manuel peut rendre les niveaux de stock difficiles à consulter rapidement.",
+  "affectedActors": ["gérant", "vendeur", "fournisseur"],
+  "usageContext": "Boutique avec téléphone connecté et temps administratif limité.",
+  "proposedApproach": "Enregistrer des mouvements avec des messages guidés et produire un état synthétique.",
+  "valueProposition": "Obtenir une vue exploitable sans imposer un logiciel de gestion complet.",
+  "expectedOutcomes": ["mouvements enregistrés", "alerte sur seuil déclaré", "résumé quotidien"],
+  "mvpScope": ["10 produits", "entrée et sortie", "seuil manuel", "résumé exportable"],
+  "initialExclusions": ["comptabilité", "prévision automatique", "paiement", "multi-boutiques"],
+  "requiredCapabilities": ["conception conversationnelle", "développement web", "support terrain"],
+  "stakeholders": ["gérant", "vendeur", "fournisseur de messagerie"],
+  "expenseEstimates": [{
+    "type": "estimate",
+    "currency": "XOF",
+    "range": {"min": 50000, "max": 150000},
+    "basis": "prototype et test terrain fictifs ; à recalculer localement",
+    "referenceDate": "2026-07-26"
+  }],
+  "coreAssumptions": [
+    "Le canal conversationnel réduit l'effort d'apprentissage.",
+    "Le personnel enregistre les mouvements assez régulièrement.",
+    "Un catalogue initial de 10 produits suffit pour tester l'utilité."
+  ],
+  "suggestedExperiments": ["prototype cliquable", "test accompagné sur une journée"],
+  "successSignals": ["mouvements saisis sans assistance après apprentissage", "résumé compris par le gérant"],
+  "failureSignals": ["saisies systématiquement abandonnées", "écarts non détectables avec le stock réel"],
+  "risks": ["données incomplètes", "dépendance au canal", "coût des messages"],
+  "adaptationDimensions": ["canal", "devise", "connectivité", "langue", "réglementation"],
+  "claims": [
+    {"id": "c1", "type": "hypothesis", "statement": "Le canal conversationnel réduit l'effort d'apprentissage.", "sourceIds": []},
+    {"id": "c2", "type": "estimate", "statement": "Le test fictif pourrait coûter entre 50 000 et 150 000 FCFA.", "sourceIds": [], "rationale": "Fourchette pédagogique à recalculer."},
+    {"id": "c3", "type": "validation_question", "statement": "Qui enregistre les mouvements pendant les heures de pointe ?", "sourceIds": []}
+  ],
+  "sources": [],
+  "changeSummary": "Ajout des signaux d'échec et des dimensions d'adaptation."
+}</pre>
+    </section>
+
+    <section id="acceptance">
+      <h2>9. Critères d'acceptation IC-02</h2>
+      <ol>
+        <li>Les champs obligatoires, optionnels et conditionnels sont identifiables.</li>
+        <li>Les entités Idea, IdeaVersion, Claim, Source, RegionalVariant, Contribution et EditorialReview ont des responsabilités séparées.</li>
+        <li>Tout fait publié exige une source, tandis qu'une hypothèse reste publiable comme hypothèse.</li>
+        <li>Les estimations indiquent base, périmètre, date et devise lorsqu'elle s'applique.</li>
+        <li>Une variante régionale ne duplique que les blocs modifiés et référence sa version source.</li>
+        <li>Le workflow conserve l'historique et rend les versions publiées immuables.</li>
+        <li>Les exemples minimal et complet respectent les règles sans fabriquer de validation.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer><div class="shell">Idea Commons · IC-02 · contrat éditorial indépendant de l'implémentation technique.</div></footer>
+</body>
+</html>

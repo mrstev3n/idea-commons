@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Parcours principal, rôles, visibilités et règles d'autorisation d'Idea Commons.">
+  <title>Idea Commons — Parcours principal et permissions v0.1</title>
+  <style>
+    :root {
+      --ink: #17221d;
+      --muted: #5e6b65;
+      --paper: #f5f4ec;
+      --card: #fffef8;
+      --line: #d7ddd4;
+      --green: #176b4d;
+      --green-soft: #dcece4;
+      --blue: #245f83;
+      --blue-soft: #deebf2;
+      --amber: #955b0a;
+      --amber-soft: #f7e8c8;
+      --red: #913b35;
+      --red-soft: #f2dfdc;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font: 16px/1.62 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    header { padding: 68px 0 42px; border-bottom: 1px solid var(--line); }
+    .eyebrow { color: var(--green); font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { max-width: 980px; margin: 10px 0 18px; font: 700 clamp(2.5rem, 7vw, 5.2rem)/1 Georgia, serif; letter-spacing: -.04em; }
+    .lead { max-width: 850px; color: var(--muted); font-size: 1.18rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 24px; }
+    .pill { padding: 6px 10px; border: 1px solid var(--line); border-radius: 99px; background: var(--card); font-size: .84rem; }
+    nav { position: sticky; top: 0; z-index: 3; background: color-mix(in srgb, var(--paper) 90%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    nav .shell { display: flex; gap: 20px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px; }
+    nav a { color: var(--muted); text-decoration: none; white-space: nowrap; font-size: .88rem; }
+    main { padding: 28px 0 78px; }
+    section { scroll-margin-top: 68px; padding: 34px 0; }
+    h2 { margin: 0 0 17px; font: 700 clamp(1.8rem, 4vw, 3rem)/1.1 Georgia, serif; letter-spacing: -.025em; }
+    h3 { margin: 0 0 8px; font-size: 1.05rem; }
+    p { margin: 0 0 13px; }
+    ul, ol { margin: 8px 0 0; padding-left: 22px; }
+    li + li { margin-top: 5px; }
+    code { color: var(--green); font-weight: 700; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 15px; }
+    .card { grid-column: span 4; padding: 21px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+    .card.wide { grid-column: span 6; }
+    .card.full { grid-column: 1 / -1; }
+    .tag { display: inline-block; margin-bottom: 11px; padding: 4px 8px; border-radius: 6px; font-size: .71rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .public { color: var(--green); background: var(--green-soft); }
+    .private { color: var(--red); background: var(--red-soft); }
+    .resource { color: var(--blue); background: var(--blue-soft); }
+    .decision { color: var(--amber); background: var(--amber-soft); }
+    .flow { counter-reset: stage; }
+    .flow .card::before { counter-increment: stage; content: "0" counter(stage); display: block; margin-bottom: 22px; color: var(--green); font-size: .76rem; font-weight: 850; }
+    table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); }
+    th, td { padding: 13px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; }
+    .yes { color: var(--green); font-weight: 800; }
+    .no { color: var(--red); font-weight: 800; }
+    .conditional { color: var(--amber); font-weight: 800; }
+    .callout { padding: 20px; border-left: 4px solid var(--green); background: var(--green-soft); }
+    .warning { border-left-color: var(--red); background: var(--red-soft); }
+    .sequence { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+    .sequence span { padding: 7px 10px; border-radius: 8px; background: var(--green-soft); font-weight: 750; }
+    .sequence b { color: var(--muted); }
+    footer { padding: 26px 0 46px; border-top: 1px solid var(--line); color: var(--muted); }
+    @media (max-width: 800px) {
+      .shell { width: min(100% - 24px, 1180px); }
+      header { padding-top: 46px; }
+      .card, .card.wide { grid-column: 1 / -1; }
+      table { display: block; overflow-x: auto; }
+    }
+    @media print { nav { display: none; } body { background: white; } .card, table { break-inside: avoid; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell">
+      <div class="eyebrow">IC-03 · Parcours et autorisation · version 0.1</div>
+      <h1>Ouvert pour découvrir. Privé pour construire.</h1>
+      <p class="lead">Ce document définit le parcours principal d'Idea Commons, les rôles et les décisions d'accès que le serveur doit appliquer. Il protège la frontière entre une idée publique, une contribution en revue et un projet personnel privé.</p>
+      <div class="meta">
+        <span class="pill">Statut : validé</span>
+        <span class="pill">Portée : produit cible</span>
+        <span class="pill">Dernière revue : 26 juillet 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <nav aria-label="Sommaire">
+    <div class="shell">
+      <a href="#spec">Spécification</a>
+      <a href="#journey">Parcours</a>
+      <a href="#boundaries">Frontières</a>
+      <a href="#roles">Rôles</a>
+      <a href="#matrix">Matrice</a>
+      <a href="#visibility">Visibilités</a>
+      <a href="#direct-access">Accès direct</a>
+      <a href="#security">Sécurité</a>
+      <a href="#acceptance">Acceptation</a>
+    </div>
+  </nav>
+
+  <main class="shell">
+    <section id="spec">
+      <h2>1. Cadre de la spécification</h2>
+      <div class="grid">
+        <article class="card wide"><h3>Contexte</h3><p>Le catalogue est public, mais l'adaptation d'une idée contient du contexte personnel, des décisions et potentiellement des données commerciales. Ces espaces ne peuvent partager les mêmes règles d'accès.</p></article>
+        <article class="card wide"><h3>Objectif</h3><p>Décrire un parcours de bout en bout et rendre chaque décision d'autorisation testable indépendamment de l'interface.</p></article>
+        <article class="card wide"><h3>Non-objectifs</h3><ul><li>Choisir un fournisseur d'authentification.</li><li>Définir le design final des écrans.</li><li>Fixer les offres payantes.</li><li>Définir la durée de conservation légale.</li><li>Ouvrir les projets au public.</li></ul></article>
+        <article class="card wide"><h3>Principes</h3><ul><li>Refus par défaut.</li><li>Autorisation côté serveur.</li><li>Moindre privilège.</li><li>Propriété explicite par ressource.</li><li>Aucune clé secrète dans une URL.</li><li>Actions sensibles auditables.</li></ul></article>
+      </div>
+    </section>
+
+    <section id="journey">
+      <h2>2. Parcours principal</h2>
+      <div class="sequence" aria-label="Séquence du parcours">
+        <span>Explorer</span><b>→</b><span>Comprendre</span><b>→</b><span>Choisir</span><b>→</b><span>Adapter</span><b>→</b><span>Valider</span><b>→</b><span>Exécuter</span>
+      </div>
+      <div class="grid flow" style="margin-top:16px">
+        <article class="card"><h3>Explorer</h3><p><strong>Entrée :</strong> visite anonyme ou authentifiée.</p><p><strong>Action :</strong> rechercher, filtrer et parcourir les idées publiées.</p><p><strong>Sortie :</strong> une liste compréhensible sans création de compte.</p></article>
+        <article class="card"><h3>Comprendre</h3><p><strong>Entrée :</strong> fiche publique ou lien non listé.</p><p><strong>Action :</strong> lire problème, preuves, hypothèses, risques et exécution possible.</p><p><strong>Sortie :</strong> décision de poursuivre ou non.</p></article>
+        <article class="card"><h3>Choisir</h3><p><strong>Action anonyme :</strong> déclencher « Adapter cette idée ».</p><p><strong>Frontière :</strong> connexion requise seulement pour sauvegarder ou créer un projet.</p><p><strong>Sortie :</strong> compte authentifié et version source choisie.</p></article>
+        <article class="card"><h3>Adapter</h3><p><strong>Action :</strong> créer un projet privé à partir d'un instantané de l'idée et renseigner pays, budget, compétences, temps et contraintes.</p><p><strong>Sortie :</strong> contexte privé distinct de la fiche publique.</p></article>
+        <article class="card"><h3>Valider</h3><p><strong>Action :</strong> formuler hypothèses, entretiens, expériences et signaux de réussite ou d'échec.</p><p><strong>Sortie :</strong> plan de validation privé ; aucun résultat n'est reversé automatiquement au catalogue.</p></article>
+        <article class="card"><h3>Exécuter</h3><p><strong>Action :</strong> produire portée, roadmap, budget, backlog, ressources et exports.</p><p><strong>Sortie :</strong> livrables privés appartenant au projet, toujours reliés à la version source.</p></article>
+      </div>
+      <div class="callout" style="margin-top:16px"><strong>Règle de continuité :</strong> une nouvelle version publique de l'idée ne modifie jamais silencieusement un projet existant. Le propriétaire peut consulter les changements et choisir une migration explicite.</div>
+    </section>
+
+    <section id="boundaries">
+      <h2>3. Frontières des objets</h2>
+      <table>
+        <thead><tr><th>Objet</th><th>Visibilité par défaut</th><th>Propriétaire éditorial</th><th>Règle centrale</th></tr></thead>
+        <tbody>
+          <tr><td><code>PublishedIdeaVersion</code></td><td>Publique ou non listée</td><td>Catalogue / mainteneurs</td><td>Immuable, sourcée, lisible sans compte selon sa visibilité.</td></tr>
+          <tr><td><code>IdeaDraft</code></td><td>Privée</td><td>Auteur de la contribution</td><td>Visible seulement par participants à la revue.</td></tr>
+          <tr><td><code>Project</code></td><td>Privée</td><td>Membre propriétaire</td><td>Jamais rendu public par simple changement d'URL.</td></tr>
+          <tr><td><code>ProjectArtifact</code></td><td>Privée</td><td>Projet parent</td><td>Notes, roadmap, exports et générations héritent des droits du projet.</td></tr>
+          <tr><td><code>Contribution</code></td><td>Privée pendant la revue</td><td>Auteur puis catalogue si acceptée</td><td>Une acceptation crée une version publique séparée ; elle ne publie pas le projet source.</td></tr>
+          <tr><td><code>ProviderCredential</code></td><td>Secrète</td><td>Membre</td><td>Jamais relue en clair, jamais incluse dans un export, un log ou une réponse client.</td></tr>
+          <tr><td><code>Favorite</code></td><td>Privée</td><td>Membre</td><td>Ne révèle pas publiquement l'intérêt d'une personne pour une idée.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="roles">
+      <h2>4. Rôles globaux et rôles de ressource</h2>
+      <div class="grid">
+        <article class="card"><span class="tag public">Global</span><h3>Visiteur</h3><p>Non authentifié. Lit et recherche le contenu public ; accède à une idée non listée uniquement avec son URL.</p></article>
+        <article class="card"><span class="tag public">Global</span><h3>Membre</h3><p>Compte authentifié. Gère favoris, projets privés, paramètres et contributions autorisées.</p></article>
+        <article class="card"><span class="tag public">Global</span><h3>Contributeur</h3><p>Membre pouvant soumettre une idée, une correction, une traduction ou une adaptation selon la future politique de contribution.</p></article>
+        <article class="card"><span class="tag public">Global</span><h3>Reviewer</h3><p>Examine les contributions et preuves ; n'obtient aucun accès aux projets privés sans relation explicite à la ressource.</p></article>
+        <article class="card"><span class="tag public">Global</span><h3>Administrateur</h3><p>Gère catalogue, rôles, abus et configuration. Son rôle ne lui donne pas automatiquement le droit de lire les projets privés ou clés fournisseurs.</p></article>
+        <article class="card"><span class="tag resource">Ressource</span><h3>Propriétaire</h3><p>Contrôle un projet : lecture, modification, archivage, export et invitations. La suppression définitive exige un flux séparé.</p></article>
+        <article class="card"><span class="tag resource">Ressource</span><h3>Collaborateur éditeur</h3><p>Peut lire et modifier le projet dans la portée accordée ; ne peut ni transférer la propriété ni gérer les secrets du propriétaire.</p></article>
+        <article class="card"><span class="tag resource">Ressource</span><h3>Collaborateur lecteur</h3><p>Peut consulter le projet et ses livrables autorisés, sans mutation ni accès aux clés fournisseurs.</p></article>
+        <article class="card"><span class="tag decision">Décision</span><h3>Rôles composables</h3><p>Les rôles globaux n'écrasent pas les droits de ressource. Un reviewer reste étranger à un projet s'il n'y est pas invité.</p></article>
+      </div>
+    </section>
+
+    <section id="matrix">
+      <h2>5. Matrice d'autorisation cible</h2>
+      <table>
+        <thead><tr><th>Capacité</th><th>Visiteur</th><th>Membre</th><th>Contributeur</th><th>Reviewer</th><th>Admin</th></tr></thead>
+        <tbody>
+          <tr><td>Lire une idée publique</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td></tr>
+          <tr><td>Trouver une idée non listée dans la recherche</td><td class="no">Non</td><td class="no">Non</td><td class="no">Non</td><td class="no">Non</td><td class="conditional">Gestion seulement</td></tr>
+          <tr><td>Lire une idée non listée avec son URL</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td></tr>
+          <tr><td>Créer un favori</td><td class="no">Non</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td></tr>
+          <tr><td>Créer un projet privé</td><td class="no">Non</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td></tr>
+          <tr><td>Lire ou modifier son projet</td><td class="no">Non</td><td class="conditional">Selon ressource</td><td class="conditional">Selon ressource</td><td class="conditional">Selon ressource</td><td class="conditional">Selon ressource</td></tr>
+          <tr><td>Lire un projet étranger</td><td class="no">Non</td><td class="no">Non</td><td class="no">Non</td><td class="no">Non</td><td class="no">Non par défaut</td></tr>
+          <tr><td>Soumettre une contribution</td><td class="no">Non</td><td class="conditional">Selon politique</td><td class="yes">Oui</td><td class="yes">Oui</td><td class="yes">Oui</td></tr>
+          <tr><td>Approuver une contribution</td><td class="no">Non</td><td class="no">Non</td><td class="no">Non</td><td class="yes">Oui</td><td class="yes">Oui</td></tr>
+          <tr><td>Modifier les rôles globaux</td><td class="no">Non</td><td class="no">Non</td><td class="no">Non</td><td class="no">Non</td><td class="yes">Oui, audité</td></tr>
+          <tr><td>Relire une clé fournisseur en clair</td><td class="no">Jamais</td><td class="no">Jamais</td><td class="no">Jamais</td><td class="no">Jamais</td><td class="no">Jamais</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px">La colonne « Admin » exprime une capacité opérationnelle, pas une propriété universelle. Tout accès exceptionnel de support à un projet privé doit être explicite, temporaire, justifié et audité ; le consentement du propriétaire est requis hors incident de sécurité ou obligation légale applicable.</p>
+    </section>
+
+    <section id="visibility">
+      <h2>6. Visibilités</h2>
+      <div class="grid">
+        <article class="card"><span class="tag public">Public</span><h3>Idée publiée</h3><p>Accessible sans compte, présente dans le catalogue et indexable. Les réponses publiques peuvent être mises en cache selon leur version.</p></article>
+        <article class="card"><span class="tag decision">Non listé</span><h3>Idée publiée par lien</h3><p>Accessible à toute personne disposant de l'URL, absente du catalogue, des recommandations, du sitemap et marquée <code>noindex</code>. Ce mode n'est jamais un secret.</p></article>
+        <article class="card"><span class="tag private">Privé</span><h3>Brouillon ou projet</h3><p>Authentification et relation à la ressource obligatoires. Réponses et fichiers utilisent <code>private, no-store</code> et ne sont jamais servis depuis un emplacement public.</p></article>
+      </div>
+      <div class="callout warning" style="margin-top:16px"><strong>Interdiction :</strong> considérer le masquage d'un bouton, une URL difficile à deviner ou l'absence d'indexation comme un contrôle d'accès.</div>
+    </section>
+
+    <section id="direct-access">
+      <h2>7. Preuves par accès direct</h2>
+      <p>Les statuts ci-dessous sont normatifs pour l'API. Une page web peut rediriger un visiteur vers la connexion, mais le serveur doit conserver la même décision d'autorisation.</p>
+      <table>
+        <thead><tr><th>Scénario</th><th>Résultat attendu</th><th>Preuve</th></tr></thead>
+        <tbody>
+          <tr><td>GET d'une idée publique sans session</td><td><code>200</code></td><td>Contenu public seulement ; aucune donnée d'auteur privée.</td></tr>
+          <tr><td>GET d'une idée non listée avec URL exacte</td><td><code>200</code></td><td>Absente des résultats, sitemap et recommandations ; <code>X-Robots-Tag: noindex</code> ou balise équivalente.</td></tr>
+          <tr><td>GET d'un brouillon par un étranger</td><td><code>404</code></td><td>Le serveur ne confirme pas l'existence de la ressource.</td></tr>
+          <tr><td>POST de création de projet sans session</td><td><code>401</code></td><td>Aucune ressource créée ; aucune donnée de formulaire persistée comme projet.</td></tr>
+          <tr><td>GET de son propre projet</td><td><code>200</code></td><td>Réponse <code>private, no-store</code> et données limitées au projet.</td></tr>
+          <tr><td>GET du projet d'un autre membre</td><td><code>404</code></td><td>Aucun titre, propriétaire, existence ou fichier n'est révélé.</td></tr>
+          <tr><td>PATCH par un collaborateur lecteur</td><td><code>403</code></td><td>La ressource est connue mais le rôle ne permet pas la mutation.</td></tr>
+          <tr><td>GET direct de son propre export privé</td><td><code>200</code></td><td>Autorisation du projet vérifiée avant téléchargement ; URL de stockage non publique.</td></tr>
+          <tr><td>GET direct de l'export privé d'un autre membre</td><td><code>404</code></td><td>Aucun nom de fichier, projet parent ou emplacement de stockage n'est révélé.</td></tr>
+          <tr><td>GET d'une clé fournisseur après création</td><td><code>200</code> sans secret</td><td>Retourne seulement fournisseur, alias, fin d'empreinte et date ; jamais la valeur.</td></tr>
+          <tr><td>Reviewer ouvre un projet non lié</td><td><code>404</code></td><td>Le rôle de revue ne traverse pas la frontière des projets.</td></tr>
+          <tr><td>Admin ouvre un projet sans flux exceptionnel</td><td><code>404</code></td><td>Pas de passe-droit implicite lié au rôle global.</td></tr>
+          <tr><td>Déconnexion puis répétition d'une requête privée</td><td><code>401</code></td><td>Session révoquée ; aucune réponse privée servie depuis un cache partagé.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="security">
+      <h2>8. Contraintes de sécurité et confidentialité</h2>
+      <div class="grid">
+        <article class="card wide"><h3>Autorisation centralisée</h3><p>Chaque lecture, mutation, export et tâche asynchrone appelle la même politique d'autorisation. Une règle appliquée uniquement dans l'interface est invalide.</p></article>
+        <article class="card wide"><h3>Portée des fichiers</h3><p>Les assets publics et privés utilisent des chemins ou espaces distincts. Un fichier privé n'est délivré qu'après vérification de la ressource parent.</p></article>
+        <article class="card wide"><h3>Recherche et cache</h3><p>Les index publics ne reçoivent aucun brouillon, projet, favori ou contribution en revue. Une réponse privée ne passe pas dans un cache partagé.</p></article>
+        <article class="card wide"><h3>IA et transmission</h3><p>Avant d'envoyer le contexte d'un projet à un fournisseur IA, la plateforme indique les données concernées, le fournisseur et le mode de clé utilisé. Les secrets et champs hors portée sont exclus.</p></article>
+        <article class="card wide"><h3>Journalisation</h3><p>Les changements de rôle, accès exceptionnels, publications et décisions de revue sont auditables. Les logs n'enregistrent ni clé, ni prompt privé complet, ni export sensible.</p></article>
+        <article class="card wide"><h3>Mutations</h3><p>Les mutations authentifiées exigent protection contre requêtes intersites, contrôle de version pour éviter l'écrasement et validation serveur des champs autorisés.</p></article>
+      </div>
+    </section>
+
+    <section id="acceptance">
+      <h2>9. Critères d'acceptation IC-03</h2>
+      <ol>
+        <li>Le parcours « explorer → comprendre → choisir → adapter → valider → exécuter » possède une entrée, une action, une frontière et une sortie observables.</li>
+        <li>Les rôles visiteur, membre, contributeur, reviewer et administrateur ont des capacités explicites.</li>
+        <li>Les rôles globaux sont distincts des rôles propriétaire, éditeur et lecteur d'une ressource.</li>
+        <li>Une idée publique, une idée non listée, un brouillon et un projet privé ont des comportements serveur différents et testables.</li>
+        <li>Le mode non listé est traité comme découvrabilité réduite, jamais comme confidentialité.</li>
+        <li>Les projets, exports, favoris, générations et clés héritent de règles privées vérifiées côté serveur.</li>
+        <li>Un reviewer ou administrateur ne lit pas automatiquement un projet privé.</li>
+        <li>Les cas anonymes, propriétaires, étrangers et lecteurs possèdent des réponses directes normatives.</li>
+        <li>Une nouvelle version d'idée ne modifie pas silencieusement un projet existant.</li>
+        <li>Aucune décision de fournisseur d'authentification, base de données ou framework n'est prise dans ce document.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer><div class="shell">Idea Commons · IC-03 · autorisation centrée sur la ressource et prouvée côté serveur.</div></footer>
+</body>
+</html>
