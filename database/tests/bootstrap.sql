@@ -11,6 +11,12 @@ begin
 end;
 $$;
 
+do $$
+begin
+  execute format('grant anonymous, authenticated to %I', current_user);
+end;
+$$;
+
 create schema auth;
 
 create function auth.user_id()

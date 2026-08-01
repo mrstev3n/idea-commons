@@ -23,6 +23,7 @@ trap cleanup EXIT INT TERM
 createdb "$database_name"
 psql -X -v ON_ERROR_STOP=1 -d "$database_name" -f database/tests/bootstrap.sql
 psql -X -v ON_ERROR_STOP=1 -d "$database_name" -f database/migrations/0001_m0_data_model.sql
+psql -X -v ON_ERROR_STOP=1 -d "$database_name" -f database/migrations/0002_m0_data_api_grants.sql
 psql -X -v ON_ERROR_STOP=1 -d "$database_name" -f database/tests/m0_rls_test.sql
 
 if psql -X -v ON_ERROR_STOP=1 -d "$database_name" -f database/migrations/0001_m0_data_model.sql >/dev/null 2>&1; then

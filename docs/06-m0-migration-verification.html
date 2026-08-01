@@ -29,7 +29,7 @@
     </ul></section>
 
     <section id="workstreams"><h2>3. Workstreams et zones affectées</h2><table><thead><tr><th>Workstream</th><th>Changement</th><th>Preuve</th></tr></thead><tbody>
-      <tr><td>Migration</td><td>Créer <code>app</code> et <code>app_private</code>, types, tables, contraintes, index, triggers, fonctions, privilèges et politiques M0.</td><td>Transaction complète sur une base vide ; seconde application refusée sans état partiel.</td></tr>
+      <tr><td>Migrations</td><td>Créer <code>app</code> et <code>app_private</code>, puis appliquer séparément les grants minimaux lorsque les rôles Data API existent.</td><td>Migration structurelle complète sur une base vide ; grants post-Data API idempotents et refusés si RLS ou les attributs de rôles sont invalides.</td></tr>
       <tr><td>Identité et rôles</td><td>Relier les membres à <code>auth.user_id()</code> et reconnaître les rôles <code>anonymous</code> et <code>authenticated</code> sans les créer dans la migration fournisseur-neutre.</td><td>Un membre lit son profil et ses rôles uniquement ; un rôle global ne traverse pas la frontière d'un projet.</td></tr>
       <tr><td>Catalogue</td><td>Créer idées, versions, claims, sources, crédits et taxonomie avec publication immuable et sources obligatoires pour les faits publics.</td><td>Catalogue public et non listé lisible ; brouillon caché ; publication invalide refusée.</td></tr>
       <tr><td>Privé</td><td>Créer favoris, projets, membres de projet, artifacts et exports avec héritage d'accès et révision optimiste.</td><td>Propriétaire et collaborateurs acceptés obtiennent exactement leurs droits ; étranger, reviewer et admin sont refusés.</td></tr>
@@ -57,7 +57,7 @@
       <li>Le diff public ne contient ni secret, ni donnée personnelle réelle, ni fichier de travail local, ni configuration interne.</li>
     </ol></section>
 
-    <section id="limites"><h2>6. Séquence distante et limites</h2><p class="note warning"><strong>Aucune action distante dans ce livrable.</strong> Après audit du SQL et succès local, une validation distincte pourra appliquer la migration à la branche Neon <code>development</code>. La Data API restera désactivée jusqu'à vérification des rôles, révocations, privilèges et politiques. Neon <code>production</code> exige une décision humaine ultérieure et séparée.</p><p>Le harnais local émule seulement <code>auth.user_id()</code> afin de tester les politiques PostgreSQL. Il ne prétend pas valider la signature d'un JWT, le proxy Data API, Neon Auth, le comportement HTTP de l'application ni une approbation humaine.</p></section>
+    <section id="limites"><h2>6. Séquence distante et limites</h2><p class="note warning"><strong>Ordre obligatoire :</strong> appliquer la structure sur Neon <code>development</code>, prouver RLS et révocations, provisionner la Data API explicitement sur cette branche, puis appliquer la migration de grants et auditer les rôles réels. Neon <code>production</code> exige une décision humaine ultérieure et séparée.</p><p>Le harnais local émule seulement <code>auth.user_id()</code> afin de tester les politiques PostgreSQL. Il ne prétend pas valider la signature d'un JWT, le proxy Data API, Neon Auth, le comportement HTTP de l'application ni une approbation humaine.</p></section>
   </main>
   <footer><div class="shell">Idea Commons · spécification de livraison et de vérification · M0</div></footer>
 </body>
