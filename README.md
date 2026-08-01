@@ -35,7 +35,8 @@ Documents de référence :
 - [cadrage produit](docs/product-concept.html) ;
 - [schéma canonique d'une idée](docs/02-idea-schema.html) ;
 - [parcours principal et permissions](docs/03-journey-permissions.html) ;
-- [architecture cible à coût fixe nul](docs/04-target-architecture.html).
+- [architecture cible à coût fixe nul](docs/04-target-architecture.html) ;
+- [modèle de données M0 et contrat RLS](docs/05-data-model-rls.html).
 
 ## Licences et modèle ouvert
 
@@ -62,7 +63,8 @@ Idea Commons peut proposer des abonnements pour le service officiel, l'hébergem
     ├── product-concept.html
     ├── 02-idea-schema.html
     ├── 03-journey-permissions.html
-    └── 04-target-architecture.html
+    ├── 04-target-architecture.html
+    └── 05-data-model-rls.html
 ```
 
 ## Contribution
