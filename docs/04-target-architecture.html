@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Décision d'architecture cible d'Idea Commons pour une première alpha à coût fixe nul.">
+  <title>Idea Commons — Architecture cible v0.1</title>
+  <style>
+    :root{--ink:#17221d;--muted:#5d6b64;--paper:#f6f5ed;--card:#fffef8;--line:#d9ddd4;--green:#176b4d;--soft:#dcece4;--amber:#9b5d0b;--amber-soft:#f5e8cd;--radius:18px}*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.65 Inter,ui-sans-serif,system-ui,sans-serif}.shell{width:min(1120px,calc(100% - 40px));margin:auto}header{padding:72px 0 42px;border-bottom:1px solid var(--line)}h1{margin:10px 0 18px;max-width:900px;font:700 clamp(2.5rem,7vw,5.4rem)/1 Georgia,serif;letter-spacing:-.04em}.lead{max-width:840px;color:var(--muted);font-size:1.2rem}.meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}.pill,.tag{display:inline-block;padding:6px 10px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:.82rem}.tag{margin-bottom:10px;border:0;background:var(--soft);color:var(--green);font-weight:700}nav{position:sticky;top:0;background:rgba(246,245,237,.94);border-bottom:1px solid var(--line)}nav .shell{display:flex;gap:20px;overflow:auto;padding-top:12px;padding-bottom:12px}a{color:var(--green)}nav a{white-space:nowrap;text-decoration:none;color:var(--muted)}main{padding:28px 0 72px}section{padding:28px 0;scroll-margin-top:60px}h2{font:700 clamp(1.8rem,4vw,3rem)/1.1 Georgia,serif}h3{margin:.2rem 0}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{grid-column:span 6;padding:22px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}.card.third{grid-column:span 4}.note{padding:18px;border-left:4px solid var(--green);background:var(--soft)}.warning{border-left-color:var(--amber);background:var(--amber-soft)}table{width:100%;border-collapse:collapse;background:var(--card)}th,td{padding:13px 15px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{color:var(--muted);font-size:.8rem;text-transform:uppercase}code{font-size:.92em}footer{padding:28px 0;border-top:1px solid var(--line);color:var(--muted)}@media(max-width:760px){.shell{width:min(100% - 24px,1120px)}.card,.card.third{grid-column:1/-1}table{display:block;overflow:auto}}@media print{nav{display:none}body{background:white}}
+  </style>
+</head>
+<body>
+  <header><div class="shell">
+    <span class="tag">Décision validée · IC-05</span>
+    <h1>Une alpha à 0 USD sans enfermer le produit.</h1>
+    <p class="lead">Idea Commons adopte un monolithe modulaire Next.js/TypeScript, PostgreSQL et une infrastructure gratuite à limites bloquantes. Les dépendances gérées sont entourées de formats et d'adaptateurs standards afin de préserver une sortie réaliste.</p>
+    <div class="meta"><span class="pill">Version 0.1</span><span class="pill">Revue : 1 août 2026</span><span class="pill">Statut : accepté</span></div>
+  </div></header>
+  <nav><div class="shell"><a href="#cadre">Cadre</a><a href="#decision">Décision</a><a href="#architecture">Architecture</a><a href="#couts">Coûts</a><a href="#sortie">Sortie</a><a href="#acceptation">Acceptation</a><a href="#sources">Sources</a></div></nav>
+  <main class="shell">
+    <section id="cadre">
+      <h2>1. Contexte, objectif et non-objectifs</h2>
+      <div class="grid">
+        <article class="card"><h3>Contexte</h3><p>Le produit doit protéger des projets privés, servir un catalogue public, rester utile sans IA et commencer avec un budget d'infrastructure fixe de <strong>0 USD</strong>.</p></article>
+        <article class="card"><h3>Objectif</h3><p>Fixer une cible suffisamment précise pour construire le premier incrément, sans rendre un fournisseur indispensable au modèle métier.</p></article>
+        <article class="card"><h3>Non-objectifs</h3><ul><li>Garantir une disponibilité de production avec des paliers gratuits.</li><li>Introduire des microservices ou une orchestration prématurée.</li><li>Choisir ici la stratégie IA, les prix ou le premier écran.</li></ul></article>
+        <article class="card"><h3>Principes</h3><ul><li>PostgreSQL reste le centre de gravité.</li><li>Les contrôles privés sont appliqués côté serveur.</li><li>Chaque service géré a une limite connue et une voie de sortie.</li><li>Aucun dépassement payant n'est activé automatiquement.</li></ul></article>
+      </div>
+    </section>
+    <section id="decision">
+      <h2>2. Décision et options écartées</h2>
+      <p class="note"><strong>Option retenue :</strong> application Next.js via OpenNext sur Cloudflare Workers pour l'alpha, Neon Free pour PostgreSQL et Neon Auth, Cloudflare R2 pour les fichiers. Le développement local utilise PostgreSQL et les mêmes migrations SQL.</p>
+      <table><thead><tr><th>Option</th><th>Atout</th><th>Motif de la décision</th></tr></thead><tbody>
+        <tr><td><strong>PostgreSQL portable</strong></td><td>Coût fixe nul, modèle relationnel standard, identité branchable.</td><td><strong>Retenue.</strong> Meilleur équilibre entre coût, sécurité, vitesse et réversibilité.</td></tr>
+        <tr><td>Cloudflare native avec D1</td><td>Infrastructure très intégrée.</td><td>Écartée pour le cœur : dépendance plus forte et changement du modèle PostgreSQL vers SQLite.</td></tr>
+        <tr><td>Auto-hébergement initial</td><td>Contrôle logiciel maximal.</td><td>Écarté : exploitation, sauvegardes, sécurité, électricité et connectivité ne sont pas réellement gratuites.</td></tr>
+      </tbody></table>
+    </section>
+    <section id="architecture">
+      <h2>3. Architecture cible</h2>
+      <table><thead><tr><th>Domaine</th><th>Choix initial</th><th>Garde-fou</th></tr></thead><tbody>
+        <tr><td>Application</td><td>Monolithe modulaire Next.js App Router et TypeScript strict.</td><td>Frontières de modules explicites ; pas de microservices avant une contrainte mesurée.</td></tr>
+        <tr><td>Déploiement</td><td>OpenNext sur Cloudflare Workers pour l'alpha.</td><td>Build Node.js <code>standalone</code> et image Docker conservés comme cible de sortie.</td></tr>
+        <tr><td>Données</td><td>PostgreSQL 18 sur Neon Free ; migrations SQL versionnées.</td><td>Pas d'API propriétaire dans le domaine ; exports logiques et tests de restauration.</td></tr>
+        <tr><td>Identité</td><td>Neon Auth, fondé sur Better Auth.</td><td>Sessions validées côté serveur ; aucune donnée d'authentification dupliquée dans le domaine.</td></tr>
+        <tr><td>Autorisation</td><td>Service applicatif canonique et RLS PostgreSQL comme seconde barrière.</td><td>Le masquage d'interface n'accorde ni ne retire aucun droit.</td></tr>
+        <tr><td>Fichiers</td><td>Cloudflare R2, espaces publics et privés séparés.</td><td>Interface compatible S3, clés côté serveur et URLs privées signées.</td></tr>
+        <tr><td>Recherche</td><td>Recherche plein texte PostgreSQL et <code>pg_trgm</code> d'abord.</td><td>Un moteur externe n'arrive qu'après mesure d'une limite réelle.</td></tr>
+        <tr><td>Jobs</td><td>Transaction et outbox PostgreSQL d'abord.</td><td>Cloudflare Queues seulement au premier besoin asynchrone durable, avec idempotence et reprise.</td></tr>
+        <tr><td>Environnements</td><td>Local, branche Neon <code>development</code>, puis <code>production</code>.</td><td>Aucune donnée personnelle réelle dans les previews ; migration validée avant promotion.</td></tr>
+        <tr><td>CI</td><td>Ajoutée avec le premier squelette exécutable.</td><td>Une vérification automatique n'est jamais présentée comme une approbation humaine.</td></tr>
+      </tbody></table>
+    </section>
+    <section id="couts">
+      <h2>4. Coût et seuils d'exploitation</h2>
+      <div class="grid">
+        <article class="card third"><h3>Développement</h3><p><strong>0 USD/mois.</strong> Exécution locale et ressources gratuites partagées.</p></article>
+        <article class="card third"><h3>Première alpha</h3><p><strong>0 USD/mois.</strong> Limites bloquantes, démarrage à froid et restauration courte acceptés.</p></article>
+        <article class="card third"><h3>Passage au payant</h3><p>Seulement après dépassement mesuré, données devenues irremplaçables, revenu ou exigence de continuité.</p></article>
+      </div>
+      <p class="note warning"><strong>Conséquence :</strong> 0 USD signifie des quotas, pas une capacité illimitée. Les métriques, exports et essais de reprise doivent précéder l'augmentation d'un plafond.</p>
+    </section>
+    <section id="sortie">
+      <h2>5. Portabilité et stratégie de sortie</h2>
+      <ul><li>Application : Next.js standard, cible Docker et tests hors runtime Cloudflare.</li><li>Données : SQL PostgreSQL versionné, sauvegarde logique et restauration testée.</li><li>Identité : compatibilité Better Auth et UUID métier indépendant du fournisseur.</li><li>Fichiers : API S3 et inventaire exportable des objets.</li><li>Jobs : outbox métier indépendante du transport de messages.</li></ul>
+    </section>
+    <section id="acceptation">
+      <h2>6. Critères d'acceptation</h2>
+      <ol><li>Le premier parcours peut fonctionner à coût fixe nul dans les plafonds documentés.</li><li>Les frontières application, données, identité, fichiers et jobs ont chacune un propriétaire clair.</li><li>Les données privées sont protégées côté serveur et en base, jamais seulement par l'interface.</li><li>Les migrations SQL et les adaptateurs rendent un changement de fournisseur réalisable.</li><li>La production ne reçoit aucune migration non vérifiée sur <code>development</code>.</li><li>La CI est introduite avec du code exécutable et ne remplace pas la revue humaine.</li></ol>
+    </section>
+    <section id="sources">
+      <h2>7. Sources officielles</h2>
+      <ul><li><a href="https://nextjs.org/docs/app/getting-started/deploying">Next.js — déploiement</a> et <a href="https://nextjs.org/docs/app/guides/self-hosting">auto-hébergement</a>.</li><li><a href="https://neon.com/pricing">Neon — tarifs</a>, <a href="https://neon.com/docs/introduction/scale-to-zero">scale-to-zero</a> et <a href="https://neon.com/docs/auth/overview">Neon Auth</a>.</li><li><a href="https://developers.cloudflare.com/workers/platform/pricing/">Cloudflare Workers — tarification</a>, <a href="https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/">OpenNext</a>, <a href="https://developers.cloudflare.com/r2/pricing/">R2</a> et <a href="https://developers.cloudflare.com/queues/platform/pricing/">Queues</a>.</li><li><a href="https://www.postgresql.org/docs/current/textsearch.html">PostgreSQL — recherche plein texte</a> et <a href="https://www.postgresql.org/docs/current/pgtrgm.html">pg_trgm</a>.</li></ul>
+    </section>
+  </main>
+  <footer><div class="shell">Idea Commons · décision d'architecture publique · IC-05</div></footer>
+</body>
+</html>
