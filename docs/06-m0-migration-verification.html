@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Idea Commons — Spécification de livraison M0</title>
+  <style>
+    :root{--ink:#17201d;--muted:#5f6a65;--paper:#f6f5ed;--card:#fff;--line:#d9ddd8;--green:#155f47;--soft:#e6f0eb;--amber:#875f09;--amber-soft:#fff4d8;--radius:18px}*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.58 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.shell{width:min(100% - 36px,1160px);margin:auto}header{padding:72px 0 50px;border-bottom:1px solid var(--line)}h1{margin:10px 0 18px;max-width:920px;font:700 clamp(2.35rem,7vw,5rem)/1 Georgia,serif;letter-spacing:-.04em}.lead{max-width:850px;color:var(--muted);font-size:1.16rem}.tag{display:inline-block;padding:6px 10px;border-radius:99px;background:var(--soft);color:var(--green);font-size:.82rem;font-weight:700}nav{position:sticky;top:0;background:rgba(246,245,237,.94);border-bottom:1px solid var(--line)}nav .shell{display:flex;gap:20px;overflow:auto;padding-top:12px;padding-bottom:12px}a{color:var(--green)}nav a{white-space:nowrap;text-decoration:none;color:var(--muted)}main{padding:30px 0 72px}section{padding:27px 0;scroll-margin-top:60px}h2{font:700 clamp(1.75rem,4vw,2.8rem)/1.1 Georgia,serif}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{grid-column:span 6;padding:21px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}.note{padding:18px;border-left:4px solid var(--green);background:var(--soft)}.warning{border-left-color:var(--amber);background:var(--amber-soft)}table{width:100%;border-collapse:collapse;background:var(--card)}th,td{padding:12px 14px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{color:var(--muted);font-size:.78rem;text-transform:uppercase}code{font-size:.9em}footer{padding:28px 0;border-top:1px solid var(--line);color:var(--muted)}@media(max-width:760px){.shell{width:min(100% - 24px,1160px)}.card{grid-column:1/-1}table{display:block;overflow:auto}}@media print{nav{display:none}body{background:white}}
+  </style>
+</head>
+<body>
+  <header><div class="shell"><span class="tag">Spécification d'exécution · M0</span><h1>Une migration rejouable, un refus par défaut prouvé.</h1><p class="lead">Ce document fixe le résultat attendu avant l'écriture du SQL M0. Il transforme le contrat validé dans <code>docs/05-data-model-rls.html</code> en livrables, contrôles et critères observables, sans toucher à Neon production.</p></div></header>
+  <nav><div class="shell"><a href="#cadre">Cadre</a><a href="#principes">Principes</a><a href="#workstreams">Workstreams</a><a href="#preuves">Preuves</a><a href="#acceptation">Acceptation</a><a href="#limites">Limites</a></div></nav>
+  <main class="shell">
+    <section id="cadre"><h2>1. Contexte, objectif et non-objectifs</h2><div class="grid">
+      <article class="card"><h3>Contexte</h3><p>IC-01 à IC-05 sont validés. Le modèle public définit une base PostgreSQL unique, des schémas séparés, Neon Auth comme identité et une seconde barrière RLS. Aucun objet métier n'est encore appliqué à un environnement distant.</p></article>
+      <article class="card"><h3>Objectif</h3><p>Livrer une première migration PostgreSQL versionnée et un harnais de tests multi-identités qui prouvent les invariants locaux, les privilèges minimaux et l'isolation des données privées.</p></article>
+      <article class="card"><h3>Non-objectifs</h3><p>Variantes régionales, contributions détaillées, IA, paiements, clés fournisseurs, invitations dans l'interface, recherche externe, stockage R2 effectif, activation de la Data API et promotion vers production.</p></article>
+      <article class="card"><h3>Résultat attendu</h3><p>Une base vide accepte la migration une fois, refuse son rejeu accidentel, expose uniquement les opérations prévues aux rôles Data API et produit les résultats RLS attendus avec des données entièrement synthétiques.</p></article>
+    </div></section>
+
+    <section id="principes"><h2>2. Principes d'implémentation</h2><ul>
+      <li><strong>Refus par défaut :</strong> aucun droit implicite de <code>PUBLIC</code>, aucune politique globale permissive et aucun rôle applicatif avec <code>BYPASSRLS</code>.</li>
+      <li><strong>Défense en profondeur :</strong> contraintes relationnelles, privilèges d'objet, politiques séparées par opération et fonctions étroites à <code>search_path</code> fixé.</li>
+      <li><strong>Identité unique :</strong> les tables métier ne copient ni email, ni mot de passe, ni session ; elles référencent l'UUID externe par <code>app.members.auth_user_id</code>.</li>
+      <li><strong>État public immuable :</strong> une version publiée ne peut plus être modifiée ou supprimée ; le pointeur courant ne cible qu'une version publiée de la même idée.</li>
+      <li><strong>Portabilité :</strong> SQL PostgreSQL lisible sans ORM, migration transactionnelle et shim d'identité limité aux tests locaux.</li>
+      <li><strong>Budget :</strong> aucune dépendance payante ni ressource distante supplémentaire n'est requise pour produire le livrable.</li>
+    </ul></section>
+
+    <section id="workstreams"><h2>3. Workstreams et zones affectées</h2><table><thead><tr><th>Workstream</th><th>Changement</th><th>Preuve</th></tr></thead><tbody>
+      <tr><td>Migration</td><td>Créer <code>app</code> et <code>app_private</code>, types, tables, contraintes, index, triggers, fonctions, privilèges et politiques M0.</td><td>Transaction complète sur une base vide ; seconde application refusée sans état partiel.</td></tr>
+      <tr><td>Identité et rôles</td><td>Relier les membres à <code>auth.user_id()</code> et reconnaître les rôles <code>anonymous</code> et <code>authenticated</code> sans les créer dans la migration fournisseur-neutre.</td><td>Un membre lit son profil et ses rôles uniquement ; un rôle global ne traverse pas la frontière d'un projet.</td></tr>
+      <tr><td>Catalogue</td><td>Créer idées, versions, claims, sources, crédits et taxonomie avec publication immuable et sources obligatoires pour les faits publics.</td><td>Catalogue public et non listé lisible ; brouillon caché ; publication invalide refusée.</td></tr>
+      <tr><td>Privé</td><td>Créer favoris, projets, membres de projet, artifacts et exports avec héritage d'accès et révision optimiste.</td><td>Propriétaire et collaborateurs acceptés obtiennent exactement leurs droits ; étranger, reviewer et admin sont refusés.</td></tr>
+      <tr><td>Interne</td><td>Créer audit et outbox append-only sans privilège Data API.</td><td>Les rôles utilisateur ne peuvent ni lire ni écrire ces tables.</td></tr>
+      <tr><td>Tests</td><td>Préparer des fixtures synthétiques et des assertions SQL pour anonyme, propriétaire, étranger, viewer, editor et rôle global.</td><td>Suite atomique avec succès explicite et rollback final.</td></tr>
+    </tbody></table></section>
+
+    <section id="preuves"><h2>4. Matrice de preuves RLS</h2><table><thead><tr><th>Identité</th><th>Lecture attendue</th><th>Mutation attendue</th></tr></thead><tbody>
+      <tr><td>Anonyme</td><td>Versions publiées publiques ou non listées et données éditoriales liées.</td><td>Aucune mutation.</td></tr>
+      <tr><td>Propriétaire</td><td>Son profil, ses rôles, favoris, projets, membres acceptés, artifacts et exports.</td><td>Création et mutation bornée ; gestion des collaborateurs ; colonnes protégées via fonctions dédiées.</td></tr>
+      <tr><td>Étranger</td><td>Aucune ligne d'un projet privé étranger.</td><td>Aucune mutation sur ce projet.</td></tr>
+      <tr><td>Viewer accepté</td><td>Projet, participants acceptés, artifacts et exports du projet.</td><td>Aucune mutation.</td></tr>
+      <tr><td>Editor accepté</td><td>Même lecture que le viewer.</td><td>Contenu ordinaire et artifacts, sans propriétaire, source, rôle ou archivage.</td></tr>
+      <tr><td>Reviewer ou admin global</td><td>Catalogue selon son état ; aucun projet privé sans relation de ressource.</td><td>Aucun passe-droit projet dans M0.</td></tr>
+    </tbody></table><p class="note"><strong>Portée de la preuve :</strong> RLS prouve la visibilité des lignes et les mutations autorisées en base. Les réponses HTTP normatives <code>401</code>, <code>403</code> et <code>404</code>, les en-têtes de cache et les URLs signées seront prouvés au niveau applicatif lorsqu'une API existera.</p></section>
+
+    <section id="acceptation"><h2>5. Critères d'acceptation observables</h2><ol>
+      <li>Chaque table possède une clé primaire, un propriétaire de donnée explicite, une visibilité documentée et les index de ses clés étrangères ou prédicats RLS.</li>
+      <li>RLS est activée sur chaque table de chemin utilisateur ; les rôles de trafic ne possèdent pas les tables, restent <code>NOBYPASSRLS</code> et aucun accès privé ne dépend seulement d'une vue ou de l'application.</li>
+      <li>Les rôles Data API reçoivent uniquement <code>USAGE</code> sur <code>app</code> et les opérations nécessaires ; <code>app_private</code> reste inaccessible.</li>
+      <li>Une version publiée exige date, licence, contenu objet et sources pour chacun de ses claims factuels ; elle devient immuable.</li>
+      <li>Un projet référence durablement une version source publiée et conserve son propriétaire ; les writes concurrents passent par une révision attendue.</li>
+      <li>Les six identités de test produisent les lectures et refus attendus avec uniquement des UUID, textes et fichiers fictifs.</li>
+      <li>Le contrôle des clés étrangères ne signale aucun index manquant ; le catalogue des politiques ne signale aucune table utilisateur sans RLS forcée.</li>
+      <li>Le diff public ne contient ni secret, ni donnée personnelle réelle, ni fichier de travail local, ni configuration interne.</li>
+    </ol></section>
+
+    <section id="limites"><h2>6. Séquence distante et limites</h2><p class="note warning"><strong>Aucune action distante dans ce livrable.</strong> Après audit du SQL et succès local, une validation distincte pourra appliquer la migration à la branche Neon <code>development</code>. La Data API restera désactivée jusqu'à vérification des rôles, révocations, privilèges et politiques. Neon <code>production</code> exige une décision humaine ultérieure et séparée.</p><p>Le harnais local émule seulement <code>auth.user_id()</code> afin de tester les politiques PostgreSQL. Il ne prétend pas valider la signature d'un JWT, le proxy Data API, Neon Auth, le comportement HTTP de l'application ni une approbation humaine.</p></section>
+  </main>
+  <footer><div class="shell">Idea Commons · spécification de livraison et de vérification · M0</div></footer>
+</body>
+</html>
