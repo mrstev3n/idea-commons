@@ -87,7 +87,7 @@
       <div class="meta">
         <span class="pill">Nom de travail : Idea Commons</span>
         <span class="pill">Statut : cadrage</span>
-        <span class="pill">Dernière revue : 26 juillet 2026</span>
+        <span class="pill">Dernière revue : 1 août 2026</span>
       </div>
     </div>
   </header>
@@ -211,7 +211,7 @@
           <tr><td>Export</td><td>Livrable figé</td><td>Relié à la version des données et méthodes qui l'ont produit.</td></tr>
         </tbody>
       </table>
-      <div class="note"><strong>Hypothèse technique actuelle :</strong> une application web en monolithe modulaire avec base relationnelle, recherche hybride et passerelle IA multi-fournisseurs semble cohérente. Next.js, PostgreSQL/Supabase et une passerelle IA sont des candidats à évaluer, pas encore des décisions.</div>
+      <div class="note"><strong>Architecture validée :</strong> monolithe modulaire Next.js/TypeScript, PostgreSQL et Neon Auth sur Neon Free, OpenNext sur Cloudflare Workers pour l'alpha, R2 pour les fichiers et voie de sortie Docker. La recherche commence dans PostgreSQL et les jobs par une outbox transactionnelle. Voir la spécification <a href="04-target-architecture.html">d'architecture cible</a>.</div>
     </section>
 
     <section id="workstreams">
@@ -220,7 +220,7 @@
         <article class="card"><span class="tag confirmed">Validé</span><h3>Licence et gouvernance</h3><p>Code sous AGPL-3.0-only, contenu public sous CC BY-SA 4.0, DCO 1.1 sans CLA, gouvernance maintainer-led et marques exclues des licences générales.</p></article>
         <article class="card"><span class="tag confirmed">Validé</span><h3>Modèle de contenu</h3><p>Schéma canonique, niveaux de preuve, variantes, versions, sources, attribution et critères de publication définis dans IC-02.</p></article>
         <article class="card"><span class="tag confirmed">Validé</span><h3>Parcours et permissions</h3><p>Parcours principal, rôles globaux et de ressource, visibilités et contrôles serveur définis dans IC-03.</p></article>
-        <article class="card"><span class="tag open">À décider</span><h3>Architecture technique</h3><p>Stack, hébergement, recherche, jobs, stockage, observabilité, stratégie de test et coûts récurrents.</p></article>
+        <article class="card"><span class="tag confirmed">Validé</span><h3>Architecture technique</h3><p>Monolithe modulaire Next.js/TypeScript, PostgreSQL et Neon Auth, Cloudflare Workers/R2 pour l'alpha, migrations SQL, recherche PostgreSQL-first et stratégie de sortie Docker/S3/Better Auth.</p></article>
         <article class="card"><span class="tag open">À décider</span><h3>Architecture IA</h3><p>Fournisseurs, BYOK, protection des clés, quotas, évaluation des skills, sécurité et conservation des données.</p></article>
         <article class="card"><span class="tag confirmed">Principe validé</span><h3>Modèle économique</h3><p>Catalogue public gratuit ; abonnements possibles pour le service officiel, l'hébergement, le calcul IA, le stockage, la collaboration, les intégrations, le support et les garanties opérationnelles. Le détail tarifaire reste à définir.</p></article>
       </div>
@@ -244,7 +244,7 @@
       <h2>9. Registre de décisions v0.1</h2>
       <div class="grid">
         <article class="card wide"><span class="tag confirmed">Confirmé</span><ul><li>Nom de travail : Idea Commons.</li><li>Dépôt public : mrstev3n/idea-commons.</li><li>Code : AGPL-3.0-only ; contenu public : CC BY-SA 4.0.</li><li>DCO 1.1 sans CLA et gouvernance initiale maintainer-led.</li><li>Marques exclues des licences générales.</li><li>Catalogue gratuit et premium fondé sur les services opérationnels.</li><li>Produit complet dans sa conception, progressif dans sa construction.</li><li>Les outils externes ne reçoivent que des tâches synthétiques et non sensibles.</li></ul></article>
-        <article class="card wide"><span class="tag open">Ouvert</span><ul><li>Nom définitif et identité.</li><li>Priorité géographique exacte.</li><li>Stack et fournisseurs.</li><li>Détail des offres et tarifs.</li><li>Premier incrément de livraison.</li></ul></article>
+        <article class="card wide"><span class="tag open">Ouvert</span><ul><li>Nom définitif et identité.</li><li>Priorité géographique exacte.</li><li>Architecture IA et fournisseurs associés.</li><li>Détail des offres et tarifs.</li><li>Premier incrément de livraison.</li></ul></article>
       </div>
     </section>
   </main>
