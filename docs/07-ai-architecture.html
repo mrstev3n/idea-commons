@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Architecture IA validée, cloud, multi-fournisseur, éditoriale et évaluable pour Idea Commons.">
+  <title>Idea Commons — Architecture IA v0.2</title>
+  <style>
+    :root{--ink:#17221d;--muted:#5d6b64;--paper:#f6f5ed;--card:#fffef8;--line:#d9ddd4;--green:#176b4d;--soft:#dcece4;--amber:#9b5d0b;--amber-soft:#f5e8cd;--red:#8a3324;--red-soft:#f4dfda;--radius:18px}*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.65 Inter,ui-sans-serif,system-ui,sans-serif}.shell{width:min(1120px,calc(100% - 40px));margin:auto}header{padding:72px 0 42px;border-bottom:1px solid var(--line)}h1{margin:10px 0 18px;max-width:920px;font:700 clamp(2.5rem,7vw,5.4rem)/1 Georgia,serif;letter-spacing:-.04em}.lead{max-width:850px;color:var(--muted);font-size:1.2rem}.meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}.pill,.tag{display:inline-block;padding:6px 10px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:.82rem}.tag{margin-bottom:10px;border:0;background:var(--soft);color:var(--green);font-weight:700}.tag.open{background:var(--amber-soft);color:var(--amber)}nav{position:sticky;top:0;z-index:2;background:rgba(246,245,237,.94);border-bottom:1px solid var(--line)}nav .shell{display:flex;gap:20px;overflow:auto;padding-top:12px;padding-bottom:12px}a{color:var(--green)}nav a{white-space:nowrap;text-decoration:none;color:var(--muted)}main{padding:28px 0 72px}section{padding:28px 0;scroll-margin-top:60px}h2{font:700 clamp(1.8rem,4vw,3rem)/1.1 Georgia,serif}h3{margin:.2rem 0}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{grid-column:span 6;padding:22px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}.card.third{grid-column:span 4}.note{padding:18px;border-left:4px solid var(--green);background:var(--soft)}.warning{border-left-color:var(--amber);background:var(--amber-soft)}.danger{border-left-color:var(--red);background:var(--red-soft)}table{width:100%;border-collapse:collapse;background:var(--card)}th,td{padding:13px 15px;text-align:left;vertical-align:top;border:1px solid var(--line)}th{color:var(--muted);font-size:.8rem;text-transform:uppercase}code{font-size:.92em}footer{padding:28px 0;border-top:1px solid var(--line);color:var(--muted)}@media(max-width:760px){.shell{width:min(100% - 24px,1120px)}.card,.card.third{grid-column:1/-1}table{display:block;overflow:auto}}@media print{nav{display:none}body{background:white}}
+  </style>
+</head>
+<body>
+  <header><div class="shell"><span class="tag">Direction validée · IC-06</span><h1>Une IA éditoriale fondatrice, jamais seule à publier.</h1><p class="lead">Cette spécification définit une architecture cloud, multi-modèle et multi-fournisseur qui transforme des sources autorisées en candidats d'idées structurés. L'IA reste facultative dans le parcours public essentiel ; toute publication demeure soumise à une revue éditoriale humaine.</p><div class="meta"><span class="pill">Version 0.2</span><span class="pill">12 août 2026</span><span class="pill">Budget initial : 0 USD</span><span class="pill">Aucun service provisionné</span></div></div></header>
+  <nav><div class="shell"><a href="#cadre">Cadre</a><a href="#decision">Décision</a><a href="#editorial">Éditorial</a><a href="#contrats">Contrats</a><a href="#routes">Routes</a><a href="#donnees">Données</a><a href="#securite">Sécurité</a><a href="#couts">Coûts</a><a href="#evaluation">Évaluation</a><a href="#sequence">Séquence</a><a href="#sources">Sources</a></div></nav>
+  <main class="shell">
+    <section id="cadre"><h2>1. Contexte, objectif et non-objectifs</h2><div class="grid">
+      <article class="card"><h3>Contexte</h3><p>Le catalogue doit rester gratuit et utile sans IA pour le public. En interne, une assistance éditoriale devient fondatrice pour traiter des sources brutes autorisées. Les contenus publiés restent sourcés et le budget initial est strictement bloqué à <strong>0 USD</strong>.</p></article>
+      <article class="card"><h3>Objectif</h3><p>Transformer articles, faits, analyses, textes, PDF ou images en candidats d'idées structurés, par des générations bornées, traçables, révocables et comparables entre fournisseurs.</p></article>
+      <article class="card"><h3>Non-objectifs</h3><ul><li>Exécuter un modèle local.</li><li>Installer un SDK ou appeler une API dans ce lot documentaire.</li><li>Créer un assistant autonome généraliste.</li><li>Publier automatiquement ou confier une mutation sensible à un modèle.</li></ul></article>
+      <article class="card"><h3>Principes</h3><ul><li>Parcours public essentiel sans IA.</li><li>Contexte minimal, sources et transformations conservés.</li><li>Sortie non fiable jusqu'à revue humaine.</li><li>Skills et schémas versionnés.</li><li>Routes gratuites et limites bloquantes.</li></ul></article>
+    </div></section>
+
+    <section id="decision"><h2>2. Architecture validée</h2><p class="note"><strong>Décision :</strong> le monolithe applicatif porte un module <code>ai</code> fournisseur-neutre. Il exécute des <code>PromptSkill</code> versionnés via des adaptateurs cloud, valide leurs sorties structurées, écrit un événement <code>AIGeneration</code> et ne transmet qu'un contexte autorisé. Workers AI Free est la plateforme principale ; Groq Free et Ollama Cloud sont secondaires. Aucun modèle local n'entre dans la cible.</p>
+      <table><thead><tr><th>Couche</th><th>Responsabilité</th><th>Frontière</th></tr></thead><tbody>
+        <tr><td>Domaine</td><td>Décrit le besoin, le skill, l'identité, la portée et le résultat attendu.</td><td>Ignore les SDK, URLs et formats propriétaires.</td></tr>
+        <tr><td>Orchestrateur IA</td><td>Autorise, minimise, réserve le quota, exécute la cascade de capacité, valide chaque réponse puis comptabilise.</td><td>Une exécution idempotente et bornée ; aucune boucle autonome implicite.</td></tr>
+        <tr><td>Registre de skills</td><td>Versionne instructions, schémas d'entrée/sortie, politique de données, modèles compatibles et jeu d'évaluation.</td><td>Une version publiée est immuable.</td></tr>
+        <tr><td>Adaptateurs cloud</td><td>Traduisent le contrat commun vers Workers AI, Groq Free ou Ollama Cloud.</td><td>Les capacités et modèles gratuits sont autorisés explicitement ; aucun moteur local ni route payante.</td></tr>
+        <tr><td>Gateway facultatif</td><td>Applique authentification, rate limits, plafonds de dépense et métriques sans payload privé.</td><td>Remplaçable ; les décisions métier restent dans PostgreSQL.</td></tr>
+        <tr><td>Workers et jobs</td><td>Servent les appels courts ; l'outbox déclenche plus tard les traitements durables réellement nécessaires.</td><td>Agents SDK, Workflows ou Queues ne sont ajoutés qu'après besoin mesuré.</td></tr>
+      </tbody></table>
+      <div class="grid" style="margin-top:16px"><article class="card third"><h3>Retenu</h3><p>IA éditoriale interne, skills étroits, sorties structurées et cascades gratuites multi-fournisseurs.</p></article><article class="card third"><h3>Différé</h3><p>Chat persistant, mémoire d'agent, outils externes, workflows longs et navigation autonome.</p></article><article class="card third"><h3>Refusé</h3><p>Modèle local, clé dans le navigateur, route payante ou publication décidée par le modèle.</p></article></div>
+    </section>
+
+    <section id="editorial"><h2>3. Capacité éditoriale fondatrice</h2><p>Le workflow interne reçoit uniquement des sources dont l'utilisation est autorisée. Il extrait et relie les éléments utiles au schéma canonique d'une idée sans confondre contenu source, transformation et conclusion éditoriale.</p>
+      <table><thead><tr><th>Étape</th><th>Résultat</th><th>Contrôle</th></tr></thead><tbody>
+        <tr><td>Ingestion</td><td>Article, faits, analyse, texte, PDF ou image avec origine, droits et empreinte.</td><td>Une source invalide termine en <code>source_invalid</code>.</td></tr>
+        <tr><td>Extraction</td><td>Passages, faits, hypothèses, incertitudes, citations et transformations séparés.</td><td>Aucune affirmation factuelle ne perd son lien vers la source.</td></tr>
+        <tr><td>Structuration</td><td>Candidat conforme au schéma Idea Commons et à la même version de skill pendant toute la cascade.</td><td>Validation de schéma et invariants après chaque réponse.</td></tr>
+        <tr><td>Contrôle</td><td>Verdict automatique et, si nécessaire, contre-évaluation par une autre route.</td><td>La réputation générale d'un modèle ne remplace pas le corpus comparatif.</td></tr>
+        <tr><td>Revue</td><td>Candidat visible par l'équipe éditoriale avec provenance et incertitudes.</td><td>Revue humaine obligatoire avant toute publication.</td></tr>
+      </tbody></table><p class="note danger"><strong>Frontière absolue :</strong> <code>candidate_ready</code> signifie prêt pour revue, jamais publié. Aucun modèle ni aucune cascade ne peut franchir la transition éditoriale de publication.</p>
+    </section>
+
+    <section id="contrats"><h2>4. Contrats d'exécution</h2>
+      <table><thead><tr><th>Objet</th><th>Champs minimaux</th><th>Invariant</th></tr></thead><tbody>
+        <tr><td><code>PromptSkillVersion</code></td><td><code>skillId</code>, version, finalité, schémas d'entrée et de sortie, instruction, capacités, politique de contexte, évaluations, statut.</td><td>Immuable après publication ; indépendant d'un modèle précis.</td></tr>
+        <tr><td><code>GenerationRequest</code></td><td>membre, projet, skill et version, consentement de transmission, route demandée, limite de tokens, clé utilisée.</td><td>L'autorisation sur chaque ressource est vérifiée avant assemblage du contexte.</td></tr>
+        <tr><td><code>GenerationRoute</code></td><td>capacité, rang, adaptateur, fournisseur, modèle, coût autorisé, timeout, circuit breaker et motif de passage.</td><td>Même skill et même schéma dans la cascade ; seules les routes gratuites autorisées sont admissibles.</td></tr>
+        <tr><td><code>AIGeneration</code></td><td>identifiants, empreintes des entrées, version du skill, tentatives, modèle réel, motifs de fallback, timestamps, statut, tokens, coût en quota, résultat validé ou erreur normalisée.</td><td>Pas de clé, de prompt privé complet ni de réponse privée dans les logs techniques.</td></tr>
+        <tr><td><code>GenerationEvaluation</code></td><td>cas, critères, verdicts automatiques, notes humaines, régressions et version du juge éventuel.</td><td>Un score produit par un modèle n'est jamais la seule preuve d'acceptation.</td></tr>
+      </tbody></table>
+      <p class="note warning"><strong>États terminaux :</strong> <code>candidate_ready</code>, <code>rejected_by_policy</code>, <code>needs_human_analysis</code>, <code>providers_exhausted</code> et <code>source_invalid</code>. JSON valide ne suffit pas : chaque tentative passe par un schéma typé et des invariants déterministes.</p>
+    </section>
+
+    <section id="routes"><h2>5. Shortlist et cascades validées</h2><p>Les affectations ci-dessous sont des hypothèses de routage validées pour l'évaluation. Leur qualité doit être prouvée sur le même corpus Idea Commons avant activation.</p>
+      <table><thead><tr><th>Capacité</th><th>Cascade gratuite autorisée</th><th>Sortie après épuisement</th></tr></thead><tbody>
+        <tr><td>Texte courant</td><td>Workers AI Qwen3 30B A3B → Groq Free Qwen 3.6 27B → Ollama Cloud GPT-OSS 120B.</td><td>Exception humaine.</td></tr>
+        <tr><td>Document long, PDF ou image</td><td>Workers AI Gemma 4 26B A4B → Workers AI Kimi K2.6 → Ollama Cloud GPT-OSS 120B avec découpage contrôlé.</td><td>Exception humaine.</td></tr>
+        <tr><td>Analyse difficile ou sensible</td><td>Groq Free GPT-OSS 120B → Ollama Cloud GPT-OSS 120B → Workers AI Kimi K2.6.</td><td>Exception humaine.</td></tr>
+        <tr><td>Extraction ou contrôle mécanique</td><td>Groq Free GPT-OSS 20B → Workers AI Qwen3 30B A3B → Ollama Cloud GPT-OSS 120B.</td><td>Exception humaine.</td></tr>
+      </tbody></table>
+      <p class="note"><strong>Fallback automatique réel :</strong> une indisponibilité, un quota épuisé ou une réponse invalide peut déclencher la route suivante. Chaque tentative conserve la même version de skill et le même schéma, est validée séparément, journalise le modèle réel et le motif, respecte idempotence et circuit breaker, et n'autorise aucune publication pendant la cascade.</p>
+      <p>La shortlist initiale compare aussi Workers AI Kimi K2.6 comme réserve spécialisée et GPT-OSS 20B sur Groq ou Ollama Cloud selon la capacité. Aucune route payante ne peut être ajoutée par configuration implicite.</p>
+    </section>
+
+    <section id="donnees"><h2>6. Données, BYOK et rétention</h2><div class="grid">
+      <article class="card"><h3>Contexte autorisé</h3><p>Le skill déclare les champs nécessaires. Le serveur construit une projection minimale après contrôle RLS ; aucune recherche globale dans les projets privés n'est implicite.</p></article>
+      <article class="card"><h3>Clés</h3><p>Les clés de plateforme vivent dans un secret d'environnement. Une future clé utilisateur est chiffrée par une clé maître serveur, identifiée par version, jamais relue par le client et révocable sans supprimer l'historique comptable.</p></article>
+      <article class="card"><h3>Journalisation</h3><p>Les traces conservent identifiants pseudonymes, modèle, tokens, coût, latence, statut et empreintes. Pour un contexte privé, tout gateway reçoit l'ordre explicite de ne pas stocker les payloads.</p></article>
+      <article class="card"><h3>Résultats</h3><p>Le résultat utile appartient au projet et hérite de ses permissions. Les erreurs techniques et métriques minimisées ont une rétention séparée, bornée et documentée.</p></article>
+    </div><p class="note danger"><strong>Interdit :</strong> clés en base en clair, secrets dans les prompts, contenu privé dans une télémétrie tierce, utilisation des générations pour entraîner un modèle sans consentement distinct, ou cache partagé pour une requête privée.</p></section>
+
+    <section id="securite"><h2>7. Menaces et contrôles</h2><table><thead><tr><th>Risque</th><th>Contrôle obligatoire</th><th>Preuve</th></tr></thead><tbody>
+      <tr><td>Injection directe ou indirecte</td><td>Traiter contenu utilisateur, sources et sorties d'outils comme données non fiables ; séparer instructions et contexte ; limiter les capacités.</td><td>Cas adversariaux qui tentent d'exfiltrer, d'ignorer les règles ou de changer de portée.</td></tr>
+      <tr><td>Fuite de données</td><td>Projection minimale, redaction déterministe, logs sans payload, fournisseurs autorisés par politique et consentement visible.</td><td>Inspection des requêtes et des traces avec canaris synthétiques.</td></tr>
+      <tr><td>Sortie dangereuse</td><td>Validation de schéma, échappement au rendu, listes d'autorisation et aucune exécution directe de texte généré.</td><td>Sorties malformées, HTML/script et commandes refusés.</td></tr>
+      <tr><td>Agence excessive</td><td>Outils en lecture seule par défaut ; portée par ressource ; idempotence ; aperçu et approbation humaine pour toute action externe ou irréversible.</td><td>Le modèle seul ne peut publier, inviter, payer, supprimer ni modifier les droits.</td></tr>
+      <tr><td>Déni de portefeuille</td><td>Quota applicatif réservé transactionnellement, timeout, concurrence bornée, circuit breaker et cascades limitées aux routes gratuites.</td><td>Au plafond, aucune tentative payante ni dépassement automatique n'est possible.</td></tr>
+      <tr><td>Surconfiance</td><td>Provenance visible, langage prudent, faits soumis au contrat de sources et édition humaine avant publication.</td><td>Un contenu non sourcé reste hypothèse, recommandation ou question à valider.</td></tr>
+    </tbody></table></section>
+
+    <section id="couts"><h2>8. Coûts, quotas et routage</h2><p class="note"><strong>Règle budgétaire :</strong> budget initial strict de <strong>0 USD</strong>. Une cascade peut changer automatiquement de modèle et de fournisseur, mais uniquement vers une route gratuite autorisée. Aucun fallback payant et aucun dépassement automatique.</p>
+      <table><thead><tr><th>Niveau</th><th>Limite</th><th>Comportement</th></tr></thead><tbody>
+        <tr><td>Requête</td><td>Tokens d'entrée/sortie, durée, taille du contexte et nombre d'appels.</td><td>Refus avant appel si l'estimation dépasse le contrat du skill.</td></tr>
+        <tr><td>Membre</td><td>Crédits par période et concurrence.</td><td>Réservation atomique, restitution bornée sur échec non facturé.</td></tr>
+        <tr><td>Projet</td><td>Budget partagé et routes autorisées.</td><td>Aucun collaborateur ne contourne le plafond du propriétaire.</td></tr>
+        <tr><td>Plateforme</td><td>Plafond quotidien et mensuel fixé à zéro pour les routes payantes.</td><td>Blocage ; jamais de dépassement automatique.</td></tr>
+        <tr><td>Fournisseur</td><td>Rate limit et spend limit en défense supplémentaire.</td><td>Un contrôle éventuellement consistant ne remplace pas la réservation PostgreSQL.</td></tr>
+      </tbody></table>
+      <p>Workers AI annonce une allocation gratuite quotidienne qui bloque sur le plan Free après dépassement. AI Gateway annonce ses fonctions centrales gratuites, mais certains contrôles consomment de l'inférence et les prix peuvent évoluer. Ces plafonds sont des contraintes d'exploitation à revérifier, pas des invariants métier.</p>
+    </section>
+
+    <section id="evaluation"><h2>9. Évaluation et observabilité</h2><div class="grid">
+      <article class="card"><h3>Corpus commun</h3><p>15 à 20 sources synthétiques ou publiques : textes courts et longs, PDF, images, français, cas ambigus et adversariaux. Aucune donnée personnelle ou projet réel.</p></article>
+      <article class="card"><h3>Mesures déterministes</h3><p>Conformité JSON, champs requis, citations existantes, absence de secrets-canaris, fidélité des transformations et coût en quota.</p></article>
+      <article class="card"><h3>Revue qualitative</h3><p>Fidélité, prudence, qualité du français, pertinence éditoriale et conservation des incertitudes, avec la même grille pour chaque modèle.</p></article>
+      <article class="card"><h3>Comparaison</h3><p>Chaque modèle et cascade est comparé au même baseline. La réputation générale ou les benchmarks externes ne suffisent pas.</p></article>
+    </div>
+      <table style="margin-top:16px"><thead><tr><th>Porte</th><th>Condition proposée</th></tr></thead><tbody>
+        <tr><td>Contrat</td><td>100 % des sorties acceptées valident le schéma et les invariants déterministes.</td></tr>
+        <tr><td>Sécurité</td><td>0 secret-canari restitué ; 0 action hors portée ; tous les cas adversariaux critiques refusés.</td></tr>
+        <tr><td>Éditorial</td><td>0 fait inventé accepté comme sourcé ; les incertitudes restent explicitement typées.</td></tr>
+        <tr><td>Régression</td><td>Aucune baisse critique ; toute variation qualitative est documentée et revue humainement.</td></tr>
+        <tr><td>Coût</td><td>Le coût maximal théorique du cas est connu et respecte le plafond avant l'appel.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section id="sequence"><h2>10. Séquence d'implémentation proposée</h2><ol>
+      <li>Définir le premier skill éditorial « sources autorisées → candidat d'idée » et son workflow humain équivalent.</li>
+      <li>Versionner ses schémas, ses états terminaux et un corpus commun de 15 à 20 sources synthétiques ou publiques.</li>
+      <li>Ajouter les tables M1 de génération, quota et secret chiffré avec RLS et tests multi-identités.</li>
+      <li>Implémenter l'orchestrateur et un adaptateur simulé déterministe ; prouver autorisation, quotas et traces sans réseau.</li>
+      <li>Implémenter les quatre cascades gratuites sur <code>development</code>, sans payload privé dans les logs et sans voie de publication.</li>
+      <li>Comparer chaque modèle et cascade au corpus, puis soumettre l'activation applicative à une revue humaine distincte.</li>
+    </ol><p class="note warning"><strong>Décisions encore ouvertes :</strong> durée exacte des métriques, enveloppe de chiffrement BYOK et seuils quantitatifs finaux de qualité. Elles seront tranchées par le lot d'implémentation concerné, jamais cachées dans une configuration.</p></section>
+
+    <section id="sources"><h2>11. Sources officielles</h2><ul>
+      <li><a href="https://ai-sdk.dev/docs/foundations/providers-and-models">AI SDK — fournisseurs et modèles</a>, <a href="https://ai-sdk.dev/docs/reference/ai-sdk-core/provider-registry">registre de fournisseurs</a> et <a href="https://ai-sdk.dev/docs/reference/ai-sdk-core/output">sorties structurées</a>.</li>
+      <li><a href="https://developers.cloudflare.com/workers-ai/platform/pricing/">Workers AI — tarification et allocation gratuite</a>.</li>
+      <li><a href="https://developers.cloudflare.com/workers-ai/models/">Workers AI — catalogue des modèles</a> et <a href="https://developers.cloudflare.com/workers-ai/changelog/">disponibilité de Gemma 4 et Kimi K2.6</a>.</li>
+      <li><a href="https://console.groq.com/docs/models">Groq — modèles pris en charge</a> et <a href="https://console.groq.com/docs/rate-limits">limites du plan gratuit</a>.</li>
+      <li><a href="https://docs.ollama.com/cloud">Ollama Cloud — exécution distante et GPT-OSS 120B</a>.</li>
+      <li><a href="https://developers.cloudflare.com/ai-gateway/reference/pricing/">AI Gateway — tarification</a>, <a href="https://developers.cloudflare.com/ai-gateway/features/spend-limits/">plafonds de dépense</a>, <a href="https://developers.cloudflare.com/ai-gateway/features/rate-limiting/">rate limiting</a> et <a href="https://developers.cloudflare.com/ai-gateway/observability/logging/">journalisation</a>.</li>
+      <li><a href="https://developers.cloudflare.com/workers/configuration/secrets/">Cloudflare Workers — secrets</a> et <a href="https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/">AI Gateway — BYOK</a>.</li>
+      <li><a href="https://developers.cloudflare.com/agents/">Cloudflare Agents SDK</a> et <a href="https://developers.cloudflare.com/agents/runtime/operations/observability/">observabilité des agents</a>.</li>
+      <li><a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">OWASP — risques des applications à base de LLM</a>.</li>
+    </ul></section>
+  </main>
+  <footer><div class="shell">Idea Commons · proposition d'architecture IA · IC-06</div></footer>
+</body>
+</html>
