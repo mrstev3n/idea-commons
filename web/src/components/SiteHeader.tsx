@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { getCurrentIdentity } from "@/server/identity";
 import { SiteNav } from "@/components/SiteNav";
 
-export async function SiteHeader() {
-  const identity = await getCurrentIdentity();
+export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="site-header__inner">
@@ -11,10 +9,7 @@ export async function SiteHeader() {
           <img src="/brand/idea-commons-mark.png" alt="" />
           <span>Idea Commons</span>
         </Link>
-        <SiteNav
-          identityName={identity.displayName}
-          identityTone={identity.key === "anonymous" ? "neutral" : "ready"}
-        />
+        <SiteNav />
       </div>
     </header>
   );
