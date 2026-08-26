@@ -1,0 +1,18 @@
+{
+  "skillId": "source-to-idea",
+  "version": "1.0.0",
+  "status": "published",
+  "inputSchema": "input.schema.json",
+  "outputSchema": "output.schema.json",
+  "claimTypes": ["fact", "hypothesis", "estimate", "recommendation", "validation_question"],
+  "terminalStates": ["candidate_ready", "rejected_by_policy", "needs_human_analysis", "providers_exhausted", "source_invalid"],
+  "rules": [
+    "Une génération n'est jamais une source.",
+    "Chaque id d'extrait est unique dans une entrée, même lorsque les textes diffèrent.",
+    "sourceFingerprint est un indice non autoritaire tant qu'un composant de confiance ne l'a pas dérivé et vérifié séparément.",
+    "Tout claim factuel référence au moins un extrait fourni.",
+    "Une estimation et une recommandation ont une justification.",
+    "Aucun fait, citation, personne, mesure ou validation ne peut être inventé.",
+    "candidate_ready signifie prêt pour revue humaine, jamais publié."
+  ]
+}
