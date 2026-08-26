@@ -1,0 +1,521 @@
+.recentSection,
+.collectionsSection {
+  background: var(--sur-public-paper);
+  color: var(--ink);
+}
+
+.recentSection {
+  padding: clamp(76px, 8vw, 132px) 0 clamp(54px, 6.5vw, 104px);
+}
+
+.collectionsSection {
+  padding: clamp(30px, 4vw, 64px) 0 clamp(88px, 9vw, 148px);
+}
+
+.shell {
+  width: min(var(--public-shell-max), calc(100% - 64px));
+  margin-inline: auto;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: clamp(26px, 3.2vw, 44px);
+}
+
+.sectionHeading h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-section-title);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+}
+
+.sectionHeading a,
+.textLink,
+.emptyAction,
+.collectionOverlay a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--ink-accent);
+  font-size: 0.86rem;
+  font-weight: 610;
+  line-height: 1.25;
+  text-decoration: none;
+  transition: color var(--dur-micro) var(--ease-glide);
+}
+
+.sectionHeading a:hover,
+.textLink:hover,
+.emptyAction:hover {
+  color: var(--action-primary-hover);
+}
+
+.sectionHeading a span,
+.textLink span,
+.emptyAction span,
+.collectionOverlay a span {
+  transition: translate var(--dur-micro) var(--ease-exit);
+}
+
+.sectionHeading a:hover span,
+.textLink:hover span,
+.emptyAction:hover span,
+.collectionOverlay a:hover span {
+  translate: 4px 0;
+}
+
+.ideaLayout {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  grid-template-rows: repeat(2, var(--bento-row-size));
+  gap: var(--space-bento-gap);
+}
+
+.ideaCard,
+.emptyState {
+  overflow: hidden;
+  border: var(--border-standard) solid color-mix(in oklch, var(--line) 82%, transparent);
+  border-radius: var(--radius-lg);
+  background: var(--sur-raised);
+  box-shadow: var(--shadow-raised);
+  animation: recent-collection-enter var(--dur-narrative) var(--ease-exit) both;
+}
+
+.ideaCard {
+  display: grid;
+  min-width: 0;
+}
+
+.feature {
+  grid-column: span 8;
+  grid-row: span 2;
+  grid-template-columns: minmax(0, 0.92fr) minmax(260px, 1.08fr);
+}
+
+.wide {
+  grid-column: span 8;
+  grid-template-columns: minmax(190px, 0.9fr) minmax(0, 1.1fr);
+}
+
+.compact {
+  grid-column: span 4;
+  grid-template-rows: minmax(104px, 0.82fr) minmax(0, 1.18fr);
+}
+
+.ideaMedia,
+.collectionCard {
+  position: relative;
+  overflow: hidden;
+}
+
+.ideaMedia img,
+.collectionCard > img {
+  object-fit: cover;
+  transition: scale var(--dur-narrative) var(--ease-exit);
+}
+
+.ideaBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.feature .ideaBody {
+  padding: 40px clamp(30px, 3.4vw, 52px);
+}
+
+.wide .ideaBody {
+  padding: var(--space-5);
+}
+
+.compact .ideaBody {
+  padding: var(--space-5);
+}
+
+.eyebrow,
+.collectionLabel {
+  margin: 0 0 13px;
+  color: var(--ink-muted);
+  font-size: 0.69rem;
+  font-weight: 680;
+  line-height: 1.2;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.ideaBody h3 {
+  font-family: var(--font-serif);
+  font-size: var(--text-card-title);
+  font-weight: 520;
+  line-height: var(--leading-card-title);
+  letter-spacing: -0.035em;
+}
+
+.feature .ideaBody h3 {
+  font-size: var(--text-card-feature);
+  letter-spacing: -0.04em;
+}
+
+.summary {
+  display: -webkit-box;
+  margin-top: var(--space-3);
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.cardMeta {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.feature .cardMeta {
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+}
+
+.cardMeta p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: var(--text-card-meta);
+  line-height: 1.4;
+}
+
+.cardMeta p:last-child {
+  grid-column: 1 / -1;
+}
+
+.cardMeta span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--ink-muted);
+  font-size: var(--text-card-label);
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.ideaBody .textLink,
+.pendingLabel {
+  margin-top: auto;
+  padding-top: var(--space-3);
+}
+
+.pendingLabel {
+  color: var(--ink-muted);
+  font-size: var(--text-card-meta);
+  font-weight: 610;
+}
+
+.wide .summary,
+.compact .summary {
+  display: none;
+}
+
+.wide .cardMeta,
+.compact .cardMeta {
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+}
+
+.wide .ideaBody .textLink,
+.compact .ideaBody .textLink,
+.compact .pendingLabel {
+  padding-top: var(--space-2);
+}
+
+.compact {
+  position: relative;
+  grid-template-rows: 1fr;
+  background: var(--sur-inverse);
+  color: var(--ink-inverse);
+}
+
+.compact .ideaMedia,
+.compact .ideaBody {
+  grid-area: 1 / 1;
+}
+
+.compact .ideaMedia::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: var(--sur-image-scrim);
+}
+
+.compact .ideaBody {
+  position: relative;
+  z-index: 1;
+}
+
+.compact .eyebrow,
+.compact .cardMeta span {
+  color: var(--ink-inverse-subtle);
+}
+
+.compact .cardMeta {
+  border-color: var(--line-inverse);
+}
+
+.compact .cardMeta p,
+.compact .pendingLabel {
+  color: var(--ink-inverse-muted);
+}
+
+.ideaCard:hover img,
+.collectionCard:hover > img {
+  scale: 1.025;
+}
+
+.emptyState {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 48px;
+  min-height: 260px;
+  padding: clamp(34px, 5vw, 64px);
+}
+
+.emptyState h3 {
+  max-width: 620px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.65rem, 1.35rem + 1.05vw, 2.3rem);
+  font-weight: 520;
+  letter-spacing: -0.04em;
+}
+
+.emptyState p:not(.eyebrow) {
+  max-width: 620px;
+  margin-top: 16px;
+  color: var(--ink-soft);
+}
+
+.collectionsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 34px);
+}
+
+.collectionCard {
+  min-height: clamp(250px, 22vw, 320px);
+  border-radius: var(--radius-lg);
+  background: var(--sur-inverse);
+  box-shadow: var(--shadow-overlay);
+  animation: recent-collection-enter var(--dur-narrative) var(--ease-exit) both;
+}
+
+.collectionOverlay {
+  position: absolute;
+  inset: 42% 0 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: clamp(22px, 2.4vw, 34px);
+  background: var(--sur-image-scrim);
+  color: var(--ink-inverse);
+}
+
+.collectionLabel {
+  color: var(--ink-inverse-subtle);
+}
+
+.collectionOverlay h3 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.38rem, 1.2rem + 0.7vw, 1.85rem);
+  font-weight: 520;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.collectionOverlay p:not(.collectionLabel) {
+  display: -webkit-box;
+  margin-top: 9px;
+  overflow: hidden;
+  color: var(--ink-inverse-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.collectionOverlay a {
+  margin-top: auto;
+  padding-top: 8px;
+  color: var(--ink-accent-inverse);
+  font-size: 0.75rem;
+}
+
+.collectionOverlay a:hover {
+  color: var(--action-inverse);
+}
+
+@keyframes recent-collection-enter {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (max-width: 1040px) {
+  .ideaLayout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+  }
+
+  .feature,
+  .wide,
+  .compact {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .feature {
+    grid-column: 1 / -1;
+    min-height: var(--bento-feature-tablet);
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+    min-height: var(--bento-wide-tablet);
+  }
+
+  .compact {
+    min-height: var(--bento-compact-tablet);
+  }
+
+  .collectionOverlay {
+    inset-block-start: 35%;
+  }
+}
+
+@media (max-width: 760px) {
+  .recentSection {
+    padding: 68px 0 48px;
+  }
+
+  .collectionsSection {
+    padding: 26px 0 88px;
+  }
+
+  .shell {
+    width: min(100% - 28px, var(--public-shell-max));
+  }
+
+  .sectionHeading {
+    display: block;
+    margin-bottom: 24px;
+  }
+
+  .sectionHeading a {
+    margin-top: 8px;
+  }
+
+  .ideaLayout {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+
+  .feature,
+  .wide,
+  .compact {
+    display: grid;
+    grid-column: auto;
+    min-height: 0;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(190px, 46vw) auto;
+  }
+
+  .feature .ideaBody,
+  .wide .ideaBody,
+  .compact .ideaBody {
+    padding: var(--space-5);
+  }
+
+  .feature .ideaBody h3 {
+    font-size: var(--text-card-title);
+  }
+
+  .compact {
+    min-height: var(--bento-compact-mobile);
+    grid-template-rows: 1fr;
+  }
+
+  .feature .cardMeta,
+  .cardMeta {
+    grid-template-columns: 1fr;
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+  }
+
+  .cardMeta p:last-child {
+    grid-column: auto;
+  }
+
+  .collectionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .collectionCard {
+    min-height: 320px;
+  }
+
+  .collectionOverlay {
+    inset-block-start: 40%;
+    padding: 26px 24px;
+  }
+
+  .emptyState {
+    display: block;
+    min-height: 0;
+    padding: 32px 24px;
+  }
+
+  .emptyAction {
+    margin-top: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ideaCard,
+  .emptyState,
+  .collectionCard {
+    animation: none;
+  }
+
+  .ideaMedia img,
+  .collectionCard > img,
+  .sectionHeading a span,
+  .textLink span,
+  .emptyAction span,
+  .collectionOverlay a span {
+    transition: none;
+  }
+
+  .ideaCard:hover img,
+  .collectionCard:hover > img {
+    scale: 1;
+  }
+}

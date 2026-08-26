@@ -1,0 +1,125 @@
+.section {
+  position: relative;
+  z-index: 2;
+  padding-block: var(--space-7);
+  background: var(--sur-public-paper);
+  color: var(--ink);
+}
+
+.shell {
+  width: min(var(--public-shell-max), calc(100% - 64px));
+  margin-inline: auto;
+}
+
+.heading {
+  display: grid;
+  justify-items: center;
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.heading h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+.scroller {
+  overflow-x: auto;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.scroller:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: var(--space-1);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(112px, 1fr));
+  gap: var(--space-4);
+  min-width: 1040px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--dur-micro) var(--ease-glide);
+}
+
+.item:hover {
+  background: var(--sur-accent-faint);
+}
+
+.logo {
+  display: block;
+  width: auto;
+  max-width: 126px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.reddit {
+  width: 30px;
+  border-radius: var(--radius-full);
+}
+
+.googleNews {
+  width: 30px;
+}
+
+.techCrunch {
+  max-width: 124px;
+  filter: brightness(0);
+}
+
+.yelp { max-width: 92px; }
+.axios { max-width: 86px; }
+.yahoo { max-width: 92px; }
+.reuters { max-width: 106px; }
+.guardian { max-width: 100px; height: 34px; }
+
+.wordmark {
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding-block: var(--space-6);
+  }
+
+  .shell {
+    width: calc(100% - 32px);
+  }
+
+  .heading {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .list {
+    grid-template-columns: repeat(8, 132px);
+    min-width: max-content;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    transition: none;
+  }
+}

@@ -1,0 +1,251 @@
+.contribution,
+.faq {
+  background: var(--sur-public-paper);
+  color: var(--ink);
+}
+
+.shell,
+.faqShell,
+.newsletterShell {
+  width: min(var(--public-shell-max), calc(100% - 64px));
+  margin-inline: auto;
+}
+
+.contribution {
+  padding: var(--space-9) 0 var(--space-8);
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.22fr) minmax(340px, 0.78fr);
+  gap: var(--space-8);
+  align-items: center;
+}
+
+.contributionImage {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-raised);
+}
+
+.contributionImage img {
+  object-fit: cover;
+}
+
+.contributionCopy {
+  max-width: 440px;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--ink-muted);
+  font-size: 0.72rem;
+  font-weight: 680;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.contributionCopy h2,
+.faqIntro h2,
+.newsletterShell h2 {
+  font-family: var(--font-serif);
+  font-weight: 520;
+  letter-spacing: -0.045em;
+}
+
+.contributionCopy h2 {
+  font-size: clamp(2.4rem, 4vw, 4rem);
+}
+
+.contributionCopy > p:not(.eyebrow) {
+  margin-top: var(--space-5);
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+  align-items: center;
+  margin-top: var(--space-6);
+}
+
+.faq {
+  padding: var(--space-9) 0 var(--space-10);
+}
+
+.faqShell {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.28fr);
+  gap: var(--space-9);
+  align-items: start;
+}
+
+.faqIntro {
+  max-width: 420px;
+}
+
+.faqIntro h2 {
+  font-size: clamp(2.25rem, 3.4vw, 3.5rem);
+}
+
+.faqIntro > p:last-child {
+  margin-top: 18px;
+  color: var(--ink-muted);
+}
+
+.questionList {
+  border-top: 1px solid color-mix(in oklch, var(--line) 72%, transparent);
+}
+
+.questionList details {
+  border-bottom: 1px solid color-mix(in oklch, var(--line) 72%, transparent);
+}
+
+.questionList summary {
+  min-height: var(--space-8);
+  padding: 19px 8px 17px 0;
+  cursor: pointer;
+  font-weight: 620;
+  line-height: 1.35;
+}
+
+.questionList summary::marker {
+  color: var(--ink-accent);
+}
+
+.questionList summary:focus-visible,
+.actions :global(.ui-action):focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: var(--space-1);
+}
+
+.questionList details p {
+  max-width: 70ch;
+  padding: 0 36px 22px 0;
+  color: var(--ink-muted);
+  font-size: 0.94rem;
+}
+
+.newsletter {
+  padding: 38px 0;
+  background: var(--sur-brand);
+  color: var(--ink-inverse);
+}
+
+.newsletterShell {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(380px, 1.1fr);
+  gap: var(--space-8);
+  align-items: center;
+}
+
+.newsletterShell .eyebrow {
+  color: var(--ink-inverse-muted);
+}
+
+.newsletterShell h2 {
+  color: var(--ink-inverse);
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+
+.newsletterShell > div > p:last-child {
+  margin-top: 10px;
+  color: var(--ink-inverse-muted);
+}
+
+.newsletterShell :global(.newsletter-form) {
+  min-width: 0;
+}
+
+.newsletterShell :global(.newsletter-form__controls) {
+  min-height: 50px;
+  padding-left: var(--space-3);
+}
+
+.newsletterShell :global(.newsletter-form input:focus-visible),
+.newsletterShell :global(.newsletter-form .ui-action:focus-visible) {
+  outline: 3px solid var(--focus-ring-inverse);
+  outline-offset: var(--space-1);
+}
+
+.newsletterShell :global(.newsletter-form__status) {
+  min-height: 1.4em;
+  margin-top: 8px;
+  color: var(--ink-inverse-muted);
+  font-size: 0.75rem;
+}
+
+.newsletterShell :global(.newsletter-form__status[data-kind="error"]) {
+  color: var(--ink-inverse);
+  font-weight: 650;
+}
+
+.newsletterShell :global(.newsletter-form__status[data-kind="success"]) {
+  color: var(--action-inverse);
+  font-weight: 650;
+}
+
+@media (max-width: 900px) {
+  .shell,
+  .faqShell,
+  .newsletterShell {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .contributionCopy,
+  .faqIntro {
+    max-width: 620px;
+  }
+
+  .newsletterShell {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .shell,
+  .faqShell,
+  .newsletterShell {
+    width: calc(100% - 28px);
+  }
+
+  .contribution {
+    padding-top: 48px;
+  }
+
+  .contributionImage {
+    min-height: 250px;
+  }
+
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .actions :global(.ui-action) {
+    width: 100%;
+  }
+
+  .faq {
+    padding: 58px 0 64px;
+  }
+
+  .newsletter {
+    padding: 34px 0;
+  }
+
+  .newsletterShell :global(.newsletter-form__controls) {
+    align-items: stretch;
+    flex-direction: column;
+    padding: var(--space-2);
+  }
+
+  .newsletterShell :global(.newsletter-form .ui-action) {
+    width: 100%;
+  }
+}
