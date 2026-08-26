@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { CSSProperties, FormEvent, useEffect, useId, useRef, useState } from "react";
+import { IconChevronDown, IconSearch } from "@tabler/icons-react";
 import { BorderBeam } from "border-beam";
 import { FieldLabel, InputGroup, InputGroupInput } from "@/components/ui/Field";
 
@@ -46,21 +47,54 @@ const MOBILE_EXPLORE_LINKS = [
   ...EXPLORE_GROUPS[1].links,
 ] as const;
 
-const DESKTOP_MENUS = [
+const USE_CASES = [
   {
-    key: "dossiers",
-    label: "Dossiers",
-    links: [
-      { label: "Climat urbain", description: "Comprendre les îlots de chaleur", href: "/idees/cartographie-ilots-chaleur" },
-      { label: "Réparer ensemble", description: "Documenter les ateliers en médiathèque", href: "/idees/ateliers-reparation-mediatheque" },
-    ],
+    label: "Trouver une idée de produit",
+    description: "Partir d’un besoin observé pour faire émerger une piste concrète.",
+    href: "/cas-d-utilisation#idee-produit",
   },
   {
-    key: "contribuer",
-    label: "Contribuer",
+    label: "Transformer un irritant en piste",
+    description: "Décrire une friction et remonter aux faits qui permettent de l’explorer.",
+    href: "/cas-d-utilisation#irritant",
+  },
+  {
+    label: "Repenser un service ou une expérience",
+    description: "Relier les usages, les sources et les idées qui éclairent une évolution.",
+    href: "/cas-d-utilisation#service-experience",
+  },
+  {
+    label: "Explorer les besoins d’un territoire",
+    description: "Lire des signaux locaux pour mieux situer les besoins et les initiatives.",
+    href: "/cas-d-utilisation#besoins-territoire",
+  },
+] as const;
+
+const DESKTOP_MENUS = [
+  {
+    key: "about",
+    label: "À propos",
     links: [
-      { label: "Proposer une source", description: "Faire entrer une source publique dans la revue", href: "/editorial" },
-      { label: "Créer un compte contributeur", description: "Choisir comment participer au Commons", href: "/identite" },
+      {
+        label: "Pourquoi Idea Commons",
+        description: "Comprendre la promesse et ce que le Commons cherche à rendre possible.",
+        href: "/a-propos#mission",
+      },
+      {
+        label: "Comment ça marche",
+        description: "Voir comment les sources deviennent des idées structurées et discutables.",
+        href: "/a-propos#fonctionnement",
+      },
+      {
+        label: "Contribuer",
+        description: "Proposer une source, une idée ou participer à la veille du Commons.",
+        href: "/a-propos#contribuer",
+      },
+      {
+        label: "Principes et confidentialité",
+        description: "Lire les repères d’usage, de provenance et de protection des espaces personnels.",
+        href: "/a-propos#principes",
+      },
     ],
   },
 ] as const;
@@ -78,15 +112,10 @@ const SEARCH_ITEMS = [
   },
 ] as const;
 
-type DesktopMenu = "explorer" | "dossiers" | "contribuer" | null;
+type DesktopMenu = "explorer" | "use-cases" | "about" | null;
 type MenuLayout = { x: number; width: number };
 
-export function SiteNav({
-  identityName,
-}: {
-  identityName: string;
-  identityTone: "neutral" | "ready";
-}) {
+export function SiteNav() {
   const pathname = usePathname();
   const router = useRouter();
   const desktopPanelId = useId();
@@ -122,7 +151,7 @@ export function SiteNav({
     const headerRect = header.getBoundingClientRect();
     const triggerRect = trigger.getBoundingClientRect();
 
-    if (menu === "explorer") {
+    if (menu === "explorer" || menu === "use-cases") {
       setMenuLayout({ x: 0, width: headerRect.width });
       return;
     }
@@ -231,16 +260,51 @@ export function SiteNav({
       <nav aria-label="Navigation principale" className="site-header__nav">
         <button
           type="button"
-          className="site-header__link site-header__menu-trigger site-header__explore"
+          className="site-header__link site-header__menu-trigger"
           aria-expanded={desktopMenu === "explorer"}
           aria-controls={desktopPanelId}
           onMouseEnter={(event) => openDesktopMenu("explorer", event.currentTarget)}
           onClick={(event) => toggleDesktopMenu("explorer", event.currentTarget)}
         >
           Explorer
-          <img className="site-header__chevron" src="/icons/chevron-down.svg" alt="" />
+          <IconChevronDown
+            className="site-header__chevron"
+            width={16}
+            height={16}
+            stroke={1.75}
+            aria-hidden="true"
+            focusable="false"
+          />
         </button>
 
+        <button
+          type="button"
+          className="site-header__link site-header__menu-trigger"
+          aria-expanded={desktopMenu === "use-cases"}
+          aria-controls={desktopPanelId}
+          onMouseEnter={(event) => openDesktopMenu("use-cases", event.currentTarget)}
+          onClick={(event) => toggleDesktopMenu("use-cases", event.currentTarget)}
+        >
+          Cas d’utilisation
+          <IconChevronDown
+            className="site-header__chevron"
+            width={16}
+            height={16}
+            stroke={1.75}
+            aria-hidden="true"
+            focusable="false"
+          />
+        </button>
+
+        <Link
+          className="site-header__link"
+          href="/pricing"
+          aria-current={pathname === "/pricing" ? "page" : undefined}
+          onMouseEnter={scheduleDesktopClose}
+          onFocus={closeDesktop}
+        >
+          Tarifs
+        </Link>
         {DESKTOP_MENUS.map((menu) => (
           <button
             key={menu.key}
@@ -252,19 +316,24 @@ export function SiteNav({
             onClick={(event) => toggleDesktopMenu(menu.key, event.currentTarget)}
           >
             {menu.label}
-            <img className="site-header__chevron" src="/icons/chevron-down.svg" alt="" />
+            <IconChevronDown
+              className="site-header__chevron"
+              width={16}
+              height={16}
+              stroke={1.75}
+              aria-hidden="true"
+              focusable="false"
+            />
           </button>
         ))}
         <Link
           className="site-header__link"
-          href="/pricing"
-          aria-current={pathname === "/pricing" ? "page" : undefined}
-          onMouseEnter={() => {
-            clearCloseTimer();
-            closeDesktop();
-          }}
+          href="/blog"
+          aria-current={pathname.startsWith("/blog") ? "page" : undefined}
+          onMouseEnter={scheduleDesktopClose}
+          onFocus={closeDesktop}
         >
-          Tarifs
+          Blog
         </Link>
       </nav>
 
@@ -283,7 +352,14 @@ export function SiteNav({
               borderRadius={999}
             >
               <InputGroup className="site-search-inline__field">
-                <img className="site-search-inline__icon" src="/icons/search.svg" alt="" />
+                <IconSearch
+                  className="site-search-inline__icon"
+                  width={16}
+                  height={16}
+                  stroke={1.75}
+                  aria-hidden="true"
+                  focusable="false"
+                />
                 <InputGroupInput
                   ref={searchInputRef}
                   id={`${desktopPanelId}-search-input`}
@@ -333,8 +409,7 @@ export function SiteNav({
           className="site-header__account"
           href="/identite"
           aria-current={onIdentity ? "page" : undefined}
-          aria-label={`Compte de test : ${identityName}. Changer de compte.`}
-          title={identityName}
+          aria-label="Se connecter ou créer un compte"
         >
           Se connecter
         </Link>
@@ -359,7 +434,15 @@ export function SiteNav({
         className="desktop-menu-surface"
         data-menu={desktopMenu || undefined}
         hidden={!desktopMenu}
-        aria-label={desktopMenu === "explorer" ? "Explorer Idea Commons" : undefined}
+        aria-label={
+          desktopMenu === "explorer"
+            ? "Explorer Idea Commons"
+            : desktopMenu === "use-cases"
+              ? "Cas d’utilisation Idea Commons"
+              : desktopMenu === "about"
+                ? "À propos d’Idea Commons"
+                : undefined
+        }
         onMouseEnter={clearCloseTimer}
         style={{
           "--menu-x": `${menuLayout.x}px`,
@@ -387,10 +470,31 @@ export function SiteNav({
             </div>
             <aside className="mega-menu__feature" aria-labelledby={`${desktopPanelId}-feature`}>
               <img src="/images/stock-climate-flood.webp" alt="Vue aérienne d’un territoire touché par une inondation" />
-              <p className="mega-menu__eyebrow">Dossier à la une</p>
+              <p className="mega-menu__eyebrow">Collection à la une</p>
               <h2 id={`${desktopPanelId}-feature`}>Climat urbain : comprendre les îlots de chaleur</h2>
               <p>Une idée publiée, ses sources et les affirmations qui restent à discuter.</p>
-              <Link href="/idees/cartographie-ilots-chaleur" onClick={closeAll}>Ouvrir le dossier</Link>
+              <Link href="/idees/cartographie-ilots-chaleur" onClick={closeAll}>Découvrir la sélection</Link>
+            </aside>
+          </div>
+        ) : desktopMenu === "use-cases" ? (
+          <div className="use-case-menu" key="use-cases">
+            <div className="use-case-menu__items">
+              {USE_CASES.map((useCase) => (
+                <Link href={useCase.href} key={useCase.href} onClick={closeAll}>
+                  <strong>{useCase.label}</strong>
+                  <span>{useCase.description}</span>
+                </Link>
+              ))}
+            </div>
+            <aside className="mega-menu__feature" aria-labelledby={`${desktopPanelId}-real-case`}>
+              <div className="mega-menu__feature-mark" aria-hidden="true">
+                <span>Oh</span>
+                <span>Ah</span>
+              </div>
+              <p className="mega-menu__eyebrow">Cas réel</p>
+              <h2 id={`${desktopPanelId}-real-case`}>Un soundboard d’emojis né d’un besoin en direct</h2>
+              <p>Pendant un live ou un appel vidéo, certaines réactions gagnent à être entendues. Cette envie est devenue un soundboard où chaque emoji déclenche un son.</p>
+              <Link href="/blog/soundboard-emojis" onClick={closeAll}>Lire le récit</Link>
             </aside>
           </div>
         ) : desktopMenu ? (
@@ -428,6 +532,16 @@ export function SiteNav({
               <Link href={link.href} key={link.label} onClick={closeAll}>{link.label}</Link>
             ))}
           </section>
+          <section>
+            <h2>Cas d’utilisation</h2>
+            {USE_CASES.map((useCase) => (
+              <Link href={useCase.href} key={useCase.href} onClick={closeAll}>{useCase.label}</Link>
+            ))}
+          </section>
+          <section>
+            <h2>Tarifs</h2>
+            <Link href="/pricing" onClick={closeAll}>Comparer les offres</Link>
+          </section>
           {DESKTOP_MENUS.map((menu) => (
             <section key={menu.key}>
               <h2>{menu.label}</h2>
@@ -437,11 +551,11 @@ export function SiteNav({
             </section>
           ))}
           <section>
-            <h2>Tarifs</h2>
-            <Link href="/pricing" onClick={closeAll}>Comparer les offres</Link>
+            <h2>Blog</h2>
+            <Link href="/blog" onClick={closeAll}>Lire le Blog</Link>
           </section>
           <Link className="mobile-navigation__account" href="/identite" onClick={closeAll}>
-            Se connecter · {identityName}
+            Se connecter
           </Link>
         </nav>
       </div>

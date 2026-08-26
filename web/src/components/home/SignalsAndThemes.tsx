@@ -1,18 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  EDITORIAL_PREVIEWS,
+  type LandingIdeaPresentation,
+} from "./landingContent";
 import styles from "./SignalsAndThemes.module.css";
 
-export interface SignalsAndThemesIdea {
-  slug: string;
-  title: string;
-  oneLineSummary: string;
-  theme: string;
-  image: string;
-  imageAlt: string;
-  sourceLabel: string;
-  provenance: string;
-  publishedAt: string;
-}
+export type SignalsAndThemesIdea = LandingIdeaPresentation;
 
 interface SignalsAndThemesProps {
   ideas: SignalsAndThemesIdea[];
@@ -54,6 +48,12 @@ const THEME_IMAGES: Record<string, { image: string; imageAlt: string }> = {
     imageAlt: "Port de commerce et conteneurs vus depuis les airs",
   },
 };
+
+function mediaClassName(image: string) {
+  return `${styles.cardImage}${
+    image.includes("stock-territory-valley") ? ` ${styles.mediaCropValley}` : ""
+  }`;
+}
 
 function formatPublishedAt(value: string) {
   const date = new Date(value);
@@ -111,15 +111,13 @@ function TrendCard({
   priority?: boolean;
   variant: "featured" | "compact";
 }) {
-  return (
-    <Link
-      className={`${styles.trendCard} ${
-        variant === "featured" ? styles.trendCardFeatured : styles.trendCardCompact
-      }`}
-      href={`/idees/${idea.slug}`}
-    >
+  const className = `${styles.trendCard} ${
+    variant === "featured" ? styles.trendCardFeatured : styles.trendCardCompact
+  }`;
+  const content = (
+    <>
       <Image
-        className={styles.cardImage}
+        className={mediaClassName(idea.image || FALLBACK_IMAGE)}
         src={idea.image || FALLBACK_IMAGE}
         alt={idea.imageAlt}
         fill
@@ -147,13 +145,32 @@ function TrendCard({
         </span>
         <span className={styles.cardAction}>Voir l’idée</span>
       </span>
+    </>
+  );
+
+  if (idea.statusLabel) {
+    return (
+      <article
+        className={className}
+        data-status="review"
+        aria-label={idea.title}
+      >
+        {content}
+      </article>
+    );
+  }
+
+  return (
+    <Link className={className} href={idea.href ?? `/idees/${idea.slug}`}>
+      {content}
     </Link>
   );
 }
 
 export function SignalsAndThemes({ ideas }: SignalsAndThemesProps) {
-  const featuredIdea = ideas[0];
-  const compactIdeas = ideas.slice(1, 3);
+  const trendIdeas = [...ideas, ...EDITORIAL_PREVIEWS].slice(0, 3);
+  const featuredIdea = trendIdeas[0];
+  const compactIdeas = trendIdeas.slice(1, 3);
   const themes = themeCardsFor(ideas);
 
   return (
@@ -205,7 +222,7 @@ export function SignalsAndThemes({ ideas }: SignalsAndThemesProps) {
             {themes.map((theme) => (
               <Link className={styles.themeCard} href={theme.href} key={theme.name}>
                 <Image
-                  className={styles.cardImage}
+                  className={mediaClassName(theme.image)}
                   src={theme.image}
                   alt={theme.imageAlt}
                   fill

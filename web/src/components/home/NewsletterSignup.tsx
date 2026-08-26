@@ -63,12 +63,14 @@ export function NewsletterSignup() {
             onChange={changeEmail}
             inputMode="email"
             autoComplete="email"
-            placeholder="Votre email"
+            placeholder="vous@exemple.com"
             aria-describedby={message.kind === "idle" ? undefined : statusId}
             aria-invalid={message.kind === "error"}
             required
           />
-          <ActionButton variant="inverse" type="submit">S’abonner gratuitement</ActionButton>
+          <ActionButton className="newsletter-form__submit" variant="inverse" type="submit">
+            S’abonner gratuitement
+          </ActionButton>
         </InputGroup>
       </Field>
       {message.kind === "idle" ? null : (

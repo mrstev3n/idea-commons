@@ -1,7 +1,7 @@
 .page {
   min-height: calc(100dvh - var(--header-offset));
   margin-top: calc(-1 * var(--header-offset));
-  padding: calc(var(--header-offset) + clamp(78px, 9vw, 132px)) 0 clamp(90px, 10vw, 150px);
+  padding: calc(var(--header-offset) + clamp(var(--space-section-md), 9vw, var(--space-section-xl))) 0 clamp(var(--space-section-lg), 10vw, var(--space-section-pricing-max));
   background:
     radial-gradient(circle at 82% 10%, color-mix(in oklch, var(--sur-accent-soft) 62%, transparent), transparent 30%),
     var(--sur-public-paper);
@@ -30,7 +30,7 @@
 .intro h1 {
   max-width: 16ch;
   font-family: var(--font-serif);
-  font-size: clamp(2.7rem, 2rem + 3.3vw, 5rem);
+  font-size: var(--text-display);
   font-weight: 500;
   line-height: 0.98;
   letter-spacing: -0.055em;
@@ -48,15 +48,15 @@
 .plans {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(20px, 3vw, 34px);
-  margin-top: clamp(52px, 7vw, 88px);
+  gap: clamp(var(--space-card-inset), 3vw, var(--space-content-loose));
+  margin-top: clamp(var(--space-section-sm), 7vw, var(--space-section-flow));
 }
 
 .plan {
   display: flex;
   min-height: 510px;
   flex-direction: column;
-  padding: clamp(30px, 4vw, 48px);
+  padding: clamp(var(--space-content-loose), 4vw, var(--space-content-max));
   border: var(--border-hairline) solid var(--line);
   border-radius: var(--radius-xl);
   background: var(--sur-raised);
@@ -80,7 +80,7 @@
 
 .plan h2 {
   font-family: var(--font-serif);
-  font-size: clamp(1.7rem, 1.4rem + 1vw, 2.4rem);
+  font-size: var(--text-2xl);
   font-weight: 520;
   line-height: 1.05;
   letter-spacing: -0.04em;
@@ -92,12 +92,12 @@
   margin: 0;
   color: var(--ink);
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
   font-weight: 700;
 }
 
 .soon {
-  padding: 8px 12px;
+  padding: var(--space-control-gap) var(--space-control-inline);
   border-radius: var(--radius-full);
   background: var(--sur-accent-soft);
   color: var(--ink-accent);
@@ -133,15 +133,6 @@
 .action {
   width: 100%;
   margin-top: auto;
-}
-
-.note {
-  max-width: 66ch;
-  margin: var(--space-5) auto 0;
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
-  line-height: 1.5;
-  text-align: center;
 }
 
 @media (max-width: 760px) {

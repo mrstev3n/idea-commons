@@ -46,6 +46,25 @@ body:has(.hero--stage) {
   background: var(--sur-public-paper);
 }
 
+body:has([data-identity-page]) {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body:has([data-identity-page]) > .skip-link,
+body:has([data-identity-page]) > .site-header,
+body:has([data-identity-page]) > .site-footer {
+  display: none;
+}
+
+body:has([data-identity-page]) > #contenu {
+  flex: none;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
 #contenu {
   flex: 1 0 auto;
 }
@@ -123,8 +142,8 @@ code, pre {
 }
 
 code {
-  padding: 1px 5px;
-  border-radius: 6px;
+  padding: 0 var(--space-control-gap);
+  border-radius: var(--radius-sm);
   background: var(--sur-sunken);
   overflow-wrap: anywhere;
 }
@@ -150,7 +169,7 @@ th, td {
 th {
   color: var(--ink-muted);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: var(--text-card-label);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -172,7 +191,7 @@ select,
 textarea {
   width: 100%;
   min-height: var(--tap-target);
-  padding: 10px 12px;
+  padding: var(--space-control-gap) var(--space-control-inline);
   border: 1.5px solid var(--line-strong);
   border-radius: var(--radius-md);
   background: var(--sur-raised);
@@ -211,7 +230,7 @@ input[type="radio"] {
 :focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
 }
 
 .hero--stage :focus-visible,
@@ -257,7 +276,7 @@ input[type="radio"] {
   inset-inline-start: var(--space-4);
   top: var(--space-3);
   z-index: 100;
-  padding: 10px 16px;
+  padding: var(--space-control-gap) var(--space-control-inline);
   border-radius: var(--radius-full);
   background: var(--sur-raised);
   color: var(--ink);
@@ -275,7 +294,7 @@ input[type="radio"] {
 .fingerprint {
   display: block;
   font-family: var(--font-mono);
-  font-size: 0.78em;
+  font-size: var(--text-card-meta);
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
   word-break: break-all;
@@ -285,7 +304,7 @@ input[type="radio"] {
 .eyebrow {
   color: var(--ink-accent);
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: var(--text-card-label);
   font-weight: 650;
   letter-spacing: 0.04em;
 }

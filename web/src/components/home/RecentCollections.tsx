@@ -1,21 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ActionLink } from "@/components/ui/Action";
+import {
+  EDITORIAL_PREVIEWS,
+  type LandingIdeaPresentation,
+} from "./landingContent";
 import styles from "./RecentCollections.module.css";
 
-export type RecentCollectionIdea = {
-  slug: string;
-  title: string;
-  oneLineSummary: string;
-  theme: string;
-  image: string;
-  imageAlt: string;
-  sourceLabel: string;
-  provenance: string;
-  publishedAt: string;
-  statusLabel?: string;
-  href?: string;
-  actionLabel?: string;
-};
+export type RecentCollectionIdea = LandingIdeaPresentation;
 
 type RecentCollectionsProps = {
   ideas: RecentCollectionIdea[];
@@ -39,34 +31,7 @@ const COLLECTIONS = [
   },
 ] as const;
 
-const EDITORIAL_PREVIEWS: RecentCollectionIdea[] = [
-  {
-    slug: "ilots-fraicheur-trajets-quotidiens",
-    title: "Des îlots de fraîcheur reliés aux trajets du quotidien",
-    oneLineSummary:
-      "Relier les zones ombragées, les points d’eau et les parcours les plus empruntés.",
-    theme: "Territoires",
-    image: "/images/stock-territory-valley.webp",
-    imageAlt: "Vallée et territoire habité vus depuis les hauteurs",
-    sourceLabel: "Corpus mobilité et climat urbain",
-    provenance: "Croisement éditorial",
-    publishedAt: "Date à confirmer",
-    statusLabel: "Relecture en cours",
-  },
-  {
-    slug: "outils-reparation-quartier",
-    title: "Mutualiser les outils de réparation à l’échelle du quartier",
-    oneLineSummary:
-      "Mettre en commun équipements, savoir-faire et créneaux d’entraide de proximité.",
-    theme: "Communs",
-    image: "/images/stock-economy-harbor.webp",
-    imageAlt: "Infrastructure portuaire observée depuis le rivage",
-    sourceLabel: "Observations de terrain à consolider",
-    provenance: "Piste éditoriale",
-    publishedAt: "Date à confirmer",
-    statusLabel: "Relecture en cours",
-  },
-];
+type Collection = (typeof COLLECTIONS)[number];
 
 const DATE_FORMATTER = new Intl.DateTimeFormat("fr-FR", {
   day: "numeric",
@@ -77,6 +42,10 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("fr-FR", {
 function formatPublishedAt(value: string) {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? value : DATE_FORMATTER.format(date);
+}
+
+function mediaClassName(image: string) {
+  return image.includes("stock-territory-valley") ? styles.mediaCropValley : undefined;
 }
 
 function IdeaStatus({ idea }: { idea: RecentCollectionIdea }) {
@@ -98,19 +67,14 @@ function IdeaStatus({ idea }: { idea: RecentCollectionIdea }) {
   );
 }
 
-function IdeaCard({
-  idea,
-  variant,
-}: {
-  idea: RecentCollectionIdea;
-  variant: "feature" | "wide" | "compact";
-}) {
+function IdeaCard({ idea }: { idea: RecentCollectionIdea }) {
   const href = idea.href ?? (idea.statusLabel ? null : `/idees/${idea.slug}`);
 
   return (
-    <article className={`${styles.ideaCard} ${styles[variant]}`}>
+    <article className={styles.ideaCard}>
       <div className={styles.ideaMedia}>
         <Image
+          className={mediaClassName(idea.image)}
           src={idea.image}
           alt={idea.imageAlt}
           fill
@@ -134,6 +98,38 @@ function IdeaCard({
   );
 }
 
+function CollectionCard({
+  collection,
+  href,
+}: {
+  collection: Collection;
+  href: string;
+}) {
+  return (
+    <article className={styles.collectionCard}>
+      <div className={styles.collectionMedia} aria-hidden="true">
+        <Image
+          className={mediaClassName(collection.image)}
+          src={collection.image}
+          alt=""
+          fill
+          sizes="(max-width: 760px) 100vw, (max-width: 1080px) 31vw, 25vw"
+        />
+      </div>
+      <div className={styles.collectionOverlay}>
+        <div className={styles.collectionText}>
+          <p className={styles.collectionLabel}>Collection</p>
+          <h3>{collection.title}</h3>
+          <p>{collection.count} idées dans cette collection</p>
+        </div>
+        <Link href={href}>
+          Parcourir les idées
+        </Link>
+      </div>
+    </article>
+  );
+}
+
 export function RecentCollections({ ideas }: RecentCollectionsProps) {
   const visibleIdeas = [...ideas, ...EDITORIAL_PREVIEWS].slice(0, 4);
 
@@ -143,9 +139,6 @@ export function RecentCollections({ ideas }: RecentCollectionsProps) {
         <div className={styles.shell}>
           <div className={styles.sectionHeading}>
             <h2 id="recent-title">Idées récentes</h2>
-            <a href="#idees-publiees">
-              Voir toutes les idées <span aria-hidden="true">→</span>
-            </a>
           </div>
 
           {visibleIdeas.length > 0 ? (
@@ -154,9 +147,14 @@ export function RecentCollections({ ideas }: RecentCollectionsProps) {
                 <IdeaCard
                   key={`${idea.slug}-${index}`}
                   idea={idea}
-                  variant={index === 0 ? "feature" : index === 1 ? "wide" : "compact"}
                 />
               ))}
+              <aside className={styles.ideaIndexCta} aria-label="Catalogue des idées">
+                <p>Découvrez d’autres idées</p>
+                <ActionLink href="/#idees-publiees" size="md" variant="primary">
+                  Voir toutes les idées
+                </ActionLink>
+              </aside>
             </div>
           ) : (
             <div className={styles.emptyState}>
@@ -185,7 +183,7 @@ export function RecentCollections({ ideas }: RecentCollectionsProps) {
           <div className={styles.sectionHeading}>
             <h2 id="collections-title">Collections éditoriales</h2>
             <Link href="/editorial">
-              Voir l’espace éditorial <span aria-hidden="true">→</span>
+              Voir l’espace éditorial
             </Link>
           </div>
 
@@ -194,22 +192,11 @@ export function RecentCollections({ ideas }: RecentCollectionsProps) {
               const relatedIdea = ideas[index % Math.max(ideas.length, 1)];
 
               return (
-              <article className={styles.collectionCard} key={collection.title}>
-                <Image
-                  src={collection.image}
-                  alt=""
-                  fill
-                  sizes="(max-width: 760px) 100vw, (max-width: 1080px) 31vw, 25vw"
+                <CollectionCard
+                  key={collection.title}
+                  collection={collection}
+                  href={relatedIdea ? `/idees/${relatedIdea.slug}` : "/editorial"}
                 />
-                <div className={styles.collectionOverlay}>
-                  <p className={styles.collectionLabel}>Collection</p>
-                  <h3>{collection.title}</h3>
-                  <p>{collection.count} idées dans cette collection</p>
-                  <Link href={relatedIdea ? `/idees/${relatedIdea.slug}` : "/editorial"}>
-                    Parcourir les idées <span aria-hidden="true">→</span>
-                  </Link>
-                </div>
-              </article>
               );
             })}
           </div>

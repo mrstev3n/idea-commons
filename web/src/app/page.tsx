@@ -46,7 +46,7 @@ function HeroDossier({ idea }: { idea?: PublishedIdeaSummary }) {
   const presentation = presentationFor(idea);
 
   return (
-    <aside className="hero-dossier" aria-label={`Dossier vedette : ${idea.title}`}>
+    <aside className="hero-dossier" aria-label={`Idée vedette : ${idea.title}`}>
       <div className="hero-dossier__sheet">
         <p className="hero-dossier__eyebrow">Idée vérifiée</p>
         <h2>{idea.title}</h2>
@@ -111,7 +111,8 @@ export default async function CataloguePage() {
               <em className="hero__accent">des idées à discuter.</em>
             </h1>
             <p className="hero__lead">
-              Comprendre ce qui compte. Remonter aux sources. Mettre les idées en discussion.
+              Nous révélons, dans les sources du quotidien, des idées de produits et services
+              numériques pour votre prochaine startup ou votre side project.
             </p>
             <div className="hero__actions">
               <ActionLink variant="on-dark" size="lg" data-emphasis="strong" href="#idees-publiees">

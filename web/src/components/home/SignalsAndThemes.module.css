@@ -17,19 +17,19 @@
   align-items: end;
   justify-content: space-between;
   gap: var(--space-5);
-  margin-bottom: clamp(24px, 2.4vw, 36px);
+  margin-bottom: clamp(var(--space-card-inset), 2.4vw, var(--space-content-wide));
 }
 
 .trendsHeader h2,
 .themesHeader h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 1.5rem + 1.1vw, 2.65rem);
+  font-size: var(--text-section-title);
   font-weight: 650;
   letter-spacing: -0.045em;
 }
 
 .trendsHeader p {
-  margin-top: 6px;
+  margin-top: var(--space-control-gap);
   color: var(--ink-inverse-muted);
   font-size: var(--text-sm);
 }
@@ -38,7 +38,7 @@
 .themesHeader a {
   flex: none;
   min-height: var(--tap-target);
-  padding: 10px 0;
+  padding: var(--space-control-gap) 0;
   color: inherit;
   font-size: var(--text-sm);
   font-weight: 600;
@@ -103,8 +103,20 @@
 
 .cardImage {
   z-index: -2;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  inset: 0 !important;
   object-fit: cover;
   transition: transform var(--dur-narrative) var(--ease-exit);
+}
+
+/* Asset placeholder crop: its source file contains an unusable grey strip at the bottom. */
+.cardImage.mediaCropValley {
+  height: 120% !important;
+  top: 0 !important;
+  bottom: auto !important;
+  object-position: center top;
 }
 
 .imageWash {
@@ -121,32 +133,32 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
-  padding: clamp(24px, 3vw, 44px);
+  gap: var(--space-control-inline);
+  padding: clamp(var(--space-card-inset), 3vw, var(--space-content-wide));
 }
 
 .trendCardCompact .trendContent {
-  gap: 8px;
-  padding: clamp(20px, 2.2vw, 30px);
+  gap: var(--space-control-gap);
+  padding: clamp(var(--space-card-inset), 2.2vw, var(--space-content-loose));
 }
 
 .trendTheme {
   display: inline-flex;
   align-items: center;
-  min-height: 28px;
-  padding: 5px 11px;
+  min-height: var(--control-height-tag);
+  padding: var(--space-control-gap) var(--space-control-inline);
   border: var(--border-standard) solid var(--line-glass);
   border-radius: var(--radius-full);
   background: color-mix(in oklch, var(--sur-accent-soft) 92%, transparent);
   color: var(--ink);
-  font-size: 0.72rem;
+  font-size: var(--text-card-label);
   font-weight: 650;
 }
 
 .trendTitle {
   max-width: 21ch;
   font-family: var(--font-display);
-  font-size: clamp(1.65rem, 1.25rem + 1.7vw, 3rem);
+  font-size: var(--text-trend-feature);
   font-weight: 620;
   line-height: 1.06;
   letter-spacing: -0.045em;
@@ -155,7 +167,7 @@
 
 .trendCardCompact .trendTitle {
   max-width: 26ch;
-  font-size: clamp(1.15rem, 0.98rem + 0.7vw, 1.55rem);
+  font-size: var(--text-trend-compact);
   line-height: 1.13;
 }
 
@@ -174,14 +186,14 @@
 .trendMeta {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 8px;
+  gap: var(--space-control-gap);
   color: var(--ink-inverse-subtle);
-  font-size: 0.72rem;
+  font-size: var(--text-card-meta);
   line-height: 1.35;
 }
 
 .cardAction {
-  margin-top: 2px;
+  margin-top: var(--space-control-gap);
   font-size: var(--text-sm);
   font-weight: 650;
   text-decoration: underline;
@@ -190,7 +202,7 @@
 
 .emptyTrend {
   max-width: 720px;
-  padding: clamp(32px, 5vw, 64px);
+  padding: clamp(var(--space-content-loose), 5vw, var(--space-section-sm));
   border: var(--border-standard) solid var(--line-inverse);
   border-radius: var(--radius-md);
   background: color-mix(in oklch, var(--action-primary-hover) 74%, transparent);
@@ -217,13 +229,13 @@
 .themes {
   position: relative;
   z-index: 2;
-  padding-block: clamp(72px, 7vw, 112px);
+  padding-block: clamp(var(--space-section-sm), 7vw, var(--space-section-home-max));
   background: var(--sur-public-paper);
   color: var(--ink);
 }
 
 .themesHeader {
-  margin-bottom: clamp(28px, 3vw, 42px);
+  margin-bottom: clamp(var(--space-content-loose), 3vw, var(--space-content-wide));
 }
 
 .themesHeader a {
@@ -249,14 +261,14 @@
   justify-content: space-between;
   gap: var(--space-4);
   width: 100%;
-  padding: clamp(20px, 2.4vw, 30px);
+  padding: clamp(var(--space-card-inset), 2.4vw, var(--space-content-loose));
 }
 
 .themeContent {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-control-gap);
 }
 
 .themeName {
@@ -267,7 +279,7 @@
 .themeDescription {
   max-width: 31ch;
   color: var(--ink-inverse-soft);
-  font-size: 0.78rem;
+  font-size: var(--text-card-meta);
   line-height: 1.35;
 }
 
@@ -278,11 +290,11 @@
   min-height: 38px;
   align-items: center;
   justify-content: center;
-  padding: 8px 10px;
+  padding: var(--space-control-gap) var(--space-control-inline);
   border-radius: var(--radius-full);
   background: var(--sur-raised);
   color: var(--ink);
-  font-size: 0.7rem;
+  font-size: var(--text-card-label);
   font-weight: 700;
 }
 
@@ -293,9 +305,18 @@
     box-shadow: var(--shadow-lift);
   }
 
+  .trendCard[data-status="review"]:hover {
+    transform: none;
+    box-shadow: var(--shadow-overlay);
+  }
+
   .trendCard:hover .cardImage,
   .themeCard:hover .cardImage {
     transform: scale(1.035);
+  }
+
+  .trendCard[data-status="review"]:hover .cardImage {
+    transform: none;
   }
 }
 
@@ -361,7 +382,7 @@
 
   .sectionLinkOnPrimary,
   .themesHeader a {
-    font-size: 0.78rem;
+    font-size: var(--text-card-meta);
   }
 
   .trendGrid {
@@ -416,7 +437,7 @@
   .sectionLinkOnPrimary,
   .themesHeader a {
     display: inline-flex;
-    margin-top: 12px;
+    margin-top: var(--space-control-inline);
   }
 
   .trendCardFeatured {
@@ -425,23 +446,23 @@
 
   .trendContent,
   .trendCardCompact .trendContent {
-    padding: 22px;
+    padding: var(--space-card-inset);
   }
 
   .trendTitle {
-    font-size: clamp(1.6rem, 8vw, 2.25rem);
+    font-size: var(--text-trend-feature-mobile);
   }
 
   .trendCardCompact .trendTitle {
-    font-size: 1.25rem;
+    font-size: var(--text-lg);
   }
 
   .trendMeta {
-    font-size: 0.68rem;
+    font-size: var(--text-card-meta);
   }
 
   .themeContent {
-    padding: 22px;
+    padding: var(--space-card-inset);
   }
 }
 

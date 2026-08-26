@@ -50,13 +50,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <Link href="/#collections">Collections</Link>
               <Link href="/pricing">Tarifs</Link>
             </nav>
-            <nav aria-label="Contribuer dans le pied de page">
-              <h2>Contribuer</h2>
-              <Link href="/editorial">Proposer une source</Link>
-              <Link href="/identite">Créer un compte contributeur</Link>
+            <nav aria-label="À propos dans le pied de page">
+              <h2>À propos</h2>
+              <Link href="/a-propos#mission">Pourquoi Idea Commons</Link>
+              <Link href="/a-propos#fonctionnement">Comment ça marche</Link>
+              <Link href="/a-propos#contribuer">Contribuer</Link>
             </nav>
-            <nav aria-label="Dossiers dans le pied de page">
-              <h2>Dossiers</h2>
+            <nav aria-label="Collections dans le pied de page">
+              <h2>Collections</h2>
               <Link href="/idees/cartographie-ilots-chaleur">Climat urbain</Link>
               <Link href="/idees/ateliers-reparation-mediatheque">Réparer ensemble</Link>
             </nav>

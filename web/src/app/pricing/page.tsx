@@ -74,10 +74,6 @@ export default function PricingPage() {
           </article>
         </div>
 
-        <p className={styles.note}>
-          Les fonctions Premium sont encore en définition. Aucun tarif ni calendrier
-          d’ouverture n’est annoncé à ce stade.
-        </p>
       </div>
     </section>
   );

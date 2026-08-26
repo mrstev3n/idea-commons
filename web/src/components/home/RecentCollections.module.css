@@ -5,11 +5,11 @@
 }
 
 .recentSection {
-  padding: clamp(76px, 8vw, 132px) 0 clamp(54px, 6.5vw, 104px);
+  padding: clamp(var(--space-section-md), 8vw, var(--space-section-xl)) 0 clamp(var(--space-section-compact), 6.5vw, var(--space-section-reading));
 }
 
 .collectionsSection {
-  padding: clamp(30px, 4vw, 64px) 0 clamp(88px, 9vw, 148px);
+  padding: clamp(var(--space-content-loose), 4vw, var(--space-section-sm)) 0 clamp(var(--space-section-flow), 9vw, var(--space-section-collections-max));
 }
 
 .shell {
@@ -21,8 +21,8 @@
   display: flex;
   align-items: end;
   justify-content: space-between;
-  gap: 32px;
-  margin-bottom: clamp(26px, 3.2vw, 44px);
+  gap: var(--space-content-loose);
+  margin-bottom: clamp(var(--space-card-inset), 3.2vw, var(--space-content-wide));
 }
 
 .sectionHeading h2 {
@@ -38,13 +38,15 @@
 .collectionOverlay a {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-control-gap);
   min-height: 44px;
   color: var(--ink-accent);
-  font-size: 0.86rem;
+  font-size: var(--text-sm);
   font-weight: 610;
   line-height: 1.25;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: var(--border-standard);
+  text-underline-offset: 5px;
   transition: color var(--dur-micro) var(--ease-glide);
 }
 
@@ -70,8 +72,8 @@
 
 .ideaLayout {
   display: grid;
-  grid-template-columns: repeat(16, minmax(0, 1fr));
-  grid-template-rows: repeat(2, var(--bento-row-size));
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(2, var(--bento-idea-row-size)) var(--bento-idea-cta-size);
   gap: var(--space-bento-gap);
 }
 
@@ -86,62 +88,76 @@
 }
 
 .ideaCard {
+  position: relative;
   display: grid;
   min-width: 0;
+  grid-template-columns: minmax(112px, 38%) minmax(0, 1fr);
+  grid-template-rows: 1fr;
+  background: var(--sur-raised);
+  color: var(--ink);
 }
 
-.feature {
-  grid-column: span 8;
-  grid-row: span 2;
-  grid-template-columns: minmax(0, 0.92fr) minmax(260px, 1.08fr);
+.ideaLayout > .ideaCard:nth-child(1) {
+  grid-column: 1 / 5;
+  grid-row: 1 / 4;
 }
 
-.wide {
-  grid-column: span 8;
-  grid-template-columns: minmax(190px, 0.9fr) minmax(0, 1.1fr);
+.ideaLayout > .ideaCard:nth-child(2) {
+  grid-column: 5 / 9;
+  grid-row: 1;
 }
 
-.compact {
-  grid-column: span 4;
-  grid-template-rows: minmax(104px, 0.82fr) minmax(0, 1.18fr);
+.ideaLayout > .ideaCard:nth-child(3) {
+  grid-column: 9 / 13;
+  grid-row: 1;
+}
+
+.ideaLayout > .ideaCard:nth-child(4) {
+  grid-column: 5 / 13;
+  grid-row: 2;
 }
 
 .ideaMedia,
-.collectionCard {
+.collectionCard,
+.collectionMedia {
   position: relative;
   overflow: hidden;
 }
 
 .ideaMedia img,
-.collectionCard > img {
+.collectionMedia img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  inset: 0 !important;
   object-fit: cover;
   transition: scale var(--dur-narrative) var(--ease-exit);
 }
 
+/* Asset placeholder crop: its source file contains an unusable grey strip at the bottom. */
+.ideaMedia img.mediaCropValley,
+.collectionMedia img.mediaCropValley {
+  height: 120% !important;
+  top: 0 !important;
+  bottom: auto !important;
+  object-position: center top;
+}
+
 .ideaBody {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   min-width: 0;
-}
-
-.feature .ideaBody {
-  padding: 40px clamp(30px, 3.4vw, 52px);
-}
-
-.wide .ideaBody {
-  padding: var(--space-5);
-}
-
-.compact .ideaBody {
-  padding: var(--space-5);
+  padding: var(--space-4);
 }
 
 .eyebrow,
 .collectionLabel {
-  margin: 0 0 13px;
+  margin: 0 0 var(--space-2);
   color: var(--ink-muted);
-  font-size: 0.69rem;
+  font-size: var(--text-card-label);
   font-weight: 680;
   line-height: 1.2;
   letter-spacing: 0.09em;
@@ -149,51 +165,46 @@
 }
 
 .ideaBody h3 {
+  display: -webkit-box;
+  overflow: hidden;
   font-family: var(--font-serif);
   font-size: var(--text-card-title);
   font-weight: 520;
   line-height: var(--leading-card-title);
   letter-spacing: -0.035em;
-}
-
-.feature .ideaBody h3 {
-  font-size: var(--text-card-feature);
-  letter-spacing: -0.04em;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .summary {
   display: -webkit-box;
-  margin-top: var(--space-3);
+  margin-top: var(--space-2);
   overflow: hidden;
   color: var(--ink-soft);
-  font-size: var(--text-sm);
+  font-size: var(--text-card-meta);
   line-height: var(--leading-body);
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
 }
 
 .cardMeta {
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
-  margin-top: auto;
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--line);
-}
-
-.feature .cardMeta {
   grid-template-columns: 1fr;
-  gap: var(--space-3);
-  margin-top: var(--space-6);
-  padding-top: var(--space-5);
+  gap: var(--space-control-gap);
+  margin-top: auto;
+  padding-top: var(--space-2);
+  border-top: var(--border-standard) solid var(--line);
 }
 
 .cardMeta p {
   margin: 0;
-  color: var(--ink-soft);
-  font-size: var(--text-card-meta);
-  line-height: 1.4;
+  overflow: hidden;
+  color: var(--ink-muted);
+  font-size: var(--text-card-label);
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cardMeta p:last-child {
@@ -203,7 +214,9 @@
 .cardMeta span {
   display: block;
   margin-bottom: 3px;
-  color: var(--ink-muted);
+  display: inline;
+  margin-right: var(--space-2);
+  color: var(--ink-soft);
   font-size: var(--text-card-label);
   font-weight: 650;
   letter-spacing: 0.07em;
@@ -213,7 +226,7 @@
 .ideaBody .textLink,
 .pendingLabel {
   margin-top: auto;
-  padding-top: var(--space-3);
+  padding-top: var(--space-control-gap);
 }
 
 .pendingLabel {
@@ -222,64 +235,43 @@
   font-weight: 610;
 }
 
-.wide .summary,
-.compact .summary {
-  display: none;
+.ideaCard .eyebrow,
+.ideaCard .cardMeta span {
+  color: var(--ink-muted);
 }
 
-.wide .cardMeta,
-.compact .cardMeta {
-  gap: var(--space-2) var(--space-3);
-  margin-top: var(--space-3);
-  padding-top: var(--space-3);
+.ideaIndexCta {
+  grid-column: 5 / 13;
+  grid-row: 3;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-card-inset);
+  padding: var(--space-control-inline) var(--space-card-inset);
+  border: var(--border-standard) solid color-mix(in oklch, var(--line) 82%, transparent);
+  border-radius: var(--radius-lg);
+  background: var(--sur-raised);
+  color: var(--ink);
+  box-shadow: var(--shadow-raised);
+  transition:
+    background-color var(--dur-ui) var(--ease-glide),
+    border-color var(--dur-ui) var(--ease-glide);
 }
 
-.wide .ideaBody .textLink,
-.compact .ideaBody .textLink,
-.compact .pendingLabel {
-  padding-top: var(--space-2);
+.ideaIndexCta p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
 }
 
-.compact {
-  position: relative;
-  grid-template-rows: 1fr;
-  background: var(--sur-inverse);
-  color: var(--ink-inverse);
-}
-
-.compact .ideaMedia,
-.compact .ideaBody {
-  grid-area: 1 / 1;
-}
-
-.compact .ideaMedia::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  background: var(--sur-image-scrim);
-}
-
-.compact .ideaBody {
-  position: relative;
-  z-index: 1;
-}
-
-.compact .eyebrow,
-.compact .cardMeta span {
-  color: var(--ink-inverse-subtle);
-}
-
-.compact .cardMeta {
-  border-color: var(--line-inverse);
-}
-
-.compact .cardMeta p,
-.compact .pendingLabel {
-  color: var(--ink-inverse-muted);
+.ideaIndexCta:hover {
+  border-color: var(--line-strong);
 }
 
 .ideaCard:hover img,
-.collectionCard:hover > img {
+.collectionCard:hover .collectionMedia img {
   scale: 1.025;
 }
 
@@ -287,70 +279,84 @@
   display: flex;
   align-items: end;
   justify-content: space-between;
-  gap: 48px;
+  gap: var(--space-content-max);
   min-height: 260px;
-  padding: clamp(34px, 5vw, 64px);
+  padding: clamp(var(--space-content-loose), 5vw, var(--space-section-sm));
 }
 
 .emptyState h3 {
   max-width: 620px;
   font-family: var(--font-serif);
-  font-size: clamp(1.65rem, 1.35rem + 1.05vw, 2.3rem);
+  font-size: var(--text-2xl);
   font-weight: 520;
   letter-spacing: -0.04em;
 }
 
 .emptyState p:not(.eyebrow) {
   max-width: 620px;
-  margin-top: 16px;
+  margin-top: var(--space-control-inline);
   color: var(--ink-soft);
 }
 
 .collectionsGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(20px, 2.4vw, 34px);
+  gap: clamp(var(--space-card-inset), 2.4vw, var(--space-content-loose));
 }
 
 .collectionCard {
+  display: grid;
+  grid-template-rows: minmax(148px, 1.05fr) minmax(0, 0.95fr);
   min-height: clamp(250px, 22vw, 320px);
+  overflow: hidden;
+  border: var(--border-standard) solid color-mix(in oklch, var(--line) 82%, transparent);
   border-radius: var(--radius-lg);
-  background: var(--sur-inverse);
-  box-shadow: var(--shadow-overlay);
+  background: var(--sur-raised);
+  box-shadow: var(--shadow-raised);
   animation: recent-collection-enter var(--dur-narrative) var(--ease-exit) both;
 }
 
+.collectionMedia {
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+}
+
 .collectionOverlay {
-  position: absolute;
-  inset: 42% 0 0;
+  position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-end;
-  padding: clamp(22px, 2.4vw, 34px);
-  background: var(--sur-image-scrim);
-  color: var(--ink-inverse);
+  padding: clamp(var(--space-card-inset), 2.4vw, var(--space-content-loose));
+  background: var(--sur-raised);
+  color: var(--ink);
+}
+
+.collectionText {
+  display: grid;
+  align-content: start;
 }
 
 .collectionLabel {
-  color: var(--ink-inverse-subtle);
+  color: var(--ink-muted);
 }
 
 .collectionOverlay h3 {
+  min-block-size: calc(2 * 1.08em);
   font-family: var(--font-serif);
-  font-size: clamp(1.38rem, 1.2rem + 0.7vw, 1.85rem);
+  font-size: var(--text-card-feature);
   font-weight: 520;
   line-height: 1.08;
   letter-spacing: -0.035em;
 }
 
-.collectionOverlay p:not(.collectionLabel) {
+.collectionText > p:not(.collectionLabel) {
   display: -webkit-box;
-  margin-top: 9px;
+  margin-top: var(--space-control-gap);
   overflow: hidden;
-  color: var(--ink-inverse-muted);
-  font-size: 0.78rem;
+  color: var(--ink-muted);
+  font-size: var(--text-card-meta);
   line-height: 1.4;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -358,13 +364,15 @@
 
 .collectionOverlay a {
   margin-top: auto;
-  padding-top: 8px;
-  color: var(--ink-accent-inverse);
-  font-size: 0.75rem;
+  padding-top: var(--space-control-gap);
+  color: var(--ink-accent);
+  font-size: var(--text-card-meta);
+  text-decoration: underline;
+  text-underline-offset: 5px;
 }
 
 .collectionOverlay a:hover {
-  color: var(--action-inverse);
+  color: var(--action-primary-hover);
 }
 
 @keyframes recent-collection-enter {
@@ -385,52 +393,45 @@
     grid-template-rows: none;
   }
 
-  .feature,
-  .wide,
-  .compact {
+  .ideaLayout > .ideaCard:nth-child(1),
+  .ideaLayout > .ideaCard:nth-child(2),
+  .ideaLayout > .ideaCard:nth-child(3),
+  .ideaLayout > .ideaCard:nth-child(4),
+  .ideaIndexCta {
     grid-column: auto;
     grid-row: auto;
   }
 
-  .feature {
-    grid-column: 1 / -1;
-    min-height: var(--bento-feature-tablet);
-  }
-
-  .wide {
-    grid-column: 1 / -1;
-    min-height: var(--bento-wide-tablet);
-  }
-
-  .compact {
+  .ideaCard {
     min-height: var(--bento-compact-tablet);
   }
 
-  .collectionOverlay {
-    inset-block-start: 35%;
+  .ideaIndexCta {
+    min-height: var(--bento-idea-cta-size);
+    grid-column: 1 / -1;
   }
 }
 
 @media (max-width: 760px) {
   .recentSection {
-    padding: 68px 0 48px;
+    padding: var(--space-section-sm) 0 var(--space-content-max);
   }
 
   .collectionsSection {
-    padding: 26px 0 88px;
+    padding: var(--space-content-loose) 0 var(--space-section-flow);
   }
 
   .shell {
-    width: min(100% - 28px, var(--public-shell-max));
+    width: min(calc(100% - var(--space-content-loose)), var(--public-shell-max));
   }
 
   .sectionHeading {
     display: block;
-    margin-bottom: 24px;
+    margin-bottom: var(--space-card-inset);
   }
 
   .sectionHeading a {
-    margin-top: 8px;
+    margin-top: var(--space-control-gap);
   }
 
   .ideaLayout {
@@ -438,36 +439,28 @@
     grid-template-rows: none;
   }
 
-  .feature,
-  .wide,
-  .compact {
-    display: grid;
-    grid-column: auto;
-    min-height: 0;
+  .ideaCard {
+    min-height: var(--bento-idea-card-mobile);
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(190px, 46vw) auto;
+    grid-template-rows: minmax(148px, 42%) minmax(0, 1fr);
   }
 
-  .feature .ideaBody,
-  .wide .ideaBody,
-  .compact .ideaBody {
-    padding: var(--space-5);
+  .ideaBody {
+    padding: var(--space-4);
   }
 
-  .feature .ideaBody h3 {
-    font-size: var(--text-card-title);
+  .ideaIndexCta {
+    min-height: calc(var(--bento-idea-cta-size) + var(--space-6));
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-control-inline);
+    padding: var(--space-4);
   }
 
-  .compact {
-    min-height: var(--bento-compact-mobile);
-    grid-template-rows: 1fr;
-  }
-
-  .feature .cardMeta,
   .cardMeta {
     grid-template-columns: 1fr;
-    margin-top: var(--space-5);
-    padding-top: var(--space-4);
+    margin-top: auto;
+    padding-top: var(--space-control-inline);
   }
 
   .cardMeta p:last-child {
@@ -482,31 +475,29 @@
     min-height: 320px;
   }
 
-  .collectionOverlay {
-    inset-block-start: 40%;
-    padding: 26px 24px;
-  }
+  .collectionOverlay { padding: var(--space-card-inset); }
 
   .emptyState {
     display: block;
     min-height: 0;
-    padding: 32px 24px;
+    padding: var(--space-content-loose) var(--space-card-inset);
   }
 
   .emptyAction {
-    margin-top: 24px;
+    margin-top: var(--space-card-inset);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ideaCard,
   .emptyState,
-  .collectionCard {
+  .collectionCard,
+  .ideaIndexCta {
     animation: none;
   }
 
   .ideaMedia img,
-  .collectionCard > img,
+  .collectionMedia img,
   .sectionHeading a span,
   .textLink span,
   .emptyAction span,
@@ -515,7 +506,9 @@
   }
 
   .ideaCard:hover img,
-  .collectionCard:hover > img {
+  .collectionCard:hover .collectionMedia img,
+  .ideaIndexCta a:hover {
     scale: 1;
+    transform: none;
   }
 }

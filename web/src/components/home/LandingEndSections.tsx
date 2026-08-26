@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import { IconChevronDown } from "@tabler/icons-react";
+import { type KeyboardEvent, useId, useRef, useState } from "react";
 import { NewsletterSignup } from "./NewsletterSignup";
 import { ActionLink } from "@/components/ui/Action";
 import styles from "./LandingEndSections.module.css";
@@ -26,6 +30,71 @@ const QUESTIONS = [
   },
 ] as const;
 
+function FaqAccordion() {
+  const accordionId = useId();
+  const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  function moveFocus(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+      event.preventDefault();
+      setOpenIndex((currentIndex) => (currentIndex === index ? null : index));
+      return;
+    }
+
+    let nextIndex: number | null = null;
+
+    if (event.key === "ArrowDown") nextIndex = (index + 1) % QUESTIONS.length;
+    if (event.key === "ArrowUp") nextIndex = (index - 1 + QUESTIONS.length) % QUESTIONS.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = QUESTIONS.length - 1;
+    if (nextIndex === null) return;
+
+    event.preventDefault();
+    buttonRefs.current[nextIndex]?.focus();
+  }
+
+  return (
+    <div className={styles.questionList}>
+      {QUESTIONS.map((item, index) => {
+        const isOpen = openIndex === index;
+        const buttonId = `${accordionId}-question-${index}`;
+        const panelId = `${accordionId}-answer-${index}`;
+
+        return (
+          <div className={styles.questionItem} key={item.question}>
+            <h3 className={styles.questionHeading}>
+              <button
+                ref={(node) => {
+                  buttonRefs.current[index] = node;
+                }}
+                id={buttonId}
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+                onClick={() => setOpenIndex(isOpen ? null : index)}
+                onKeyDown={(event) => moveFocus(event, index)}
+              >
+                <span>{item.question}</span>
+                <IconChevronDown aria-hidden="true" focusable="false" />
+              </button>
+            </h3>
+            <div
+              id={panelId}
+              className={styles.answerPanel}
+              role="region"
+              aria-labelledby={buttonId}
+              hidden={!isOpen}
+            >
+              <p>{item.answer}</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function LandingEndSections() {
   return (
     <>
@@ -40,18 +109,14 @@ export function LandingEndSections() {
             />
           </div>
           <div className={styles.contributionCopy}>
-            <p className={styles.eyebrow}>Le Commons est ouvert</p>
-            <h2 id="contribution-title">Contribuer au Commons</h2>
+            <h2 id="contribution-title">Contribuer aux idées</h2>
             <p>
-              Partage une source publique, enrichis une idée ou rends un débat plus
-              explicite. Chaque contribution reste reliée à son origine.
+              Propose ce qui mérite d’être documenté, discuté ou mis en commun. Un compte
+              est requis avant l’envoi.
             </p>
             <div className={styles.actions}>
-              <ActionLink variant="primary" href="/editorial">
-                Proposer une source
-              </ActionLink>
-              <ActionLink variant="quiet" href="/identite">
-                Créer un compte contributeur
+              <ActionLink variant="primary" href="/identite">
+                Partager une idée
               </ActionLink>
             </div>
           </div>
@@ -61,29 +126,20 @@ export function LandingEndSections() {
       <section className={styles.faq} aria-labelledby="faq-title" data-reveal>
         <div className={styles.faqShell}>
           <div className={styles.faqIntro}>
-            <p className={styles.eyebrow}>Pour aller plus loin</p>
             <h2 id="faq-title">Questions fréquentes</h2>
             <p>
               Le minimum à savoir pour explorer, citer ou proposer une source sans perdre
               le fil de sa provenance.
             </p>
           </div>
-          <div className={styles.questionList}>
-            {QUESTIONS.map((item, index) => (
-              <details key={item.question} open={index === 0}>
-                <summary>{item.question}</summary>
-                <p>{item.answer}</p>
-              </details>
-            ))}
-          </div>
+          <FaqAccordion />
         </div>
       </section>
 
-      <section id="newsletter" className={styles.newsletter} aria-labelledby="newsletter-title" data-reveal>
+      <section id="newsletter" className={styles.newsletter} aria-labelledby="newsletter-title">
         <div className={styles.newsletterShell}>
           <div>
-            <p className={styles.eyebrow}>La lettre du Commons</p>
-            <h2 id="newsletter-title">Le briefing du Commons</h2>
+            <h2 id="newsletter-title">Les briefs Idea Commons</h2>
             <p>Chaque semaine, une sélection d’idées et de débats à ne pas manquer.</p>
           </div>
           <NewsletterSignup />
