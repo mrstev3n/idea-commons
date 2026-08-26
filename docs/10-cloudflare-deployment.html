@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Idea Commons — Spécification de déploiement Cloudflare</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, sans-serif; line-height: 1.55; }
+    body { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; color: #17201a; }
+    h1, h2 { line-height: 1.15; }
+    h1 { max-width: 18ch; }
+    section { margin-top: 36px; }
+    .decision { border-left: 4px solid #18733c; padding: 16px 20px; background: #f1f8f3; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border-bottom: 1px solid #ccd5ce; padding: 10px; text-align: left; vertical-align: top; }
+    code { background: #eef1ee; padding: 0.12em 0.35em; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <p>Spécification technique courte · 26 août 2026</p>
+    <h1>Surface Cloudflare du prototype Next.js</h1>
+    <p>Cette spécification sépare la cible d'hébergement de l'état réellement déployable du prototype IC-07.</p>
+  </header>
+
+  <section id="decision">
+    <h2>Décision</h2>
+    <div class="decision">
+      <p><strong>Cible :</strong> Cloudflare Workers avec <code>vinext</code>, désormais recommandé par Cloudflare pour une nouvelle application Next.js 16. Pages classique est exclu : il ne convient qu'à un export statique, alors qu'Idea Commons comporte SSR, Server Actions et Route Handlers.</p>
+      <p><strong>État :</strong> configuration locale prête à être revue, mais déploiement bloqué. Le build Workers réussit ; le runtime dynamique échoue tant que les adaptateurs PGlite, filesystem local et processus enfant restent actifs.</p>
+    </div>
+  </section>
+
+  <section id="scope">
+    <h2>Périmètre et non-objectifs</h2>
+    <ul>
+      <li>Configurer le packaging Workers, les previews et les commandes de publication.</li>
+      <li>Ne pas modifier l'authentification, créer de ressource distante, ajouter de secret ou déployer.</li>
+      <li>Ne pas présenter les pages publiques qui répondent localement comme une application complète prête à exposer.</li>
+    </ul>
+  </section>
+
+  <section id="environments">
+    <h2>Environnements Git</h2>
+    <table>
+      <thead><tr><th>Branche</th><th>Comportement Cloudflare</th><th>URL attendue</th></tr></thead>
+      <tbody>
+        <tr><td><code>main</code></td><td>Branche de production Workers Builds ; déploiement actif seulement après revue et autorisation.</td><td><code>idea-commons-web.&lt;sous-domaine&gt;.workers.dev</code>, puis domaine personnalisé si décidé.</td></tr>
+        <tr><td><code>dev</code></td><td>Build non-production ; upload d'une version sans promotion, alias de preview stable <code>dev</code>.</td><td><code>dev-idea-commons-web.&lt;sous-domaine&gt;.workers.dev</code>.</td></tr>
+        <tr><td><code>agent/*</code></td><td>Preview versionnée ou alias de branche automatique ; jamais production.</td><td>URL de preview fournie par Workers Builds.</td></tr>
+      </tbody>
+    </table>
+    <p>Les previews Workers sont publiques par défaut. Les flux éditoriaux ne doivent pas être exposés avant l'authentification cible ; Cloudflare Access est une option de protection séparée, pas activée implicitement.</p>
+  </section>
+
+  <section id="blockers">
+    <h2>Bloqueurs avant publication</h2>
+    <ol>
+      <li>Remplacer PGlite par l'adaptateur Neon/PostgreSQL cible ; le VFS Workers n'offre qu'un <code>/tmp</code> mémoire, isolé et non persistant par requête.</li>
+      <li>Remplacer le pont <code>node:child_process</code> par un appel d'adaptateur dans le runtime ; le module Workers est un stub non fonctionnel.</li>
+      <li>Sortir la consommation de l'outbox du GET de polling vers un consommateur durable borné.</li>
+      <li>Valider ensuite l'identité service, l'authentification et les secrets dans des environnements séparés.</li>
+    </ol>
+    <p><code>npm run cloudflare:preflight</code> bloque les commandes de preview et de production tant que ces marqueurs sont présents.</p>
+  </section>
+
+  <section id="acceptance">
+    <h2>Preuves d'acceptation</h2>
+    <ul>
+      <li><code>npm run typecheck</code> et <code>npm run build</code> restent verts.</li>
+      <li><code>npm run build:vinext</code> construit le Worker sans erreur.</li>
+      <li>Le runtime Workers local rend les routes publiques et dynamiques attendues sans 500.</li>
+      <li>Le préflight ne passe qu'après remplacement réel des trois adaptateurs bloquants.</li>
+      <li>Après autorisation : <code>dev</code> obtient un alias stable observé, puis <code>main</code> une URL de production observée.</li>
+    </ul>
+  </section>
+
+  <section id="costs">
+    <h2>Coûts et limites</h2>
+    <p>La configuration n'active ni KV, ni Images, ni service payant. Elle vise le plan Workers Free, mais le SSR et les traitements lourds peuvent dépasser sa limite CPU ; tout passage au plan Workers Paid, actuellement annoncé à partir de 5 USD par mois, exige une décision humaine séparée. Les plafonds et tarifs doivent être revérifiés au jalon de déploiement.</p>
+  </section>
+
+  <section id="sources">
+    <h2>Sources officielles consultées</h2>
+    <ul>
+      <li><a href="https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/">Cloudflare Workers — Next.js et vinext</a></li>
+      <li><a href="https://developers.cloudflare.com/pages/framework-guides/nextjs/">Cloudflare Pages — frontière Next.js statique</a></li>
+      <li><a href="https://developers.cloudflare.com/workers/runtime-apis/nodejs/">Workers — compatibilité Node.js et modules stub</a></li>
+      <li><a href="https://developers.cloudflare.com/workers/runtime-apis/nodejs/fs/">Workers — filesystem virtuel</a></li>
+      <li><a href="https://developers.cloudflare.com/workers/versions-and-deployments/preview-urls/">Workers — URLs de preview et alias</a></li>
+      <li><a href="https://developers.cloudflare.com/workers/ci-cd/builds/configuration/">Workers Builds — branches production et non-production</a></li>
+      <li><a href="https://developers.cloudflare.com/workers/platform/pricing/">Workers — tarification</a></li>
+    </ul>
+  </section>
+</body>
+</html>
