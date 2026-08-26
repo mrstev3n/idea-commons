@@ -1,14 +1,24 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://idea-commons.example/schemas/source-catalogue/1.0.0",
+  "$id": "https://idea-commons.example/schemas/source-catalogue/1.1.0",
   "title": "IdeaCommonsSourceCatalogue",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "accessedAt", "sourceLockNotice", "collectorPolicy", "sources"],
+  "required": ["schemaVersion", "accessedAt", "sourceLockNotice", "inclusionPolicy", "collectorPolicy", "registeredSources", "sources"],
   "properties": {
-    "schemaVersion": {"const": "1.0.0"},
+    "schemaVersion": {"const": "1.1.0"},
     "accessedAt": {"type": "string", "format": "date"},
     "sourceLockNotice": {"type": "string", "minLength": 1},
+    "inclusionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allRegisteredSourcesActive", "verificationIndependentFromInclusion", "humanDecisionRequiredToDeactivate"],
+      "properties": {
+        "allRegisteredSourcesActive": {"const": true},
+        "verificationIndependentFromInclusion": {"const": true},
+        "humanDecisionRequiredToDeactivate": {"const": true}
+      }
+    },
     "collectorPolicy": {
       "type": "object",
       "additionalProperties": false,
@@ -17,8 +27,12 @@
         "networkMode": {"const": "explicit_live_only"},
         "maxItemsPerSource": {"type": "integer", "minimum": 1, "maximum": 3},
         "retainFullText": {"const": false},
-        "liveOutputDirectory": {"const": ".local/source-collection-research"}
+        "liveOutputDirectory": {"const": ".agent/source-collection-research"}
       }
+    },
+    "registeredSources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/registeredSource"}
     },
     "sources": {
       "type": "array",
@@ -27,6 +41,22 @@
     }
   },
   "$defs": {
+    "registeredSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "publisher", "canonicalUrl", "inclusionStatus", "evidenceMaturity", "accessStatus", "observedCharacteristics", "consultedUrls", "nextVerification"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "publisher": {"type": "string", "minLength": 1},
+        "canonicalUrl": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "inclusionStatus": {"const": "active"},
+        "evidenceMaturity": {"enum": ["partially_verified", "not_yet_verified"]},
+        "accessStatus": {"enum": ["opened_online", "blocked_online"]},
+        "observedCharacteristics": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "consultedUrls": {"type": "array", "minItems": 1, "items": {"type": "string", "format": "uri"}, "uniqueItems": true},
+        "nextVerification": {"type": "string", "minLength": 1}
+      }
+    },
     "evidenceValue": {
       "type": "object",
       "additionalProperties": false,
@@ -40,9 +70,11 @@
     "source": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "publisher", "canonicalUrl", "accessType", "languages", "coverage", "subjects", "cadence", "metadata", "endpoint", "rights", "access", "qualificationRecommendation", "rationale", "consultedUrls"],
+      "required": ["id", "inclusionStatus", "evidenceMaturity", "publisher", "canonicalUrl", "accessType", "languages", "coverage", "subjects", "cadence", "metadata", "endpoint", "rights", "access", "rationale", "consultedUrls"],
       "properties": {
         "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "inclusionStatus": {"const": "active"},
+        "evidenceMaturity": {"enum": ["verified_for_defined_use", "partially_verified", "not_yet_verified", "conflicting"]},
         "publisher": {"type": "string", "minLength": 1},
         "canonicalUrl": {"type": "string", "format": "uri", "pattern": "^https://"},
         "accessType": {"enum": ["rss", "atom", "api_json", "api_xml", "html", "dataset", "sitemap"]},
@@ -93,7 +125,6 @@
             "observation": {"type": "string", "minLength": 1}
           }
         },
-        "qualificationRecommendation": {"enum": ["m1_candidate", "observation", "not_selected_for_current_probe", "insufficient_information"]},
         "rationale": {"type": "string", "minLength": 1},
         "consultedUrls": {"type": "array", "minItems": 1, "items": {"type": "string", "format": "uri"}, "uniqueItems": true}
       }

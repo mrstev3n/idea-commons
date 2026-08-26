@@ -33,9 +33,14 @@ class CatalogueContractTests(unittest.TestCase):
         cls.catalogue = json.loads((ROOT / "editorial" / "sources" / "catalogue.json").read_text(encoding="utf-8"))
 
     def test_catalogue_is_extensible_and_unique(self) -> None:
-        sources = self.catalogue["sources"]
-        self.assertGreaterEqual(len(sources), 15)
+        sources = self.catalogue["sources"] + self.catalogue["registeredSources"]
+        self.assertGreaterEqual(len(sources), 50)
         self.assertEqual(len({source["id"] for source in sources}), len(sources))
+        self.assertTrue(self.catalogue["inclusionPolicy"]["allRegisteredSourcesActive"])
+        self.assertTrue(all(source["inclusionStatus"] == "active" for source in sources))
+        for source in self.catalogue["registeredSources"]:
+            self.assertTrue(source["consultedUrls"])
+            self.assertTrue(source["nextVerification"])
 
     def test_live_selection_is_bounded_and_explicit(self) -> None:
         active = [source for source in self.catalogue["sources"] if source["endpoint"]["testStatus"] in {"planned", "live_success", "live_error"}]
@@ -53,11 +58,12 @@ class CatalogueContractTests(unittest.TestCase):
                 if field["status"] in {"not_found", "not_checked"}:
                     self.assertIsNone(field["value"])
 
-    def test_each_source_has_evidence_and_a_revisable_recommendation(self) -> None:
-        allowed = {"m1_candidate", "observation", "not_selected_for_current_probe", "insufficient_information"}
+    def test_each_source_has_evidence_without_implicit_exclusion(self) -> None:
+        allowed = {"verified_for_defined_use", "partially_verified", "not_yet_verified", "conflicting"}
         for source in self.catalogue["sources"]:
             self.assertTrue(source["consultedUrls"])
-            self.assertIn(source["qualificationRecommendation"], allowed)
+            self.assertEqual(source["inclusionStatus"], "active")
+            self.assertIn(source["evidenceMaturity"], allowed)
             self.assertTrue(source["access"]["observation"])
 
     def test_user_discovery_leads_are_extensible_and_linked(self) -> None:
@@ -65,21 +71,29 @@ class CatalogueContractTests(unittest.TestCase):
         entries = leads["entries"]
         self.assertGreaterEqual(len(entries), 40)
         self.assertEqual(len({entry["id"] for entry in entries}), len(entries))
-        catalogue_ids = {source["id"] for source in self.catalogue["sources"]}
+        catalogue_ids = {source["id"] for source in self.catalogue["sources"] + self.catalogue["registeredSources"]}
         for entry in entries:
-            if entry["qualification"] == "qualified_catalogue":
-                self.assertIn(entry["catalogueId"], catalogue_ids)
+            self.assertEqual(entry["inclusionStatus"], "active")
+            self.assertIn(entry["catalogueId"], catalogue_ids)
         reddit = [entry for entry in entries if entry["id"].startswith("reddit-")]
         self.assertGreaterEqual(len(reddit), 20)
         self.assertTrue(all(entry["priority"] == "user_priority" for entry in reddit))
 
-    def test_user_requested_source_extension_is_qualified(self) -> None:
-        required = {"yelp-places", "google-news", "yahoo-finance", "axios-media", "reuters-media", "guardian-open-platform"}
-        catalogue_ids = {source["id"] for source in self.catalogue["sources"]}
+    def test_user_requested_sources_are_active_and_linked(self) -> None:
+        required = {"yelp-places", "google-news", "yahoo-finance", "axios-media", "reuters-media", "guardian-open-platform", "ecowas-news", "product-hunt", "la-nation-benin", "haac-media-directory", "meteo-benin"}
+        catalogue_ids = {source["id"] for source in self.catalogue["sources"] + self.catalogue["registeredSources"]}
         self.assertTrue(required.issubset(catalogue_ids))
         leads = json.loads((ROOT / "editorial" / "sources" / "discovery-leads.json").read_text(encoding="utf-8"))
-        linked = {entry["catalogueId"] for entry in leads["entries"] if entry["qualification"] == "qualified_catalogue"}
+        linked = {entry["catalogueId"] for entry in leads["entries"] if entry["inclusionStatus"] == "active"}
         self.assertTrue(required.issubset(linked))
+
+    def test_regional_product_hypothesis_is_explicit_and_bounded(self) -> None:
+        model = json.loads((ROOT / "editorial" / "sources" / "regional-discovery-model.json").read_text(encoding="utf-8"))
+        self.assertEqual(model["status"], "product_hypothesis")
+        self.assertFalse(model["premiumHypothesis"]["pricingDecisionMade"])
+        self.assertGreaterEqual(model["crossSourceRecommendation"]["minimumIndependentSignalsForEscalation"], 2)
+        self.assertTrue(model["crossSourceRecommendation"]["humanReviewRequired"])
+        self.assertTrue(all(case["evidenceClass"] == "user_provided_hypothesis" for case in model["illustrativeScenarios"]))
 
 
 class SourceToIdeaCaseTests(unittest.TestCase):

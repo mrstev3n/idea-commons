@@ -14,8 +14,8 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
-IMPORT_DIR = ROOT / ".local" / "source-collection-research" / "imports"
-OUTPUT_DIR = ROOT / ".local" / "source-collection-research"
+IMPORT_DIR = ROOT / ".agent" / "source-collection-research" / "imports"
+OUTPUT_DIR = ROOT / ".agent" / "source-collection-research"
 ALLOWED_METHODS = {"manual_browser_export", "authorized_platform_export", "synthetic_fixture"}
 ALLOWED_KINDS = {"topic", "question", "answer", "comment", "post"}
 MAX_ITEMS = 40
@@ -95,7 +95,7 @@ def main() -> int:
     source = Path(args.input).resolve()
     imports = IMPORT_DIR.resolve()
     if source.parent != imports or source.suffix != ".json":
-        parser.error("--input must be one JSON file directly under .local/source-collection-research/imports")
+        parser.error("--input must be one JSON file directly under .agent/source-collection-research/imports")
     if Path(args.output).name != args.output or not args.output.endswith(".json"):
         parser.error("--output must be one JSON filename without directories")
 

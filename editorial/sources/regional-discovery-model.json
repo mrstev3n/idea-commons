@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "product_hypothesis",
+  "decisionSource": "user_direction_2026-08-26",
+  "generalBaseline": {
+    "principle": "Combiner des sources mondiales avec un socle éditorial Bénin, Afrique de l'Ouest et Afrique.",
+    "sourceIds": ["sgg-benin", "instad-benin", "bceao-communiques", "waho-news", "boad-news", "ecowas-news", "rfi-rss", "la-nation-benin", "banouto-benin", "24h-benin", "benin-web-tv", "haac-media-directory", "meteo-benin", "africanews-rss", "voa-afrique", "africa-check-fr", "ortb-benin"]
+  },
+  "premiumHypothesis": {
+    "pricingDecisionMade": false,
+    "valueProposition": "Permettre de sauvegarder un profil régional et de personnaliser pays, sous-régions, villes, langues, thèmes et sources suivies.",
+    "configurableFields": ["country", "subregions", "cities", "languages", "topics", "selectedSourceIds", "userProvidedSourceUrls"],
+    "candidatePacks": ["benin-news", "west-africa-institutions", "africa-innovation"]
+  },
+  "crossSourceRecommendation": {
+    "minimumIndependentSignalsForEscalation": 2,
+    "singleReportLabel": "signal_non_corrobore",
+    "corroboratedLabel": "signal_corrobore_a_revoir",
+    "humanReviewRequired": true,
+    "notAnEmergencyInformationService": true
+  },
+  "illustrativeScenarios": [
+    {"id":"power-outage-map","evidenceClass":"user_provided_hypothesis","event":"signalements de coupures d'électricité dans plusieurs quartiers","candidateIdea":"carte communautaire à fraîcheur visible des zones affectées","warning":"Ne jamais afficher une disponibilité garantie à partir d'un signal isolé."},
+    {"id":"flood-route-map","evidenceClass":"user_provided_hypothesis","event":"actualités et signalements d'inondations sur plusieurs axes","candidateIdea":"itinéraires locaux enrichis par des signalements récents et une corroboration institutionnelle","warning":"Ne pas remplacer les autorités ou services d'urgence."},
+    {"id":"fuel-availability","evidenceClass":"user_provided_hypothesis","event":"pénurie d'essence et informations dispersées sur les réseaux sociaux","candidateIdea":"partage communautaire horodaté de disponibilité avec expiration automatique","warning":"Une information périmée doit devenir inconnue, jamais disponible."}
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "capturedAt": "2026-08-26",
-  "source": ".local/source-collection-research/probe-2026-08-26.json",
+  "source": ".agent/source-collection-research/probe-2026-08-26.json",
   "notice": "Échantillon minimisé issu du probe live. Il ne contient aucun article intégral, profil ou donnée privée ; seulement les champs nécessaires aux tests de traçabilité.",
   "records": {
     "world-bank-2025": {"sourceId":"world-bank-benin-indicators","identifier":"BEN:SP.POP.TOTL:2025","title":"Population, total — Benin","date":"2025","value":"14814460","url":null},

@@ -14,13 +14,13 @@ from collector import CollectionError, USER_AGENT, diagnostics, fetch_bounded, n
 
 ROOT = Path(__file__).resolve().parents[2]
 CATALOGUE = ROOT / "editorial" / "sources" / "catalogue.json"
-OUTPUT_DIR = ROOT / ".local" / "source-collection-research"
+OUTPUT_DIR = ROOT / ".agent" / "source-collection-research"
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run the explicit, sequential Idea Commons live source probe.")
     parser.add_argument("--live", action="store_true", help="Required confirmation that network access is intended.")
-    parser.add_argument("--output", default="latest-probe.json", help="Filename under .local/source-collection-research only.")
+    parser.add_argument("--output", default="latest-probe.json", help="Filename under .agent/source-collection-research only.")
     args = parser.parse_args()
     if not args.live:
         parser.error("network is disabled by default; pass --live explicitly")
