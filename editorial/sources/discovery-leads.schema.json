@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idea-commons.example/schemas/discovery-leads/1.1.0",
+  "title": "IdeaCommonsDiscoveryLeads",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "notice", "entries"],
+  "properties": {
+    "schemaVersion": {"const": "1.1.0"},
+    "notice": {"type": "string", "minLength": 1},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "submittedUrl", "kind", "priority", "inclusionStatus", "catalogueId", "notes"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "label": {"type": "string", "minLength": 1},
+          "submittedUrl": {"type": ["string", "null"]},
+          "kind": {"enum": ["media", "platform", "community", "thread", "search"]},
+          "priority": {"enum": ["user_priority", "regional_baseline", "research_expansion"]},
+          "inclusionStatus": {"const": "active"},
+          "catalogueId": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "notes": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

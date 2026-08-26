@@ -1,0 +1,306 @@
+/*
+ * Idea Commons — tokens de design
+ *
+ * Architecture en deux couches :
+ *   1. primitives  (--ic-*)   : valeurs brutes OKLCH, jamais consommées par les composants ;
+ *   2. sémantiques (--sur-*, --ink-*, --line-*, etc.) : seule API de consommation.
+ *
+ * Identité : landing produit contemporaine, éditoriale.
+ * Ciel forestier, blancs légèrement teintés de vert, grotesque géométrique + serif italic d'accent.
+ * Mode clair uniquement pour cet incrément (décision documentée).
+ */
+
+:root {
+  /* ---------- Primitives : blancs verts et encre ---------- */
+  --ic-white: oklch(1 0 0);
+  --ic-paper-0: oklch(0.992 0.006 155);
+  --ic-paper-1: oklch(0.978 0.009 155);
+  --ic-paper-2: oklch(0.948 0.016 155);
+  --ic-card: oklch(0.996 0.004 155);
+  --ic-ink-0: oklch(0.22 0.034 165);
+  --ic-ink-1: oklch(0.36 0.028 164);
+  --ic-ink-2: oklch(0.5 0.022 160);
+  --ic-line-0: oklch(0.86 0.02 130);
+  --ic-line-1: oklch(0.74 0.03 140);
+
+  /* ---------- Primitives : teintes ---------- */
+  --ic-green-6: oklch(0.43 0.124 163);
+  --ic-green-7: oklch(0.365 0.112 163);
+  --ic-green-3: oklch(0.82 0.1 148);
+  --ic-green-2: oklch(0.91 0.048 155);
+  --ic-green-1: oklch(0.962 0.024 155);
+  --ic-sky-0: oklch(0.34 0.07 162);
+  --ic-sky-1: oklch(0.46 0.1 155);
+  --ic-sky-2: oklch(0.62 0.09 145);
+  --ic-amber-6: oklch(0.52 0.12 68);
+  --ic-amber-2: oklch(0.925 0.052 84);
+  --ic-blue-6: oklch(0.46 0.09 235);
+  --ic-blue-2: oklch(0.92 0.036 235);
+  --ic-red-6: oklch(0.44 0.112 28);
+  --ic-red-2: oklch(0.915 0.04 28);
+  --ic-violet-6: oklch(0.44 0.108 300);
+  --ic-violet-2: oklch(0.925 0.04 300);
+  --ic-teal-6: oklch(0.45 0.082 200);
+  --ic-teal-2: oklch(0.925 0.034 200);
+
+  /* ---------- Sémantiques : surfaces ---------- */
+  --sur-page: var(--ic-paper-1);
+  --sur-raised: var(--ic-card);
+  --sur-sunken: var(--ic-paper-2);
+  --sur-inverse: var(--ic-ink-0);
+  --sur-sky: var(--ic-sky-0);
+  --sur-glass: oklch(0.2 0.03 165 / 0.52);
+  --sur-preview: oklch(0.22 0.028 165 / 0.42);
+  --sur-accent-soft: var(--ic-green-2);
+  --sur-accent-faint: var(--ic-green-1);
+  --sur-brand: var(--ic-green-6);
+  --sur-brand-hover: var(--ic-green-7);
+  --sur-public-night: oklch(0.135 0.032 171);
+  --sur-hero-dither: oklch(0.9 0.035 150 / 0.024);
+  --sur-public-panel: oklch(0.15 0.03 170 / 0.96);
+  --sur-public-paper: var(--ic-paper-0);
+  --sur-header: oklch(0.105 0.023 173 / 0.97);
+  --sur-header-active: oklch(0.92 0.045 133 / 0.12);
+  --sur-inverse-hover: oklch(1 0 0 / 0.08);
+  --sur-image-wash: oklch(0.11 0.035 175 / 0.56);
+  --sur-image-scrim: oklch(0.13 0.03 170 / 0.82);
+  --sur-mega-feature: oklch(0.23 0.052 154 / 0.78);
+  --sur-footer: oklch(0.145 0.03 166);
+
+  /* ---------- Sémantiques : encre ---------- */
+  --ink: var(--ic-ink-0);
+  --ink-muted: var(--ic-ink-2);
+  --ink-soft: var(--ic-ink-1);
+  --ink-inverse: var(--ic-white);
+  --ink-inverse-soft: oklch(1 0 0 / 0.86);
+  --ink-inverse-muted: oklch(1 0 0 / 0.78);
+  --ink-inverse-subtle: oklch(1 0 0 / 0.72);
+  --ink-inverse-faint: oklch(1 0 0 / 0.48);
+  --ink-accent: var(--ic-green-6);
+  --ink-accent-inverse: oklch(0.9 0.07 148);
+  --ink-danger: var(--ic-red-6);
+
+  /* ---------- Sémantiques : filets et anneaux ---------- */
+  --line: var(--ic-line-0);
+  --line-strong: var(--ic-line-1);
+  --line-inverse: oklch(0.97 0.012 95 / 0.22);
+  --line-glass: oklch(1 0 0 / 0.18);
+  --line-overlay: oklch(0.7 0.03 130 / 0.34);
+  --line-header: oklch(0.82 0.026 103 / 0.38);
+  --line-header-active: oklch(0.9 0.05 133 / 0.58);
+  --line-inverse-faint: oklch(1 0 0 / 0.1);
+  --focus-ring: oklch(0.5 0.14 163);
+  --focus-ring-inverse: oklch(0.92 0.06 148);
+
+  /* ---------- Sémantiques : actions ---------- */
+  --action-primary: var(--ic-green-6);
+  --action-primary-hover: var(--ic-green-7);
+  --action-solid: oklch(0.18 0.03 165);
+  --action-solid-hover: oklch(0.12 0.03 165);
+  --action-on-dark: oklch(0.97 0.012 95);
+  --action-on-dark-ink: var(--ic-ink-0);
+  --action-inverse: var(--ic-green-3);
+  --action-inverse-ink: var(--ic-ink-0);
+  --action-danger: var(--ic-red-6);
+  --action-danger-soft: var(--ic-red-2);
+
+  /* ---------- Types de claim (IC-02) ---------- */
+  --claim-fact: var(--ic-green-6);
+  --claim-fact-soft: var(--ic-green-2);
+  --claim-hypothesis: var(--ic-amber-6);
+  --claim-hypothesis-soft: var(--ic-amber-2);
+  --claim-estimate: var(--ic-blue-6);
+  --claim-estimate-soft: var(--ic-blue-2);
+  --claim-recommendation: var(--ic-violet-6);
+  --claim-recommendation-soft: var(--ic-violet-2);
+  --claim-validation-question: var(--ic-teal-6);
+  --claim-validation-question-soft: var(--ic-teal-2);
+
+  /* ---------- États terminaux IA (IC-06) et statuts ---------- */
+  --state-ready: var(--ic-green-6);
+  --state-ready-soft: var(--ic-green-2);
+  --state-running: var(--ic-blue-6);
+  --state-running-soft: var(--ic-blue-2);
+  --state-caution: var(--ic-amber-6);
+  --state-caution-soft: var(--ic-amber-2);
+  --state-failure: var(--ic-red-6);
+  --state-failure-soft: var(--ic-red-2);
+
+  /* ---------- Typographie ---------- */
+  --font-display: "Instrument Sans Variable", Instrument Sans, ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Instrument Sans Variable", Instrument Sans, ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces Variable", Fraunces, Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --ic-type-12: 12px;
+  --ic-type-16: 16px;
+  --ic-type-20: 20px;
+  --ic-type-24: 24px;
+  --ic-type-28: 28px;
+  --ic-type-32: 32px;
+  --ic-type-36: 36px;
+  --ic-type-40: 40px;
+  --ic-type-44: 44px;
+  --ic-type-48: 48px;
+  --ic-type-56: 56px;
+  --ic-type-60: 60px;
+  --ic-type-64: 64px;
+  --ic-type-68: 68px;
+  --text-xs: var(--ic-type-12);
+  --text-sm: var(--ic-type-16);
+  --text-base: var(--ic-type-16);
+  --text-lg: var(--ic-type-20);
+  --text-xl: clamp(var(--ic-type-20), 1.1rem + 0.7vw, var(--ic-type-24));
+  --text-2xl: clamp(var(--ic-type-24), 1.2rem + 1.4vw, var(--ic-type-32));
+  --text-display: clamp(var(--ic-type-48), 1.4rem + 3.6vw, var(--ic-type-68));
+  --text-control: var(--ic-type-12);
+  --text-section-title: clamp(var(--ic-type-32), 1.55rem + 1.15vw, var(--ic-type-40));
+  --text-card-feature: clamp(var(--ic-type-28), 1.48rem + 0.72vw, var(--ic-type-32));
+  --text-card-title: clamp(var(--ic-type-20), 1.08rem + 0.38vw, var(--ic-type-24));
+  --text-trend-feature: clamp(var(--ic-type-28), 1.25rem + 1.7vw, var(--ic-type-48));
+  --text-trend-compact: clamp(var(--ic-type-20), 0.98rem + 0.7vw, var(--ic-type-24));
+  --text-trend-feature-mobile: clamp(var(--ic-type-24), 8vw, var(--ic-type-36));
+  --text-newsletter-title: clamp(var(--ic-type-32), 3vw, var(--ic-type-48));
+  --text-emphasis-count: var(--ic-type-28);
+  --text-hero-title: var(--text-display);
+  --text-hero-title-tablet: clamp(var(--ic-type-48), 6vw, var(--ic-type-60));
+  --text-hero-title-mobile: clamp(var(--ic-type-44), 10vw, var(--ic-type-64));
+  --text-hero-title-compact: clamp(var(--ic-type-40), 12vw, var(--ic-type-48));
+  --text-card-meta: var(--ic-type-12);
+  --text-card-label: var(--ic-type-12);
+  --leading-tight: 1.05;
+  --leading-card-title: 1.08;
+  --leading-body: 1.55;
+
+  /* ---------- Espace, rayons, ombres ---------- */
+  --ic-space-8: 8px;
+  --ic-space-16: 16px;
+  --ic-space-24: 24px;
+  --ic-space-32: 32px;
+  --ic-space-40: 40px;
+  --ic-space-48: 48px;
+  --ic-space-56: 56px;
+  --ic-space-64: 64px;
+  --ic-space-80: 80px;
+  --ic-space-88: 88px;
+  --ic-space-96: 96px;
+  --ic-space-104: 104px;
+  --ic-space-112: 112px;
+  --ic-space-128: 128px;
+  --ic-space-144: 144px;
+  --ic-space-152: 152px;
+  --ic-space-160: 160px;
+  --ic-space-184: 184px;
+  --space-control-gap: var(--ic-space-8);
+  --space-control-inline: var(--ic-space-16);
+  --space-nested-control: 4px;
+  --space-header-outer-block: var(--ic-space-24);
+  --space-header-outer-inline: var(--ic-space-16);
+  --space-header-inset-block: var(--ic-space-8);
+  --space-header-inset-inline: var(--ic-space-16);
+  --space-menu-offset: var(--ic-space-8);
+  --space-popover-inset: var(--ic-space-16);
+  --space-card-inset: var(--ic-space-24);
+  --space-content-loose: var(--ic-space-32);
+  --space-content-wide: var(--ic-space-40);
+  --space-content-max: var(--ic-space-48);
+  --space-section-sm: var(--ic-space-64);
+  --space-section-md: var(--ic-space-80);
+  --space-section-flow: var(--ic-space-88);
+  --space-section-lg: var(--ic-space-96);
+  --space-section-xl: var(--ic-space-128);
+  --space-section-home-max: var(--ic-space-112);
+  --space-section-pricing-max: var(--ic-space-152);
+  --space-section-compact: var(--ic-space-56);
+  --space-section-reading: var(--ic-space-104);
+  --space-section-collections-max: var(--ic-space-144);
+  --space-hero-tablet-top: var(--ic-space-160);
+  --space-hero-mobile-top: var(--ic-space-184);
+  --space-footer-start: var(--ic-space-56);
+  --space-footer-end: var(--ic-space-40);
+  /* Aliases historiques : migration progressive, sans redimensionnement global implicite. */
+  --space-1: 4px;
+  --space-2: var(--ic-space-8);
+  --space-3: 12px;
+  --space-4: var(--ic-space-16);
+  --space-5: var(--ic-space-24);
+  --space-6: var(--ic-space-32);
+  --space-7: var(--ic-space-48);
+  --space-8: var(--ic-space-80);
+  --space-9: var(--ic-space-96);
+  --space-10: var(--ic-space-128);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-full: 999px;
+  --border-hairline: 0.75px;
+  --border-standard: 1px;
+  --focus-offset: 2px;
+  --shadow-raised:
+    0 1px 2px oklch(0.22 0.034 165 / 0.05),
+    0 8px 24px -12px oklch(0.22 0.034 165 / 0.22);
+  --shadow-forest:
+    0 1px 2px oklch(0.22 0.04 163 / 0.04),
+    0 14px 36px -18px oklch(0.32 0.1 155 / 0.3);
+  --shadow-lift:
+    0 8px 18px -10px oklch(0.28 0.08 155 / 0.14),
+    0 22px 48px -18px oklch(0.32 0.12 155 / 0.36);
+  --shadow-overlay:
+    0 8px 24px oklch(0.18 0.04 165 / 0.12),
+    0 28px 72px -20px oklch(0.18 0.04 165 / 0.38);
+  --shadow-header: 0 18px 44px -22px oklch(0.04 0.02 170 / 0.82);
+  --shadow-deep: 0 28px 70px -28px oklch(0.04 0.02 170 / 0.9);
+  --shadow-text-strong: 0 2px 18px oklch(0.04 0.02 170 / 0.48);
+  --shadow-text: 0 1px 12px oklch(0.04 0.02 170 / 0.62);
+  --shadow-text-soft: 0 1px 10px oklch(0.04 0.02 170 / 0.68);
+  --shadow-button: 0 1px 0 oklch(1 0 0 / 0.12), 0 6px 18px oklch(0.18 0.04 165 / 0.28);
+
+  /* ---------- Mouvement ---------- */
+  --ease-exit: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-glide: cubic-bezier(0.45, 0.05, 0.25, 1);
+  --ease-lift: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-continuity: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-micro: 160ms;
+  --dur-ui: 280ms;
+  --dur-narrative: 400ms;
+  --dur-continuity: 240ms;
+
+  /* ---------- Mise en page ---------- */
+  --shell-max: 1120px;
+  --public-shell-max: 1180px;
+  --tap-target: 44px;
+  --control-height: var(--tap-target);
+  --control-height-compact: 36px;
+  --control-height-tag: 32px;
+  --icon-control-size: 16px;
+  --search-width-desktop: clamp(280px, 21vw, 300px);
+  --menu-width-compact: 390px;
+  --menu-height-compact: 292px;
+  --menu-height-about: 384px;
+  --menu-height-explorer: 276px;
+  --menu-height-use-cases: 324px;
+  --space-bento-gap: clamp(var(--ic-space-16), 1.7vw, var(--ic-space-24));
+  --bento-row-size: clamp(288px, 21.25vw, 306px);
+  --bento-idea-row-size: clamp(220px, 17vw, 248px);
+  --bento-idea-cta-size: 72px;
+  --bento-idea-card-mobile: 344px;
+  --bento-feature-tablet: 480px;
+  --bento-wide-tablet: 300px;
+  --bento-compact-tablet: 350px;
+  --bento-compact-mobile: 320px;
+  --header-offset: 102px;
+}
+
+@media (max-width: 720px) {
+  :root {
+    --header-offset: 86px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-micro: 0.01ms;
+    --dur-ui: 0.01ms;
+    --dur-narrative: 0.01ms;
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idea-commons.example/schemas/source-to-idea/1.0.0/input",
+  "title": "SourceToIdeaInput",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sourceId", "language", "title", "sourceFingerprint", "excerpts", "rightsBasis"],
+  "properties": {
+    "sourceId": {"type": "string", "minLength": 1, "maxLength": 120},
+    "language": {"type": "string", "pattern": "^[a-z]{2,3}(?:-[A-Z]{2})?$"},
+    "title": {"type": "string", "minLength": 1, "maxLength": 240},
+    "sourceUrl": {"type": ["string", "null"], "maxLength": 2048},
+    "sourceFingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "Indice de corrélation déclaré ; il ne constitue une preuve que si un composant de confiance l'a dérivé et vérifié séparément."},
+    "rightsBasis": {"enum": ["idea_commons", "compatible_license", "public_domain", "explicit_permission", "temporary_analysis"]},
+    "excerpts": {"type": "array", "minItems": 1, "maxItems": 40, "x-idea-commons-unique-by": "id", "items": {"type": "object", "additionalProperties": false, "required": ["id", "text", "locator"], "properties": {"id": {"type": "string", "minLength": 1}, "text": {"type": "string", "minLength": 1, "maxLength": 4000}, "locator": {"type": "string", "minLength": 1, "maxLength": 240}}}}
+  }
+}

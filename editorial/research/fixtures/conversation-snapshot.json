@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "sourceId": "synthetic-community-exchange",
+  "sourceUrl": "https://example.test/community/problems",
+  "capturedAt": "2026-08-26T12:00:00Z",
+  "captureMethod": "synthetic_fixture",
+  "rightsBasis": "temporary_analysis",
+  "containsProfiles": false,
+  "synthetic": true,
+  "items": [
+    {"id":"topic-1","kind":"topic","text":"Quels petits problèmes prennent du temps chaque semaine ?","parentId":null,"locator":"sujet synthétique 1"},
+    {"id":"comment-1","kind":"comment","text":"Une personne fictive dit appeler plusieurs ateliers avant de trouver une disponibilité.","parentId":"topic-1","locator":"commentaire synthétique 1"},
+    {"id":"comment-2","kind":"comment","text":"Une autre personne fictive dit que les horaires publiés sont souvent trop anciens pour décider d'un déplacement.","parentId":"topic-1","locator":"commentaire synthétique 2"},
+    {"id":"comment-3","kind":"comment","text":"Un atelier fictif préférerait confirmer manuellement un créneau plutôt que gérer un agenda complet.","parentId":"topic-1","locator":"commentaire synthétique 3"}
+  ]
+}

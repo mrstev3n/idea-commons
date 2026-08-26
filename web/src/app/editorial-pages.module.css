@@ -1,0 +1,228 @@
+.page {
+  min-height: 100vh;
+  background: var(--sur-public-paper);
+  color: var(--ink);
+}
+
+.hero,
+.section,
+.article {
+  width: min(var(--public-shell-max), calc(100% - (2 * var(--space-6))));
+  margin-inline: auto;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+  gap: var(--space-7);
+  align-items: end;
+  padding: var(--space-8) 0 var(--space-7);
+  border-bottom: var(--border-standard) solid var(--line);
+}
+
+.heroCopy {
+  max-width: 760px;
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-3);
+  color: var(--ink-muted);
+  font-size: var(--text-card-label);
+  font-weight: 680;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.hero h1,
+.article h1 {
+  max-width: 17ch;
+  font-family: var(--font-serif);
+  font-size: var(--text-display);
+  font-weight: 520;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 62ch;
+  margin-top: var(--space-5);
+  color: var(--ink-soft);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+}
+
+.abstractMark {
+  display: grid;
+  min-height: 220px;
+  grid-template-columns: 1fr 1fr;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: var(--sur-brand);
+  color: var(--ink-inverse);
+  box-shadow: var(--shadow-forest);
+}
+
+.abstractMark span {
+  font-family: var(--font-serif);
+  font-size: var(--text-display);
+  font-style: italic;
+}
+
+.abstractMark span:last-child {
+  opacity: 0.48;
+  translate: 0 var(--space-4);
+}
+
+.section {
+  padding: var(--space-8) 0;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.sectionHeading h2,
+.storyCard h2 {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  font-weight: 520;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.04em;
+}
+
+.sectionHeading p {
+  max-width: 54ch;
+  color: var(--ink-soft);
+  line-height: var(--leading-body);
+}
+
+.topicGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.topicCard,
+.storyCard {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: var(--space-6);
+  border: var(--border-standard) solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--sur-raised);
+  box-shadow: var(--shadow-raised);
+}
+
+.topicCard h2 {
+  max-width: 22ch;
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: 520;
+  line-height: var(--leading-card-title);
+  letter-spacing: -0.035em;
+}
+
+.topicCard p,
+.storyCard p {
+  max-width: 64ch;
+  margin-top: var(--space-3);
+  color: var(--ink-soft);
+  line-height: var(--leading-body);
+}
+
+.textLink {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-top: var(--space-5);
+  color: var(--ink-accent);
+  font-weight: 650;
+  text-underline-offset: var(--space-1);
+}
+
+.storyCard {
+  max-width: 840px;
+}
+
+.article {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  gap: var(--space-7);
+  align-items: start;
+  padding: var(--space-8) 0 var(--space-9);
+}
+
+.articleHeader {
+  position: sticky;
+  top: var(--space-8);
+}
+
+.articleBody {
+  padding: var(--space-6);
+  border: var(--border-standard) solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--sur-raised);
+  box-shadow: var(--shadow-raised);
+}
+
+.articleBody p {
+  color: var(--ink-soft);
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  line-height: var(--leading-body);
+}
+
+.articleBody p + p {
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 760px) {
+  .hero,
+  .section,
+  .article {
+    width: min(100% - (2 * var(--space-4)), var(--public-shell-max));
+  }
+
+  .hero,
+  .article {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    gap: var(--space-6);
+    padding: var(--space-7) 0 var(--space-6);
+  }
+
+  .section,
+  .article {
+    padding: var(--space-7) 0;
+  }
+
+  .sectionHeading {
+    display: block;
+  }
+
+  .sectionHeading p {
+    margin-top: var(--space-3);
+  }
+
+  .topicGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .topicCard,
+  .storyCard,
+  .articleBody {
+    padding: var(--space-5);
+  }
+
+  .articleHeader {
+    position: static;
+  }
+}

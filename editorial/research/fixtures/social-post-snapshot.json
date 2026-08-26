@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "sourceId": "synthetic-social-post",
+  "sourceUrl": "https://example.test/x/status/synthetic-1",
+  "capturedAt": "2026-08-26T09:00:00Z",
+  "captureMethod": "synthetic_fixture",
+  "rightsBasis": "temporary_analysis",
+  "containsProfiles": false,
+  "synthetic": true,
+  "items": [
+    {
+      "id": "post-1",
+      "kind": "post",
+      "text": "Post synthétique : dans un espace partagé fictif, une personne pose un petit objet coloré près de son poste pour signaler silencieusement qu'elle ne veut pas être interrompue.",
+      "parentId": null,
+      "locator": "synthetic-post:1"
+    },
+    {
+      "id": "reply-1",
+      "kind": "comment",
+      "text": "Réponse synthétique : une autre personne dit préférer un signal physique réversible à une nouvelle application ou notification.",
+      "parentId": "post-1",
+      "locator": "synthetic-post:1#reply-1"
+    }
+  ]
+}

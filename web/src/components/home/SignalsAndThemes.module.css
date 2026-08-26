@@ -1,0 +1,483 @@
+.shell {
+  width: min(var(--public-shell-max), calc(100% - 64px));
+  margin-inline: auto;
+}
+
+.trends {
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(64px, 6vw, 96px);
+  background: var(--action-primary);
+  color: var(--ink-inverse);
+}
+
+.trendsHeader,
+.themesHeader {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: clamp(var(--space-card-inset), 2.4vw, var(--space-content-wide));
+}
+
+.trendsHeader h2,
+.themesHeader h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-section-title);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+}
+
+.trendsHeader p {
+  margin-top: var(--space-control-gap);
+  color: var(--ink-inverse-muted);
+  font-size: var(--text-sm);
+}
+
+.sectionLinkOnPrimary,
+.themesHeader a {
+  flex: none;
+  min-height: var(--tap-target);
+  padding: var(--space-control-gap) 0;
+  color: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-underline-offset: 5px;
+}
+
+.sectionLinkOnPrimary {
+  color: var(--ink-inverse);
+}
+
+.trendGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(340px, 1fr);
+  gap: clamp(var(--space-4), 2.2vw, var(--space-6));
+  min-height: 500px;
+}
+
+.trendGridSingle {
+  grid-template-columns: minmax(0, 780px);
+}
+
+.trendStack {
+  display: grid;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: clamp(var(--space-4), 2.2vw, var(--space-6));
+  min-width: 0;
+}
+
+.trendStack > :only-child {
+  grid-row: 1 / -1;
+}
+
+.trendCard,
+.themeCard {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-inverse);
+  text-decoration: none;
+  background: var(--sur-public-night);
+  box-shadow: var(--shadow-overlay);
+  animation: card-enter var(--dur-narrative) var(--ease-exit) both;
+  transition:
+    transform var(--dur-ui) var(--ease-exit),
+    box-shadow var(--dur-ui) var(--ease-exit);
+}
+
+.trendCard {
+  min-height: 0;
+  border-radius: var(--radius-md);
+}
+
+.trendCardFeatured {
+  min-height: 500px;
+}
+
+.trendCardCompact {
+  min-height: 230px;
+}
+
+.cardImage {
+  z-index: -2;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  inset: 0 !important;
+  object-fit: cover;
+  transition: transform var(--dur-narrative) var(--ease-exit);
+}
+
+/* Asset placeholder crop: its source file contains an unusable grey strip at the bottom. */
+.cardImage.mediaCropValley {
+  height: 120% !important;
+  top: 0 !important;
+  bottom: auto !important;
+  object-position: center top;
+}
+
+.imageWash {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--sur-image-wash);
+  pointer-events: none;
+}
+
+.trendContent {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-control-inline);
+  padding: clamp(var(--space-card-inset), 3vw, var(--space-content-wide));
+}
+
+.trendCardCompact .trendContent {
+  gap: var(--space-control-gap);
+  padding: clamp(var(--space-card-inset), 2.2vw, var(--space-content-loose));
+}
+
+.trendTheme {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control-height-tag);
+  padding: var(--space-control-gap) var(--space-control-inline);
+  border: var(--border-standard) solid var(--line-glass);
+  border-radius: var(--radius-full);
+  background: color-mix(in oklch, var(--sur-accent-soft) 92%, transparent);
+  color: var(--ink);
+  font-size: var(--text-card-label);
+  font-weight: 650;
+}
+
+.trendTitle {
+  max-width: 21ch;
+  font-family: var(--font-display);
+  font-size: var(--text-trend-feature);
+  font-weight: 620;
+  line-height: 1.06;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.trendCardCompact .trendTitle {
+  max-width: 26ch;
+  font-size: var(--text-trend-compact);
+  line-height: 1.13;
+}
+
+.trendSummary {
+  display: -webkit-box;
+  max-width: 47ch;
+  margin: 0;
+  overflow: hidden;
+  color: var(--ink-inverse-soft);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.trendMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-control-gap);
+  color: var(--ink-inverse-subtle);
+  font-size: var(--text-card-meta);
+  line-height: 1.35;
+}
+
+.cardAction {
+  margin-top: var(--space-control-gap);
+  font-size: var(--text-sm);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.emptyTrend {
+  max-width: 720px;
+  padding: clamp(var(--space-content-loose), 5vw, var(--space-section-sm));
+  border: var(--border-standard) solid var(--line-inverse);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklch, var(--action-primary-hover) 74%, transparent);
+}
+
+.emptyTrend h3 {
+  font-size: var(--text-xl);
+}
+
+.emptyTrend p {
+  margin-top: var(--space-3);
+  color: var(--ink-inverse-muted);
+}
+
+.emptyTrend a {
+  display: inline-flex;
+  min-height: var(--tap-target);
+  align-items: center;
+  margin-top: var(--space-4);
+  color: var(--ink-inverse);
+  font-weight: 650;
+}
+
+.themes {
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(var(--space-section-sm), 7vw, var(--space-section-home-max));
+  background: var(--sur-public-paper);
+  color: var(--ink);
+}
+
+.themesHeader {
+  margin-bottom: clamp(var(--space-content-loose), 3vw, var(--space-content-wide));
+}
+
+.themesHeader a {
+  color: var(--ink);
+}
+
+.themeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(var(--space-4), 2.2vw, var(--space-6));
+}
+
+.themeCard {
+  min-height: clamp(260px, 24vw, 340px);
+  border-radius: var(--radius-md);
+}
+
+.themeFooter {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  padding: clamp(var(--space-card-inset), 2.4vw, var(--space-content-loose));
+}
+
+.themeContent {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-control-gap);
+}
+
+.themeName {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.themeDescription {
+  max-width: 31ch;
+  color: var(--ink-inverse-soft);
+  font-size: var(--text-card-meta);
+  line-height: 1.35;
+}
+
+.themeAction {
+  display: inline-flex;
+  flex: none;
+  min-width: 48px;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-control-gap) var(--space-control-inline);
+  border-radius: var(--radius-full);
+  background: var(--sur-raised);
+  color: var(--ink);
+  font-size: var(--text-card-label);
+  font-weight: 700;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trendCard:hover,
+  .themeCard:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .trendCard[data-status="review"]:hover {
+    transform: none;
+    box-shadow: var(--shadow-overlay);
+  }
+
+  .trendCard:hover .cardImage,
+  .themeCard:hover .cardImage {
+    transform: scale(1.035);
+  }
+
+  .trendCard[data-status="review"]:hover .cardImage {
+    transform: none;
+  }
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.trendCard:focus-visible,
+.themeCard:focus-visible {
+  outline: 3px solid var(--focus-ring-inverse);
+  outline-offset: 4px;
+}
+
+.themes .themeCard:focus-visible {
+  outline-color: var(--focus-ring);
+}
+
+@media (max-width: 920px) {
+  .shell {
+    width: min(var(--public-shell-max), calc(100% - 48px));
+  }
+
+  .trendGrid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    min-height: 460px;
+  }
+
+  .trendCardFeatured {
+    min-height: 460px;
+  }
+
+  .trendCardCompact {
+    min-height: 210px;
+  }
+
+  .themeGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .themeCard:last-child {
+    grid-column: 1 / -1;
+    min-height: 260px;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell {
+    width: calc(100% - 32px);
+  }
+
+  .trendsHeader,
+  .themesHeader {
+    align-items: start;
+  }
+
+  .sectionLinkOnPrimary,
+  .themesHeader a {
+    font-size: var(--text-card-meta);
+  }
+
+  .trendGrid {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .trendGridSingle {
+    grid-template-columns: 1fr;
+  }
+
+  .trendCardFeatured {
+    min-height: min(118vw, 520px);
+  }
+
+  .trendStack {
+    grid-template-rows: none;
+  }
+
+  .trendCardCompact,
+  .trendStack > :only-child {
+    min-height: 250px;
+  }
+
+  .themeGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .themeCard,
+  .themeCard:last-child {
+    grid-column: auto;
+    min-height: min(76vw, 320px);
+  }
+}
+
+@media (max-width: 480px) {
+  .shell {
+    width: calc(100% - 28px);
+  }
+
+  .trends,
+  .themes {
+    padding-block: 56px;
+  }
+
+  .trendsHeader,
+  .themesHeader {
+    display: block;
+    margin-bottom: 24px;
+  }
+
+  .sectionLinkOnPrimary,
+  .themesHeader a {
+    display: inline-flex;
+    margin-top: var(--space-control-inline);
+  }
+
+  .trendCardFeatured {
+    min-height: 460px;
+  }
+
+  .trendContent,
+  .trendCardCompact .trendContent {
+    padding: var(--space-card-inset);
+  }
+
+  .trendTitle {
+    font-size: var(--text-trend-feature-mobile);
+  }
+
+  .trendCardCompact .trendTitle {
+    font-size: var(--text-lg);
+  }
+
+  .trendMeta {
+    font-size: var(--text-card-meta);
+  }
+
+  .themeContent {
+    padding: var(--space-card-inset);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trendCard,
+  .themeCard,
+  .cardImage {
+    animation: none;
+    transition: none;
+  }
+
+  .trendCard:hover,
+  .themeCard:hover,
+  .trendCard:hover .cardImage,
+  .themeCard:hover .cardImage {
+    transform: none;
+  }
+}

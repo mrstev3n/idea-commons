@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "message": {
+    "items": [
+      {
+        "DOI": "10.0000/synthetic.1",
+        "title": ["Étude synthétique sur un service partagé"],
+        "URL": "https://doi.org/10.0000/synthetic.1",
+        "published": {"date-parts": [[2026, 8, 4]]},
+        "author": [{"given": "Awa", "family": "Exemple"}]
+      },
+      {
+        "DOI": "10.0000/synthetic.2",
+        "title": ["Étude synthétique sans mois connu"],
+        "URL": "https://doi.org/10.0000/synthetic.2",
+        "published": {"date-parts": [[2025]]},
+        "author": []
+      }
+    ]
+  }
+}

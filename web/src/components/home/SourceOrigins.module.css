@@ -1,0 +1,180 @@
+.section {
+  position: relative;
+  z-index: 2;
+  padding-block: var(--space-7);
+  background: var(--sur-public-paper);
+  color: var(--ink);
+}
+
+.shell {
+  width: min(var(--public-shell-max), calc(100% - 64px));
+  margin-inline: auto;
+}
+
+.heading {
+  display: grid;
+  justify-items: center;
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.heading h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+
+.scroller {
+  container-type: inline-size;
+  overflow-x: auto;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
+}
+
+.scroller::-webkit-scrollbar { display: none; }
+
+.scroller:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: var(--space-1);
+}
+
+.track {
+  --source-gap: var(--space-4);
+  --source-six-gaps: calc(
+    var(--source-gap) + var(--source-gap) + var(--source-gap) + var(--source-gap) + var(--source-gap)
+  );
+  display: flex;
+  width: max-content;
+  gap: var(--source-gap);
+  animation: source-marquee 34s linear 1.1s infinite;
+  animation-play-state: paused;
+  will-change: transform;
+}
+
+.visible .track { animation-play-state: running; }
+
+.scroller:hover .track,
+.scroller:focus-visible .track,
+.scroller:focus-within .track {
+  animation-play-state: paused;
+}
+
+.list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100cqw - var(--source-six-gaps)) / 6);
+  gap: var(--source-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  filter: blur(10px);
+  translate: 0 var(--space-3);
+  transition:
+    background-color var(--dur-micro) var(--ease-glide),
+    opacity 800ms var(--ease-exit),
+    filter 800ms var(--ease-exit),
+    translate 800ms var(--ease-exit);
+  transition-delay: calc(var(--source-enter-index) * 65ms);
+}
+
+.visible .item {
+  opacity: 1;
+  filter: blur(0);
+  translate: 0;
+}
+
+.item:hover {
+  background: var(--sur-accent-faint);
+}
+
+.logo {
+  display: block;
+  width: var(--logo-optical-width);
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  translate: 0 var(--logo-baseline-shift, 0);
+  flex: none;
+}
+
+.reddit {
+  --logo-optical-width: 32px;
+  border-radius: var(--radius-full);
+}
+
+.googleNews {
+  --logo-optical-width: 31px;
+  --logo-baseline-shift: 1px;
+}
+
+.yelp { --logo-optical-width: 88px; --logo-baseline-shift: 1px; }
+.axios { --logo-optical-width: 92px; }
+.yahoo { --logo-optical-width: 106px; --logo-baseline-shift: 1px; }
+.guardian { --logo-optical-width: 104px; }
+.crossref { --logo-optical-width: 116px; --logo-baseline-shift: 1px; }
+.europePmc { --logo-optical-width: 126px; --logo-baseline-shift: 1px; }
+.arxiv { --logo-optical-width: 84px; --logo-baseline-shift: 2px; }
+.x { --logo-optical-width: 27px; }
+
+.wordmark {
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding-block: var(--space-6);
+  }
+
+  .shell {
+    width: calc(100% - 32px);
+  }
+
+  .heading {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .list {
+    grid-auto-columns: 42cqw;
+  }
+}
+
+@keyframes source-marquee {
+  to { transform: translateX(calc(-50% - (var(--source-gap) / 2))); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroller { scrollbar-width: thin; }
+
+  .track {
+    animation: none;
+    will-change: auto;
+  }
+
+  .clone { display: none; }
+
+  .item {
+    opacity: 1;
+    filter: none;
+    translate: none;
+    transition: background-color var(--dur-micro) var(--ease-glide);
+  }
+}

@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Idea Commons — Collecte de sources et découverte d’idées</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231f5d45'/%3E%3Cpath d='M10 21V11h3v10zm5 0V8h3v13zm5 0v-7h3v7z' fill='white'/%3E%3C/svg%3E">
+  <meta name="description" content="Spécification vérifiable de collecte bornée, de croisement de sources et de transformation assistée en candidats d’idées révisables.">
+  <style>
+    :root{--ink:#17201d;--muted:#58645f;--paper:#f7f6f1;--panel:#fff;--line:#d9ddd7;--green:#1f5d45;--mint:#dff0e8;--amber:#7a5520;--sand:#f3ead9;--red:#803e36;--rose:#f3e2df;--blue:#315c78;--sky:#e3eef5;--radius:18px;--shadow:0 18px 50px rgba(27,44,36,.08)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.58 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--green);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}.wrap{width:min(1180px,calc(100% - 32px));margin-inline:auto}.hero{padding:72px 0 46px;background:linear-gradient(135deg,#183f32 0%,#215947 58%,#2d6a54 100%);color:#fff}.eyebrow{margin:0 0 14px;text-transform:uppercase;letter-spacing:.12em;font-size:.76rem;font-weight:750;color:#bfe1d2}.hero h1{max-width:900px;margin:0;font-size:clamp(2.2rem,6vw,5.1rem);line-height:.98;letter-spacing:-.055em}.hero .lead{max-width:780px;margin:26px 0 0;font-size:clamp(1.05rem,2vw,1.3rem);color:#e0eee8}.hero-meta{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:38px}.metric{padding:16px;border:1px solid rgba(255,255,255,.2);border-radius:14px;background:rgba(255,255,255,.07)}.metric strong{display:block;font-size:1.55rem}.metric span{font-size:.8rem;color:#d6e8e0}.toc{position:sticky;top:0;z-index:5;background:rgba(247,246,241,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.toc .wrap{display:flex;gap:20px;overflow:auto;padding-block:13px}.toc a{white-space:nowrap;color:var(--ink);font-size:.84rem;text-decoration:none}.toc a:hover{color:var(--green)}main{padding:30px 0 80px}section{scroll-margin-top:66px;margin-top:28px;padding:clamp(24px,4vw,48px);background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}h2{margin:0 0 18px;font-size:clamp(1.55rem,3vw,2.45rem);line-height:1.08;letter-spacing:-.035em}h3{margin:28px 0 10px;font-size:1.15rem}p{max-width:78ch}.lede{font-size:1.08rem;color:var(--muted)}.label{display:inline-flex;align-items:center;gap:7px;padding:4px 9px;border-radius:99px;font-size:.73rem;font-weight:750;letter-spacing:.03em;text-transform:uppercase}.fact{background:var(--mint);color:var(--green)}.observation{background:var(--sky);color:var(--blue)}.hypothesis{background:var(--sand);color:var(--amber)}.recommendation{background:#ece9f6;color:#554680}.unknown{background:var(--rose);color:var(--red)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{padding:20px;border:1px solid var(--line);border-radius:14px;background:#fcfcfa}.card h3{margin-top:0}.card p:last-child{margin-bottom:0}.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.step{position:relative;padding:17px;border:1px solid var(--line);border-radius:13px;background:#fbfcfa}.step b{display:block;color:var(--green);font-size:.78rem;text-transform:uppercase;letter-spacing:.07em}.step span{display:block;margin-top:7px;font-weight:680}.callout{padding:18px 20px;border-left:4px solid var(--green);background:var(--mint);border-radius:0 12px 12px 0}.callout.warning{border-color:var(--amber);background:var(--sand)}.callout.limit{border-color:var(--red);background:var(--rose)}ul,ol{padding-left:1.3rem}li+li{margin-top:7px}.table-wrap{overflow:auto;margin-top:18px;border:1px solid var(--line);border-radius:13px}table{width:100%;border-collapse:collapse;min-width:980px;font-size:.82rem}th,td{padding:12px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{position:sticky;top:0;background:#edf1ed;color:#34413b;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}tr:last-child td{border-bottom:0}.status{font-weight:750}.yes{color:var(--green)}.watch{color:var(--amber)}.stop{color:var(--red)}code{padding:.12em .35em;border-radius:5px;background:#edf0ed;font-size:.88em}.codeblock{overflow:auto;padding:18px;border-radius:13px;background:#13211b;color:#dcece4;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}.score-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.score-grid .card{padding:15px}.case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.case-grid .card{display:flex;flex-direction:column}.case-grid .card small{color:var(--muted)}.case-grid .card .outcome{margin-top:auto;padding-top:12px;font-weight:750}.checklist{list-style:none;padding:0}.checklist li{position:relative;padding-left:28px}.checklist li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:900}.source-log{columns:2;column-gap:34px}.source-log li{break-inside:avoid;margin-bottom:8px}.footer-note{margin-top:24px;color:var(--muted);font-size:.88rem}@media (max-width:900px){.hero-meta{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:repeat(2,1fr)}.case-grid{grid-template-columns:repeat(2,1fr)}.score-grid{grid-template-columns:repeat(2,1fr)}.source-log{columns:1}}@media (max-width:620px){.wrap{width:min(100% - 20px,1180px)}.hero{padding-top:48px}.hero-meta,.grid,.flow,.case-grid,.score-grid{grid-template-columns:1fr}section{padding:22px 18px;border-radius:14px}.toc .wrap{padding-inline:4px}.metric strong{font-size:1.3rem}}@media print{.toc{display:none}.hero{background:#fff;color:#000;padding:30px 0}.hero .lead,.metric span,.eyebrow{color:#333}.hero-meta{grid-template-columns:repeat(5,1fr)}.metric{border-color:#bbb}section{box-shadow:none;break-inside:avoid}a{color:#000}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Idea Commons · spécification de recherche · 26 août 2026</p>
+      <h1>Des signaux publics aux idées révisables.</h1>
+      <p class="lead">Une approche source-lock pour explorer largement, croiser sans confondre, formuler des hypothèses utiles et remettre chaque candidat à une revue humaine. Aucun fournisseur IA réel, aucune collecte continue, aucune publication automatique.</p>
+      <div class="hero-meta" aria-label="Résultats clés">
+        <div class="metric"><strong>55</strong><span>sources actives enregistrées</span></div>
+        <div class="metric"><strong>61</strong><span>pistes actives et reliées</span></div>
+        <div class="metric"><strong>10/10</strong><span>endpoints live HTTP valides</span></div>
+        <div class="metric"><strong>25</strong><span>éléments normalisés</span></div>
+        <div class="metric"><strong>10</strong><span>cas source → idée</span></div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Sommaire">
+    <div class="wrap">
+      <a href="#contexte">Contexte</a><a href="#principes">Principes</a><a href="#workstreams">Workstreams</a><a href="#matrice">Sources</a><a href="#architecture">Collecte</a><a href="#conversations">Conversations</a><a href="#regional">Régions</a><a href="#normalisation">Normalisation</a><a href="#droits">Droits</a><a href="#pipeline">Source → idée</a><a href="#grille">Grille</a><a href="#cas">Cas</a><a href="#echecs">Échecs</a><a href="#observabilite">Observabilité</a><a href="#tests">Tests</a><a href="#decisions">Décisions ouvertes</a><a href="#sources">Sources consultées</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section id="contexte">
+      <span class="label fact">Cadre vérifié</span>
+      <h2>Contexte, objectif et non-objectifs</h2>
+      <p class="lede">Idea Commons possède déjà le contrat éditorial <code>source-to-idea</code> v1, un simulateur déterministe et une cascade documentée dans les architectures IC-06/IC-07. Ce chantier ajoute la recherche de sources, la preuve de collecte et la traçabilité éditoriale ; il ne remplace pas ces décisions.</p>
+      <div class="grid">
+        <div class="card"><h3>Objectif</h3><p>Définir, documenter et tester une méthode vérifiable de collecte de signaux publics et de transformation assistée en candidats d’idées concrets, traçables et révisables.</p></div>
+        <div class="card"><h3>Autorité humaine</h3><p>Toutes les sources enregistrées restent <strong>actives</strong>. La maturité de vérification, la disponibilité d’un connecteur et les limites d’accès sont des dimensions séparées ; elles ne peuvent plus servir d’exclusion implicite. Seule une décision humaine explicite peut désactiver une source.</p></div>
+      </div>
+      <h3>Non-objectifs de ce proof-of-concept</h3>
+      <ul>
+        <li>aucun cron, service permanent, base distante ou collecte continue ;</li>
+        <li>aucun compte, clé, paywall, fournisseur IA ou publication automatique ;</li>
+        <li>aucun contournement de robots, anti-bot, authentification ou restriction technique ;</li>
+        <li>aucun article intégral, profil, message privé ou donnée clinique ;</li>
+        <li>aucun avis juridique définitif : un usage régulier de sources tierces exige une vérification spécialisée.</li>
+      </ul>
+      <p class="callout warning"><strong>Clarification produit.</strong> Reddit, Quora et les commentaires sont prioritaires pour repérer des problèmes déclarés. Leur accès automatisé est un workstream conditionnel, pas une source rejetée. Le chemin immédiatement testable est l’import hors réseau de snapshots fournis manuellement ou obtenus par un accès ordinaire autorisé.</p>
+    </section>
+
+    <section id="principes">
+      <span class="label recommendation">Règles de travail</span>
+      <h2>Principes de preuve et d’idéation</h2>
+      <div class="grid">
+        <div class="card"><h3>Source-lock</h3><p>Une caractéristique de source n’existe dans le catalogue que si une page officielle, une documentation, un endpoint ou des conditions ont été réellement consultés. <strong>Non trouvé</strong> ne signifie jamais <strong>autorisé</strong>.</p></div>
+        <div class="card"><h3>Types séparés</h3><p><span class="label fact">fait</span> contenu vérifiable ; <span class="label observation">observation</span> résultat du probe ou déclaration d’un utilisateur ; <span class="label hypothesis">hypothèse</span> interprétation à tester ; <span class="label recommendation">recommandation</span> choix proposé ; <span class="label unknown">inconnu</span> information absente.</p></div>
+        <div class="card"><h3>Signal ≠ preuve</h3><p>Un commentaire, un vote, un titre média ou un cluster suggère une piste. Il ne prouve ni fréquence, ni gravité, ni représentativité, ni volonté de payer.</p></div>
+        <div class="card"><h3>Réversibilité</h3><p>Chaque candidat conserve ses sources, ses limites, ses questions et son score. <code>candidate_ready</code> signifie uniquement « prêt pour revue humaine ».</p></div>
+      </div>
+    </section>
+
+    <section id="workstreams">
+      <span class="label observation">Organisation</span>
+      <h2>Workstreams</h2>
+      <div class="flow">
+        <div class="step"><b>01 · Découverte</b><span>Registre sans plafond</span><small>Sources nommées, liens, communautés, discussions et recherches.</small></div>
+        <div class="step"><b>02 · Qualification</b><span>Accès, droits, métadonnées</span><small>Preuves officielles, inconnues, statut du test et recommandation révisable.</small></div>
+        <div class="step"><b>03 · Collecte</b><span>Probe borné</span><small>HTTPS séquentiel, timeout, taille maximale et trois éléments par source.</small></div>
+        <div class="step"><b>04 · Éditorial</b><span>Croisement puis idée</span><small>Claims typés, limites, risques, score et revue humaine.</small></div>
+      </div>
+      <p class="footer-note">Artefacts structurés : <a href="../editorial/sources/catalogue.json">catalogue</a>, <a href="../editorial/sources/discovery-leads.json">pistes utilisateur</a>, <a href="../editorial/sources/source-to-idea-cases.json">études de cas</a> et schémas voisins.</p>
+    </section>
+
+    <section id="matrice">
+      <span class="label fact">55 sources actives</span>
+      <h2>Matrice d’accès et de maturité</h2>
+      <p class="lede">Accès et recommandations observés au 26 août 2026. « Live 200 » signifie succès HTTP, syntaxe valide et normalisation réussie ; cela ne vaut ni approbation humaine ni permission générale.</p>
+      <div class="table-wrap" role="region" aria-label="Matrice des sources" tabindex="0">
+        <table>
+          <thead><tr><th>Source</th><th>Zone / sujets</th><th>Accès</th><th>Test</th><th>Métadonnées observées ou documentées</th><th>Droits / limites</th><th>Recommandation révisable</th></tr></thead>
+          <tbody>
+            <tr><td><a href="https://sgg.gouv.bj/articles/">SGG Bénin</a></td><td>Bénin · institutions</td><td>HTML</td><td>Non testé</td><td>Liens et catégories ; endpoint structuré non trouvé</td><td>Reproduction même partielle interdite sans accord écrit</td><td class="status watch">Active · vérification partielle</td></tr>
+            <tr><td><a href="https://instad.bj/">INStaD Bénin</a></td><td>Bénin · économie, société, territoires</td><td>HTML</td><td>Non testé</td><td>Titres, liens, résumés, rubriques</td><td>Réutilisation gratuite indiquée, intégrité et source précise requises</td><td class="status yes">Candidat M1 manuel</td></tr>
+            <tr><td><a href="https://www.bceao.int/fr/communique-presse">BCEAO</a></td><td>UMOA · économie, paiements</td><td>HTML</td><td>Non testé</td><td>Titres, dates, liens</td><td>Conditions de réutilisation non trouvées</td><td class="status watch">Observation</td></tr>
+            <tr><td><a href="https://www.wahooas.org/web-ooas-prod/fr/actualites">OOAS / WAHO</a></td><td>Afrique de l’Ouest · santé publique</td><td>HTML</td><td>Non testé</td><td>Titres observés ; documentation machine non trouvée</td><td>Droits et limites non trouvés</td><td class="status watch">Observation manuelle</td></tr>
+            <tr><td><a href="https://www.boad.org/fr/actualites/">BOAD</a></td><td>Afrique de l’Ouest</td><td>HTML</td><td>Bloqué</td><td>À vérifier</td><td>Aucun contournement tenté</td><td class="status watch">Active · à vérifier</td></tr>
+            <tr><td><a href="https://www.ecowas.int/c/actualites/?lang=fr">CEDEAO</a></td><td>Afrique de l’Ouest · institutions, mobilité, économie</td><td>HTML</td><td>Ouvert</td><td>Titres, dates, résumés, rubriques</td><td>Conditions de réutilisation non trouvées</td><td class="status yes">Active · lecture HTML</td></tr>
+            <tr><td><a href="https://www.lanation.bj/">La Nation Bénin</a></td><td>Bénin · actualités</td><td>HTML</td><td>Ouvert</td><td>Titres, dates, auteurs, rubriques</td><td>Flux et conditions à vérifier</td><td class="status yes">Active · socle régional</td></tr>
+            <tr><td><a href="https://banouto.bj/">Banouto</a></td><td>Bénin · société, actualités</td><td>HTML</td><td>Ouvert</td><td>Titres, dates, résumés, commentaires</td><td>Commentaires et conditions à vérifier</td><td class="status yes">Active · socle régional</td></tr>
+            <tr><td><a href="https://www.24haubenin.bj/">24 Heures au Bénin</a></td><td>Bénin · actualités</td><td>HTML</td><td>Partiel</td><td>Référencé par la HAAC</td><td>Retester sans contourner</td><td class="status watch">Active · à vérifier</td></tr>
+            <tr><td><a href="https://beninwebtv.bj/">Bénin Web TV</a></td><td>Bénin, Afrique</td><td>HTML</td><td>Ouvert</td><td>Fil, rubriques, titres, dates</td><td>Flux et conditions à vérifier</td><td class="status yes">Active · socle régional</td></tr>
+            <tr><td><a href="https://haac.bj/medias-en-ligne">HAAC — médias en ligne</a></td><td>Bénin · découverte</td><td>HTML</td><td>Ouvert</td><td>Noms, URL, responsables, nature</td><td>Vérifier ensuite chaque média</td><td class="status yes">Active · registre officiel</td></tr>
+            <tr><td><a href="https://www.meteobenin.bj/">Météo-Bénin</a></td><td>Bénin · météo, climat</td><td>HTML</td><td>Ouvert</td><td>Alertes, carte, bulletins</td><td>Endpoints et conditions à vérifier</td><td class="status yes">Active · socle régional</td></tr>
+            <tr><td><a href="https://fr.africanews.com/feed/rss">Africanews</a></td><td>Afrique · actualités</td><td>RSS</td><td>À tester</td><td>Flux officiellement proposé</td><td>Attribution et rétention à vérifier</td><td class="status yes">Active · probe futur</td></tr>
+            <tr><td><a href="https://www.voaafrique.com/">VOA Afrique</a></td><td>Afrique · pays, émissions</td><td>HTML</td><td>Ouvert</td><td>Rubriques et langues observées</td><td>Flux et conditions à vérifier</td><td class="status yes">Active · socle régional</td></tr>
+            <tr><td><a href="https://africacheck.org/fr">Africa Check</a></td><td>Afrique · fact-checking</td><td>HTML</td><td>Ouvert</td><td>Pays, thèmes, dates, méthode</td><td>Conditions à vérifier</td><td class="status yes">Active · contre-vérification</td></tr>
+            <tr><td><a href="https://ortb.bj/">ORTB / Bénin TV</a></td><td>Bénin · audiovisuel</td><td>HTML</td><td>Timeout</td><td>Aucune caractéristique affirmée</td><td>Retester sans contourner</td><td class="status watch">Active · à vérifier</td></tr>
+            <tr><td><a href="https://www.rfi.fr/fr/rss">RFI RSS</a></td><td>Afrique · actualités francophones</td><td>RSS</td><td>Non testé</td><td>Documentation historique : titres, résumés, rubriques</td><td>Page actuelle bloquée ; droits actuels non trouvés</td><td class="status watch">Observation</td></tr>
+            <tr><td><a href="https://news.un.org/feed/subscribe/fr/news/all/rss.xml">ONU Info FR</a></td><td>Global · société, climat, santé</td><td>RSS</td><td class="status yes">Live 200 · 3 items</td><td>Titre, URL, date, identifiant, résumé court</td><td>Conditions UN limitées ; attribution et revue juridique</td><td class="status watch">Observation</td></tr>
+            <tr><td><a href="https://api.worldbank.org/v2/country/BEN/indicator/SP.POP.TOTL?format=json&amp;per_page=3">Banque mondiale</a></td><td>Bénin · développement</td><td>API JSON</td><td class="status yes">Live 200 · 3 items</td><td>Indicateur, pays, année, valeur, identifiant</td><td>CC BY 4.0 par défaut, vérifier les métadonnées d’indicateur</td><td class="status yes">Candidat M1</td></tr>
+            <tr><td><a href="https://ghoapi.azureedge.net/api/Indicator?$top=3">WHO GHO</a></td><td>Global · santé publique non clinique</td><td>API JSON</td><td class="status yes">Live 200 · 3 items</td><td>Nom et code d’indicateur ; dates absentes dans cet appel</td><td>Finalités de santé publique et attribution encadrées</td><td class="status watch">Observation</td></tr>
+            <tr><td><a href="https://apidoc.reliefweb.int/">ReliefWeb</a></td><td>Global · crises, territoires</td><td>API JSON</td><td>Non testé</td><td>API documentée</td><td><code>appname</code> pré-approuvé demandé dans les exemples ; contenu partenaire variable</td><td class="status watch">Observation</td></tr>
+            <tr><td><a href="https://eonet.gsfc.nasa.gov/api/v3/events?status=open&amp;limit=3">NASA EONET</a></td><td>Global · climat, événements naturels</td><td>API JSON</td><td class="status yes">Live 200 · 3 items</td><td>Titre, lien, date, catégorie, identifiant</td><td>Droits de réutilisation à compléter</td><td class="status watch">Observation</td></tr>
+            <tr><td><a href="https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&amp;limit=3&amp;orderby=time">USGS séismes</a></td><td>Global · résilience</td><td>API JSON</td><td class="status yes">Live 200 · 3 items</td><td>Titre, URL, horodatage, type, identifiant</td><td>Conditions de conservation non trouvées dans les pages consultées</td><td class="status watch">Observation</td></tr>
+            <tr><td><a href="https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=OPEN_ACCESS:Y%20AND%20innovation&amp;format=json&amp;pageSize=3">Europe PMC</a></td><td>Global · recherche, santé</td><td>API JSON</td><td class="status yes">Live 200 · 0 item</td><td>Réponse valide ; requête sans résultat dans ce test</td><td>Métadonnées et textes intégraux ont des droits distincts</td><td class="status yes">Candidat M1 après requête revue</td></tr>
+            <tr><td><a href="https://api.crossref.org/works?query=innovation&amp;rows=3&amp;select=DOI,title,URL,published,author">Crossref</a></td><td>Global · recherche</td><td>API JSON</td><td class="status yes">Live 200 · 3 items</td><td>DOI, titre, URL, date, auteur si présent</td><td>Métadonnées surtout factuelles ; résumés potentiellement protégés</td><td class="status yes">Candidat M1</td></tr>
+            <tr><td><a href="https://export.arxiv.org/api/query?search_query=all:innovation&amp;start=0&amp;max_results=3">arXiv</a></td><td>Global · recherche, innovation</td><td>Atom</td><td class="status yes">Live 200 · 3 items</td><td>ID, titre, URL, date, auteur, catégories, résumé court</td><td>Métadonnées CC0 ; e-prints et résumés à traiter séparément</td><td class="status yes">Candidat M1</td></tr>
+            <tr><td><a href="https://openalex.org/">OpenAlex</a></td><td>Global · recherche</td><td>API JSON</td><td>Non testé</td><td>Documentation riche</td><td>Documentation consultée contradictoire sur clé/compte de base</td><td class="status watch">Observation</td></tr>
+            <tr><td><a href="https://gallica.bnf.fr/services/OAIRecord?ark=bpt6k9633077k">BnF Gallica</a></td><td>Francophonie · culture</td><td>API XML</td><td class="status yes">Live 200 · 1 item</td><td>Notice, URL, auteurs, types, identifiant ; date absente</td><td>Métadonnées sous Licence ouverte ; droits du document séparés</td><td class="status yes">Candidat M1</td></tr>
+            <tr><td><a href="https://www.openstreetmap.org/">OpenStreetMap</a></td><td>Global · mobilité, territoires</td><td>Jeu de données</td><td>Non testé</td><td>Identifiants et géodonnées selon canal</td><td>ODbL ; API centrale d’édition déconseillée pour lecture de masse</td><td class="status watch">Observation</td></tr>
+            <tr><td><a href="https://github.com/HackerNews/API">Hacker News</a></td><td>Global · technologie, startups</td><td>API JSON</td><td>Non testé</td><td>Titre, URL, date, auteur, identifiant</td><td>Droits des contenus communautaires non documentés dans l’API</td><td class="status watch">Priorité d’observation</td></tr>
+            <tr><td><a href="https://techcrunch.com/feed/">TechCrunch</a></td><td>Global · technologie, Afrique</td><td>RSS</td><td class="status yes">Live 200 · 3 items</td><td>Titre, URL, date, auteur, résumé, catégories, ID</td><td>Attribution et lien requis ; flux modifiable ou interruptible par l’éditeur</td><td class="status watch">Signal secondaire</td></tr>
+            <tr><td><a href="https://www.geekwire.com/rss-feeds/">GeekWire</a></td><td>Technologie, science</td><td>RSS</td><td>Non testé</td><td>Flux officiel repéré</td><td>Copie ou surveillance automatisée interdite sans accord écrit</td><td class="status watch">Lecture humaine, probe non sélectionné</td></tr>
+            <tr><td><a href="https://help.hackernoon.com/rss-distribution">Hacker Noon</a></td><td>Technologie, entrepreneuriat</td><td>RSS</td><td>Non testé</td><td>Flux officiel de 20 histoires documenté</td><td>Réutilisation et indexation encadrées ; auteurs distincts</td><td class="status watch">Observation</td></tr>
+            <tr><td><a href="https://www.reddit.com/">Reddit</a></td><td>Problèmes déclarés, échanges</td><td>API / accès conversationnel</td><td>Non testé</td><td>API documentée ; 25 pistes précises conservées</td><td>OAuth, cas d’usage, rétention et droits utilisateur à établir</td><td class="status yes">Priorité stratégique</td></tr>
+            <tr><td><a href="https://www.quora.com/">Quora</a></td><td>Questions, réponses, commentaires</td><td>HTML</td><td>Bloqué</td><td>Non vérifiées sur la page principale</td><td>Quora indique bloquer les scrapers ; pages de conditions non ouvertes</td><td class="status yes">Priorité stratégique, snapshot local</td></tr>
+            <tr><td><a href="https://api.producthunt.com/v2/docs">Product Hunt</a></td><td>Global · produits, startups</td><td>API GraphQL</td><td>Non testé</td><td>Champs et quotas documentés</td><td>Compte et jeton requis ; commercial conditionnel</td><td class="status yes">Active · connecteur conditionnel</td></tr>
+            <tr><td><a href="https://docs.x.com/x-api/posts/search/introduction">X / Twitter</a></td><td>Global · conversations, société, technologie</td><td>API JSON</td><td>Non testé</td><td>ID, texte, date, auteur, métriques et identifiant de conversation documentés</td><td>Compte, application et jeton requis ; affichage et suppressions à synchroniser</td><td class="status yes">Priorité stratégique, hors PoC sans clé</td></tr>
+            <tr><td><a href="https://docs.developer.yelp.com/docs/places-intro">Yelp</a></td><td>International · services locaux, avis</td><td>API JSON</td><td>Non testé</td><td>Commerce, URL, catégories, ID et jusqu’à quelques extraits d’avis selon plan</td><td>Compte, clé et plan ; limites QPS/jour ; cache documenté jusqu’à 24 h</td><td class="status yes">Priorité besoins locaux, accès conditionnel</td></tr>
+            <tr><td><a href="https://news.google.com/">Google News</a></td><td>International · agrégation d’actualités</td><td>HTML</td><td>Page trop grande</td><td>Non vérifiées dans le canal de test</td><td>Canal lecteur automatisable non documenté ; remonter aux éditeurs</td><td class="status watch">Observation et croisement manuel</td></tr>
+            <tr><td><a href="https://finance.yahoo.com/">Yahoo Finance</a></td><td>International · finance, économie</td><td>HTML</td><td>429</td><td>Non vérifiées dans le test</td><td>Collecte automatisée hors API Yahoo interdite par les conditions API consultées</td><td class="status watch">Signal sensible, sources primaires requises</td></tr>
+            <tr><td><a href="https://www.axios.com/">Axios</a></td><td>États-Unis / international · politique, tech, climat</td><td>HTML</td><td>Ouvert</td><td>Titres, liens, auteurs, temporalité, rubriques, résumés courts observés</td><td>Conditions liées mais corps non exposé ; aucun flux officiel confirmé</td><td class="status watch">Lecture et remontée aux sources</td></tr>
+            <tr><td><a href="https://reutersagency.com/content-delivery-platforms/content-delivery">Reuters</a></td><td>International · actualités, économie</td><td>RSS contractuel</td><td>Non testé</td><td>Canal RSS documenté ; schéma public non vérifié</td><td>Reuters Connect, compte/contact ; scraping interdit</td><td class="status yes">Source forte, licence/connecteur à établir</td></tr>
+            <tr><td><a href="https://open-platform.theguardian.com/documentation/">The Guardian</a></td><td>International · actualités, société, climat, culture</td><td>API JSON</td><td>Non testé</td><td>ID, titre, URL, date, section documentés</td><td>Clé ; conditions développeur interdisent IA/TDM, offre commerciale distincte annoncée</td><td class="status watch">Lecture ou licence commerciale adaptée</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footer-note">Le détail champ par champ — cadence, auteur, résumé, catégories, identifiant, clé, quota, attribution, robots, texte et URLs consultées — est versionné dans le <a href="../editorial/sources/catalogue.json">catalogue JSON</a>.</p>
+    </section>
+
+    <section id="architecture">
+      <span class="label recommendation">Architecture proposée</span>
+      <h2>Collecte locale, bornée et explicitement déclenchée</h2>
+      <div class="flow">
+        <div class="step"><b>Entrée</b><span>Catalogue qualifié</span><small>HTTPS, parser déclaré, statut actif.</small></div>
+        <div class="step"><b>Gate</b><span>Accès et droits</span><small>Compte, clé, robots, quota, rétention.</small></div>
+        <div class="step"><b>Fetch</b><span>Une source à la fois</span><small>6 s, 768 Kio, UA explicite, 2 redirections max.</small></div>
+        <div class="step"><b>Sortie</b><span>Métadonnées minimales</span><small>3 éléments au plus, sous <code>.agent/</code>.</small></div>
+      </div>
+      <h3>Contrat du probe</h3>
+      <pre class="codeblock">python3 editorial/research/probe_sources.py --live --output probe-YYYY-MM-DD.json
+
+réseau par défaut : désactivé
+méthode             : GET séquentiel
+schémas             : HTTPS seulement
+taille               : 768 Kio par réponse
+timeout              : 6 secondes
+éléments             : 3 au plus par source
+sortie                : .agent/source-collection-research/ seulement</pre>
+      <p>Le code n’a aucun point d’entrée réseau automatique. Les tests ordinaires importent seulement les parseurs et les fixtures locales.</p>
+    </section>
+
+    <section id="conversations">
+      <span class="label hypothesis">Priorité produit</span>
+      <h2>Reddit, Quora, X et signaux conversationnels</h2>
+      <p class="lede">La valeur recherchée n’est pas la republication : ce sont les problèmes déclarés, objections, contournements, répétitions et nuances qui apparaissent dans les réponses et commentaires. Ces éléments restent des <strong>observations déclaratives</strong>, pas des faits représentatifs.</p>
+      <div class="grid">
+        <div class="card"><h3>Registre sans plafond</h3><p>Les 25 liens Reddit transmis sont conservés avec priorité utilisateur. Yelp, Google News, Yahoo Finance, Axios, Reuters, The Guardian, Product Hunt, CEDEAO, X et tous les autres médias nommés sont actifs et reliés au catalogue. Une vérification incomplète reporte un connecteur, jamais la source.</p></div>
+        <div class="card"><h3>Import de snapshot</h3><p>Le contrat <a href="../editorial/sources/conversation-snapshot.schema.json">conversation-snapshot</a> accepte un export manuel ou autorisé placé sous <code>.agent/</code>. Il refuse les profils, limite à 40 éléments, classe chaque extrait <code>user_reported_signal</code> et impose <code>temporary_analysis</code>.</p></div>
+      </div>
+      <h3>Pattern de provenance inspiré par IdeaBrowser</h3>
+      <div class="grid">
+        <div class="card"><h3>Observation fournie</h3><p><span class="label observation">Captures utilisateur</span> Les captures IdeaBrowser montrent une idée accompagnée d’un encart qui nomme une discussion Reddit et renvoie vers une idée source. Une autre capture montre une newsletter partant d’un post social. Ces éléments attestent uniquement ce qui est visible dans les captures ; le site IdeaBrowser a répondu 403 lors de la consultation directe.</p></div>
+        <div class="card"><h3>Contrat Idea Commons</h3><p>Afficher d’abord la plateforme, le lien canonique, l’extrait minimal, la date et le mode de capture. Afficher ensuite un bloc distinct « Analyse et hypothèses Idea Commons ». Un chiffre de marché, un score ou une recommandation exige ses propres sources : il n’est jamais présenté comme provenant du post.</p></div>
+      </div>
+      <p><span class="label fact">Source secondaire consultée</span> La fiche publique Product Hunt d’IdeaBrowser affirme que le produit transforme des discussions Reddit et des données de recherche en idées. Cette déclaration ne vérifie ni son implémentation, ni ses accès, ni ses méthodes de scoring.</p>
+      <h3>Connecteur conversationnel futur</h3>
+      <ol>
+        <li>résoudre un canal d’accès autorisé pour la plateforme et le cas d’usage ;</li>
+        <li>collecter sujets, réponses et commentaires sans profils, avec budget de requêtes conservateur ;</li>
+        <li>arrêter sur 401, 403 ou 429, appliquer backoff et ne jamais contourner ;</li>
+        <li>détecter les motifs sémantiques sans assimiler volume et vérité ;</li>
+        <li>chercher une source indépendante, une contre-source et un entretien humain avant tout candidat fort.</li>
+      </ol>
+      <p class="callout limit"><strong>Limite opérationnelle.</strong> Ce document ne décrit aucun mécanisme furtif, proxy, rotation d’identité, cookies détournés, capture forcée ou contournement. Un snapshot obtenu manuellement par accès ordinaire peut être analysé hors réseau ; il reste temporaire et non publiable.</p>
+    </section>
+
+    <section id="regional">
+      <span class="label hypothesis">Orientation produit à tester</span>
+      <h2>Découverte régionale : partir des réalités locales</h2>
+      <p class="lede"><strong>Décision utilisateur.</strong> Le socle général doit associer sources mondiales et informations du Bénin, de l’Afrique de l’Ouest et de l’Afrique. <strong>Hypothèse premium, pas décision tarifaire :</strong> un membre pourrait sauvegarder un profil géographique et personnaliser pays, villes, langues, thèmes et sources.</p>
+      <div class="grid">
+        <div class="card"><h3>Socle général</h3><p>Institutions, médias locaux, météo, annuaire HAAC, actualités panafricaines et fact-checking complètent la recherche mondiale. L’annuaire HAAC sert à découvrir des médias ; chaque média doit ensuite être vérifié sur son propre site.</p></div>
+        <div class="card"><h3>Profil régional personnalisable</h3><p><span class="label hypothesis">Hypothèse premium</span> Packs Bénin, institutions ouest-africaines et innovation africaine, plus ajout de sources par l’utilisateur. Le système conserve l’origine de chaque signal et n’assimile jamais proximité géographique et fiabilité.</p></div>
+      </div>
+      <div class="flow">
+        <div class="step"><b>Signal local</b><span>Actualité ou témoignage</span><small>Étiqueté non corroboré.</small></div>
+        <div class="step"><b>Recoupement</b><span>Source indépendante</span><small>Les contradictions restent visibles.</small></div>
+        <div class="step"><b>Besoin</b><span>Problème et bénéficiaires</span><small>Fréquence et gravité à valider.</small></div>
+        <div class="step"><b>Candidat</b><span>Mécanisme local testable</span><small>Revue humaine obligatoire.</small></div>
+      </div>
+      <p><span class="label hypothesis">Exemples fournis, non factuels</span> Une carte à fraîcheur visible pour les coupures, des axes routiers signalés lors d’inondations, ou une disponibilité de carburant qui expire automatiquement. Ces scénarios illustrent le pipeline ; ils n’affirment pas qu’un événement se produit actuellement.</p>
+      <p class="callout warning"><strong>Garde-fou recommandé.</strong> Deux signaux indépendants avant escalade éditoriale. Même corroborée, une idée n’est ni un service d’urgence ni une vérité temps réel ; une donnée périmée redevient « inconnue ».</p>
+    </section>
+
+    <section id="normalisation">
+      <span class="label fact">Implémenté</span>
+      <h2>Normalisation, précision des dates et déduplication</h2>
+      <div class="grid">
+        <div class="card"><h3>Schéma commun</h3><p><code>sourceId</code>, <code>identifier</code>, titre, URL canonique, date, auteur, résumé court et catégories. Une date partielle reste partielle : <code>2025</code> n’est jamais converti en jour inventé.</p></div>
+        <div class="card"><h3>URL canonique</h3><p>Schéma et hôte normalisés, fragment retiré et paramètres <code>utm_*</code> supprimés. Les autres paramètres sont préservés pour éviter de fusionner des ressources différentes.</p></div>
+        <div class="card"><h3>Déduplication</h3><p>Clé = URL canonique, sinon identifiant fourni, sinon empreinte locale de <code>sourceId + URL + titre</code>. Le rapport distingue doublons internes et globaux.</p></div>
+        <div class="card"><h3>Formats</h3><p>RSS/Atom, JSON spécialisés et XML OAI. Les DTD et entités XML sont refusées ; toute réponse trop grande, invalide ou non reconnue devient une erreur typée sans journaliser son corps.</p></div>
+      </div>
+    </section>
+
+    <section id="droits">
+      <span class="label unknown">Gate, pas avis juridique</span>
+      <h2>Droits, attribution et rétention</h2>
+      <ul>
+        <li><strong>Conserver :</strong> URL canonique, identifiant, titre, date, auteur si fourni, catégories et extrait de flux de 280 caractères au plus.</li>
+        <li><strong>Ne pas conserver :</strong> article intégral, page aspirée versionnée, profil, données privées, contenu derrière paywall ou authentification.</li>
+        <li><strong>Snapshots conversationnels :</strong> sous <code>.agent/</code>, sans profil, <code>temporary_analysis</code>, jamais preuve factuelle par défaut.</li>
+        <li><strong>Attribution :</strong> règle propre à chaque source ; le catalogue conserve l’URL de preuve. Une condition absente reste inconnue.</li>
+        <li><strong>Œuvre et métadonnées :</strong> une licence de notice, DOI ou index ne s’étend pas au document lié.</li>
+      </ul>
+      <p class="callout warning">Une revue juridique spécialisée reste nécessaire avant toute ingestion régulière de média ou de contenu communautaire, notamment pour l’analyse automatisée, la durée de conservation et les usages commerciaux.</p>
+    </section>
+
+    <section id="pipeline">
+      <span class="label recommendation">Pipeline éditorial</span>
+      <h2>Source → interprétation → candidat d’idée</h2>
+      <div class="flow">
+        <div class="step"><b>1 · Événement</b><span>Élément collecté</span><small>ID, URL, titre, date, source.</small></div>
+        <div class="step"><b>2 · Preuve</b><span>Faits et citations</span><small>Texte exact minimal, locator et fixture.</small></div>
+        <div class="step"><b>3 · Angles</b><span>Hypothèses multiples</span><small>Besoin, opportunité, contre-interprétation.</small></div>
+        <div class="step"><b>4 · Candidat</b><span>Mécanisme concret</span><small>Bénéficiaires, limites, risques, questions.</small></div>
+        <div class="step"><b>5 · Claims</b><span>Types distincts</span><small>Fait, observation, estimation, hypothèse, recommandation.</small></div>
+        <div class="step"><b>6 · Croisement</b><span>Indépendance</span><small>Source primaire, secondaire, communauté, contre-source.</small></div>
+        <div class="step"><b>7 · Score</b><span>Grille explicable</span><small>Force, besoin, nouveauté, faisabilité, responsabilité.</small></div>
+        <div class="step"><b>8 · Humain</b><span>Revue obligatoire</span><small>Reformuler, tenir, rejeter ou lancer un entretien.</small></div>
+      </div>
+      <h3>Croiser sans surcompter</h3>
+      <p>Deux articles reprenant le même communiqué comptent comme une même origine. Un commentaire et sa réponse ne sont pas deux sources indépendantes. Un cluster fort exige de conserver les relations <code>reprend</code>, <code>contredit</code>, <code>corrobore</code> et <code>source primaire de</code>. La sortie est une priorité de recherche, jamais une vérité calculée.</p>
+      <h3>Carte d’origine obligatoire</h3>
+      <p>Le corpus structure le contrat d’affichage suivant : origine avant interprétation, cinq champs minimum — source, URL canonique, énoncé capturé, date de capture et mode de preuve — puis séparation visible des dérivations. Pour X, la documentation officielle permet la recherche récente ou le lookup par identifiant, mais exige un compte développeur et un jeton ; aucun appel X n’a été réalisé dans ce chantier.</p>
+    </section>
+
+    <section id="grille">
+      <span class="label recommendation">0 à 25</span>
+      <h2>Grille éditoriale</h2>
+      <div class="score-grid">
+        <div class="card"><strong>Preuve</strong><p>0 : aucune ; 5 : faits primaires, récents et cités.</p></div>
+        <div class="card"><strong>Besoin utilisateur</strong><p>0 : inventé ; 5 : motif répété et entretiens convergents.</p></div>
+        <div class="card"><strong>Nouveauté</strong><p>0 : copie ; 5 : mécanisme ou combinaison réellement distincte.</p></div>
+        <div class="card"><strong>Faisabilité</strong><p>0 : indéfinie ; 5 : test local court et réversible.</p></div>
+        <div class="card"><strong>Responsabilité</strong><p>0 : risques non traités ; 5 : limites, droits et erreurs visibles.</p></div>
+      </div>
+      <p><strong>Lecture :</strong> à partir de 17/25 et responsabilité ≥ 4, le candidat peut entrer en revue humaine. Un cas entièrement synthétique reste en attente même s’il atteint le seuil. Une citation invalide ou une confusion fait/hypothèse entraîne <code>insufficient_evidence</code>. Aucun score ne publie.</p>
+    </section>
+
+    <section id="cas">
+      <span class="label observation">10 démonstrations</span>
+      <h2>Corpus source → idée</h2>
+      <div class="case-grid">
+        <article class="card"><small>Live · Banque mondiale · 19/25</small><h3>Canevas de capacité communale</h3><p>Trois valeurs annuelles deviennent des scénarios explicites, sans inventer de granularité locale.</p><p class="outcome">Revue humaine</p></article>
+        <article class="card"><small>Live · TechCrunch · 16/25</small><h3>Décodeur local de thèses d’investissement</h3><p>Une annonce secondaire devient une liste de questions ; la source primaire reste obligatoire.</p><p class="outcome">En attente</p></article>
+        <article class="card"><small>Live · arXiv · 15/25</small><h3>Guide d’entretien d’adoption</h3><p>Le titre d’un article ouvre un angle, sans prétendre valider sa méthode.</p><p class="outcome">En attente</p></article>
+        <article class="card"><small>Live · BnF · 17/25</small><h3>Briefs depuis des notices patrimoniales</h3><p>La métadonnée ouverte amorce l’activité ; les droits de l’œuvre restent séparés.</p><p class="outcome">En attente</p></article>
+        <article class="card"><small>Live · Crossref · 15/25</small><h3>Registre de preuves d’innovation</h3><p>Un signal faible devient une proposition de journal typé, pas une conclusion.</p><p class="outcome">En attente</p></article>
+        <article class="card"><small>Synthétique · conversations · 17/25</small><h3>Disponibilité légère pour ateliers</h3><p>Trois observations déclaratives suggèrent un statut expirant plutôt qu’un agenda complet.</p><p class="outcome">En attente de signaux réels</p></article>
+        <article class="card"><small>Synthétique · énergie · 14/25</small><h3>Journal d’adaptation aux coupures</h3><p>L’incertitude et les lacunes de mesure restent visibles.</p><p class="outcome">En attente</p></article>
+        <article class="card"><small>Synthétique · eau · 15/25</small><h3>File de vérification des points d’eau</h3><p>Le silence devient « inconnu », jamais « fonctionne ».</p><p class="outcome">En attente</p></article>
+        <article class="card"><small>Mixte · statistique + conversation · 17/25</small><h3>Éclaireur de besoins multi-sources</h3><p>Les types de preuve restent séparés dans un cluster avant entretien humain.</p><p class="outcome">Revue humaine</p></article>
+        <article class="card"><small>Synthétique · post social + réponse · 16/25</small><h3>Signal de disponibilité sans application</h3><p>Un post fictif devient un mécanisme physique testable ; la carte d’origine reste distincte de l’hypothèse.</p><p class="outcome">En attente de signaux réels</p></article>
+      </div>
+      <p class="footer-note">Chaque claim et chaque score sont consultables dans <a href="../editorial/sources/source-to-idea-cases.json">le corpus structuré</a>. Les pointeurs sont vérifiés contre les fixtures minimisées.</p>
+    </section>
+
+    <section id="echecs">
+      <span class="label unknown">Fail closed</span>
+      <h2>Scénarios d’échec et fallback</h2>
+      <div class="table-wrap" role="region" aria-label="Scénarios d’échec" tabindex="0">
+        <table>
+          <thead><tr><th>Signal</th><th>Action</th><th>Ce qui n’est pas fait</th></tr></thead>
+          <tbody>
+            <tr><td>DNS / timeout</td><td>Erreur typée, source suivante, rapport séparé</td><td>Pas de boucle rapide ni retry infini</td></tr>
+            <tr><td>401 / 403 / robots</td><td>Arrêt, statut bloqué, lecture manuelle ou snapshot autorisé</td><td>Pas de contournement</td></tr>
+            <tr><td>429</td><td>Arrêt du lot, backoff futur, budget révisé</td><td>Pas de rotation d’identité</td></tr>
+            <tr><td>Redirection hors allowlist</td><td>Refus explicite</td><td>Pas de suivi vers un hôte inconnu</td></tr>
+            <tr><td>Réponse &gt; 768 Kio</td><td><code>response_too_large</code></td><td>Pas de conservation partielle opaque</td></tr>
+            <tr><td>XML avec DTD / entité</td><td>Rejet avant parsing</td><td>Pas de résolution externe</td></tr>
+            <tr><td>JSON/XML invalide</td><td>Syntaxe invalide, aucune normalisation</td><td>Pas d’inférence depuis un corps cassé</td></tr>
+            <tr><td>Date absente</td><td><code>null</code> et compteur dédié</td><td>Pas de date inventée</td></tr>
+            <tr><td>Aucun résultat</td><td>Succès syntaxique, zéro item visible</td><td>Pas de substitution silencieuse</td></tr>
+            <tr><td>Source contradictoire</td><td>Relation de contradiction et revue humaine</td><td>Pas de moyenne qui efface le désaccord</td></tr>
+            <tr><td>Simulateur invalide / timeout</td><td>Cascades IC-06/IC-07 inchangées, état de fallback explicite</td><td>Aucun appel fournisseur réel</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="observabilite">
+      <span class="label fact">Observation live</span>
+      <h2>Observabilité, réseau et coût</h2>
+      <div class="hero-meta" style="color:var(--ink);margin-top:0">
+        <div class="metric" style="border-color:var(--line);background:#fafbf9"><strong>10</strong><span style="color:var(--muted)">requêtes HTTPS</span></div>
+        <div class="metric" style="border-color:var(--line);background:#fafbf9"><strong>71 234</strong><span style="color:var(--muted)">octets reçus</span></div>
+        <div class="metric" style="border-color:var(--line);background:#fafbf9"><strong>10,45 s</strong><span style="color:var(--muted)">durée du lot</span></div>
+        <div class="metric" style="border-color:var(--line);background:#fafbf9"><strong>6</strong><span style="color:var(--muted)">dates absentes</span></div>
+        <div class="metric" style="border-color:var(--line);background:#fafbf9"><strong>0 €</strong><span style="color:var(--muted)">service ou IA</span></div>
+      </div>
+      <p><span class="label observation">Observation de test</span> Le premier passage dans le bac à sable a produit dix erreurs DNS. Le passage réseau explicitement autorisé a ensuite obtenu 10 succès HTTP, 10 syntaxes valides, 10 normalisations réussies, 25 éléments, 0 doublon et 0 erreur. Europe PMC a répondu correctement avec zéro résultat pour la requête testée.</p>
+      <p>Le journal live reste sous <code>.agent/source-collection-research/</code>, ignoré par Git. Les fichiers publics ne contiennent qu’un échantillon minimisé nécessaire aux tests.</p>
+    </section>
+
+    <section id="tests">
+      <span class="label fact">Preuves d’acceptation</span>
+      <h2>Tests et critères d’acceptation</h2>
+      <ul class="checklist">
+        <li>registre extensible de 61 pistes actives, dont 25 Reddit, sans maximum dans le schéma ;</li>
+        <li>55 sources actives : 45 fiches détaillées et 10 inscriptions régionales à approfondir ;</li>
+        <li>aucun statut d’exclusion implicite et chaque piste reliée au catalogue ;</li>
+        <li>10 endpoints live séquentiels, sans compte ni clé, trois éléments au plus ;</li>
+        <li>tests ordinaires strictement hors réseau pour RSS, Atom, JSON, OAI XML, dates, erreurs, doublons et snapshots ;</li>
+        <li>10 cas, pointeurs de preuve résolus, scores recomposés, carte d’origine contractuelle et claim types vérifiés ;</li>
+        <li>10/10 cas exécutés par le simulateur déterministe, 0 appel fournisseur ;</li>
+        <li>aucun article intégral, profil, secret, donnée privée ou publication automatique.</li>
+      </ul>
+      <h3>Commandes reproductibles</h3>
+      <pre class="codeblock">python3 -m unittest editorial.tests.test_source_collection -v
+node editorial/tests/run-source-idea-case-simulator.mjs
+python3 editorial/research/probe_sources.py --live --output probe-YYYY-MM-DD.json
+python3 editorial/research/snapshot_import.py \
+  --input .agent/source-collection-research/imports/snapshot.json \
+  --acknowledge-temporary-analysis</pre>
+      <h3>Critère de sortie</h3>
+      <p>Le proof-of-concept est accepté techniquement lorsque les schémas et tests passent, le live reste séparé, les cas sont traçables et le rendu HTML est lisible sur desktop et mobile. Une <strong>revue humaine distincte</strong> reste obligatoire avant intégration ou usage régulier.</p>
+    </section>
+
+    <section id="decisions">
+      <span class="label hypothesis">À décider humainement</span>
+      <h2>Décisions ouvertes</h2>
+      <ol>
+        <li><strong>Reddit, Quora et X :</strong> choisir entre accès officiel autorisé, snapshots manuels temporaires ou accord/licence spécifique ; définir ensuite le budget de requêtes.</li>
+        <li><strong>Premier usage terrain :</strong> sélectionner un territoire, un thème et une équipe de revue humaine ; le Bénin est le candidat naturel proposé.</li>
+        <li><strong>Offre régionale :</strong> valider ou réfuter l’hypothèse premium de profils géographiques et de sources personnalisées ; aucune décision tarifaire n’est encore prise.</li>
+        <li><strong>Seuil de croisement :</strong> fixer le nombre minimal de sources indépendantes et la place obligatoire d’une contre-source.</li>
+        <li><strong>Rétention :</strong> définir une durée explicite pour les snapshots temporaires et le mécanisme d’effacement.</li>
+        <li><strong>Grille :</strong> confirmer le seuil 17/25 et les cas qui doivent rester en attente malgré le score.</li>
+        <li><strong>Revue juridique :</strong> valider les sources médias et communautaires avant toute routine automatisée ou finalité commerciale.</li>
+        <li><strong>Sources conditionnelles :</strong> choisir si Yelp mérite un plan d’essai, si Reuters justifie une relation Reuters Connect et si The Guardian mérite une demande de licence commerciale adaptée à l’analyse.</li>
+      </ol>
+    </section>
+
+    <section id="sources">
+      <span class="label fact">Consultées le 26 août 2026</span>
+      <h2>Sources officielles et endpoints réellement consultés</h2>
+      <p class="lede">Les pages ci-dessous soutiennent les caractéristiques du catalogue. Un blocage est enregistré comme tel ; il n’est pas transformé en information.</p>
+      <ul class="source-log">
+        <li><a href="https://sgg.gouv.bj/articles/">SGG Bénin — actualités</a> et <a href="https://sgg.gouv.bj/mentions-legales/">mentions légales</a></li>
+        <li><a href="https://instad.bj/">INStaD</a> et <a href="https://instad.bj/mentions-legales-et-credits">mentions légales</a></li>
+        <li><a href="https://www.bceao.int/fr/communique-presse">BCEAO — communiqués</a></li>
+        <li><a href="https://www.wahooas.org/web-ooas-prod/fr/actualites">OOAS — actualités</a></li>
+        <li><a href="https://www.boad.org/fr/actualites/">BOAD — URL bloquée</a></li>
+        <li><a href="https://www.ecowas.int/c/actualites/?lang=fr">CEDEAO — actualités</a> et <a href="https://www.ecowas.int/c/actualites/communiques-de-presse/?lang=fr">communiqués</a></li>
+        <li><a href="https://www1.rfi.fr/actufr/articles/072/article_40497.asp">RFI — documentation RSS historique</a></li>
+        <li><a href="https://www.un.org/en/delegate/page/un-news-outlets">ONU — flux d’actualité</a>, <a href="https://www.un.org/en/about-us/terms-of-use">conditions</a> et <a href="https://www.un.org/en/about-us/copyright">copyright</a></li>
+        <li><a href="https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation">Banque mondiale — API V2</a>, <a href="https://data.worldbank.org/summary-terms-of-use">conditions données</a> et <a href="https://www.worldbank.org/ext/en/legal/terms-conditions">conditions générales</a></li>
+        <li><a href="https://www.who.int/data/gho/info/gho-odata-api">WHO GHO OData</a> et <a href="https://www.who.int/about/policies/publishing/data-policy/terms-and-conditions">conditions des données</a></li>
+        <li><a href="https://apidoc.reliefweb.int/">ReliefWeb API</a></li>
+        <li><a href="https://eonet.gsfc.nasa.gov/docs/v3">NASA EONET v3</a></li>
+        <li><a href="https://earthquake.usgs.gov/fdsnws/event/1/wsdl">USGS FDSN Event</a></li>
+        <li><a href="https://europepmc.org/RestfulWebService">Europe PMC REST</a>, <a href="https://europepmc.org/help">aide</a> et <a href="https://europepmc.org/downloads/openaccess">open access</a></li>
+        <li><a href="https://www.crossref.org/documentation/retrieve-metadata/rest-api/">Crossref REST</a>, <a href="https://www.crossref.org/documentation/retrieve-metadata/">droits des métadonnées</a> et <a href="https://www.crossref.org/blog/announcing-changes-to-rest-api-rate-limits/">limites 2025</a></li>
+        <li><a href="https://info.arxiv.org/help/api/index.html">arXiv API</a>, <a href="https://info.arxiv.org/help/api/tou.html">conditions</a> et <a href="https://info.arxiv.org/help/api/user-manual.html">manuel</a></li>
+        <li><a href="https://developers.openalex.org/api-reference/introduction">OpenAlex API</a>, <a href="https://developers.openalex.org/guides/authentication">authentification</a> et <a href="https://help.openalex.org/api/">aide</a></li>
+        <li><a href="https://www.bnf.fr/fr/portail-bnf-api-et-jeux-de-donnees">BnF — API et données</a>, <a href="https://api.bnf.fr/fr/api-document-de-gallica">Gallica API</a> et <a href="https://www.data.gouv.fr/dataservices/api-gallica-iiif">fiche data.gouv</a></li>
+        <li><a href="https://operations.osmfoundation.org/policies/api/">OSM — politique API</a> et <a href="https://www.openstreetmap.org/copyright">licence / attribution</a></li>
+        <li><a href="https://github.com/HackerNews/API">Hacker News API</a></li>
+        <li><a href="https://techcrunch.com/rss-terms-of-use/">TechCrunch — conditions RSS</a> et <a href="https://techcrunch.com/feed/">endpoint</a></li>
+        <li><a href="https://www.geekwire.com/rss-feeds/">GeekWire — flux</a> et <a href="https://www.geekwire.com/termsofuse/">conditions</a></li>
+        <li><a href="https://help.hackernoon.com/rss-distribution">Hacker Noon — RSS</a> et <a href="https://terms.hackernoon.com/">conditions</a></li>
+        <li><a href="https://redditinc.com/policies/developer-terms">Reddit — conditions développeur</a>, <a href="https://redditinc.com/policies/data-api-terms">Data API</a> et <a href="https://redditinc.com/news/publishing-our-public-content-policy-and-introducing-a-new-community-for-researchers">politique de contenu public</a></li>
+        <li><a href="https://help.quora.com/hc/en-us/articles/15205064557844-Can-I-opt-out-of-having-my-Quora-content-used-to-train-LLMs">Quora — usage LLM</a> et <a href="https://help.quora.com/hc/en-us/articles/360052494012-How-does-Quora-intend-to-enforce-the-Not-for-Reproduction-feature">Not for Reproduction</a></li>
+        <li><a href="https://api.producthunt.com/v2/docs">Product Hunt API v2</a> et <a href="https://api.producthunt.com/v2/docs/rate_limits/headers">limites</a></li>
+        <li><a href="https://docs.x.com/x-api/posts/search/introduction">X — recherche de posts</a>, <a href="https://docs.x.com/x-api/posts/lookup/integrate">lookup et champs</a>, <a href="https://docs.x.com/x-api/getting-started/getting-access">accès</a> et <a href="https://docs.x.com/developer-terms/policy">politique développeur</a></li>
+        <li><a href="https://www.producthunt.com/products/ideabrowser-com">IdeaBrowser — fiche publique Product Hunt</a> ; site direct bloqué lors de la consultation, captures utilisateur traitées comme observations</li>
+        <li><a href="https://docs.developer.yelp.com/docs/places-intro">Yelp Places — accès</a>, <a href="https://docs.developer.yelp.com/docs/places-authentication">authentification</a>, <a href="https://docs.developer.yelp.com/docs/places-rate-limiting">limites</a> et <a href="https://terms.yelp.com/developers/api_terms/20250909_en_us/">conditions API</a></li>
+        <li><a href="https://news.google.com/">Google News</a>, <a href="https://support.google.com/news/publisher-center/answer/15898024?hl=en">aide Publisher Center</a> et <a href="https://policies.google.com/terms">conditions Google</a></li>
+        <li><a href="https://finance.yahoo.com/">Yahoo Finance</a> et <a href="https://legal.yahoo.com/us/en/yahoo/terms/product-atos/apitnc/index.html">conditions API Yahoo</a></li>
+        <li><a href="https://www.axios.com/">Axios</a>, <a href="https://www.axios.com/legal/terms-of-use">conditions liées</a> et <a href="https://legal.axios.com/">confidentialité</a></li>
+        <li><a href="https://reutersagency.com/content-delivery-platforms/content-delivery">Reuters — livraison de contenu</a>, <a href="https://liaison.thomsonreuters.com/page/rss-feeds-tech-notes">RSS</a> et <a href="https://www.reutersconnect.com/general-terms">conditions Reuters Connect</a></li>
+        <li><a href="https://open-platform.theguardian.com/access/">The Guardian — accès</a>, <a href="https://open-platform.theguardian.com/documentation/search">Content API</a> et <a href="https://www.theguardian.com/open-platform/terms-and-conditions">conditions</a></li>
+        <li><a href="https://www.lanation.bj/">La Nation Bénin</a> et <a href="https://lanation.bj/actualites">actualités</a></li>
+        <li><a href="https://banouto.bj/">Banouto</a>, <a href="https://www.24haubenin.bj/">24 Heures au Bénin</a> et <a href="https://beninwebtv.bj/">Bénin Web TV</a></li>
+        <li><a href="https://haac.bj/medias-en-ligne">HAAC — annuaire officiel des médias en ligne</a></li>
+        <li><a href="https://www.meteobenin.bj/">Météo-Bénin</a></li>
+        <li><a href="https://fr.africanews.com/page/widgets/">Africanews — widgets et RSS</a> et <a href="https://fr.africanews.com/feed/rss">endpoint RSS</a></li>
+        <li><a href="https://www.voaafrique.com/">VOA Afrique</a></li>
+        <li><a href="https://africacheck.org/fr/fact-checks/articles">Africa Check — vérifications</a> et <a href="https://africacheck.org/fr/ce-que-nous-faisons">méthode</a></li>
+        <li><a href="https://ortb.bj/">ORTB — tentative en timeout</a></li>
+      </ul>
+      <p class="footer-note">Version de recherche : 1.1.0 · Aucun service permanent lancé · Aucune publication effectuée · Revue humaine requise.</p>
+    </section>
+  </main>
+</body>
+</html>

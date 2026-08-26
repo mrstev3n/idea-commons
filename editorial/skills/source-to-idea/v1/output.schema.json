@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idea-commons.example/schemas/source-to-idea/1.0.0/output",
+  "title": "SourceToIdeaOutput",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["state", "candidate", "controls"],
+  "properties": {
+    "state": {"enum": ["candidate_ready", "rejected_by_policy", "needs_human_analysis", "providers_exhausted", "source_invalid"]},
+    "candidate": {"type": ["object", "null"], "additionalProperties": false, "required": ["title", "oneLineSummary", "problemStatement", "targetAudiences", "proposedApproach", "mvpScope", "initialExclusions", "coreAssumptions", "validationQuestions", "risks", "claims"], "properties": {
+      "title": {"type": "string", "minLength": 1, "maxLength": 180}, "oneLineSummary": {"type": "string", "minLength": 1}, "problemStatement": {"type": "string", "minLength": 1}, "targetAudiences": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "proposedApproach": {"type": "string", "minLength": 1}, "mvpScope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "initialExclusions": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "coreAssumptions": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "validationQuestions": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "risks": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "claims": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["type", "statement", "citationExcerptIds"], "properties": {"type": {"enum": ["fact", "hypothesis", "estimate", "recommendation", "validation_question"]}, "statement": {"type": "string", "minLength": 1}, "rationale": {"type": ["string", "null"]}, "citationExcerptIds": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}}}}
+    }},
+    "controls": {"type": "object", "additionalProperties": false, "required": ["schemaValid", "citationsValid", "prudenceValid"], "properties": {"schemaValid": {"type": "boolean"}, "citationsValid": {"type": "boolean"}, "prudenceValid": {"type": "boolean"}}},
+    "reasonCode": {"type": ["string", "null"]}
+  }
+}

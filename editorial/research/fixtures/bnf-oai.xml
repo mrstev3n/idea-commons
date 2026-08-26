@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Notice synthétique minimisée ; elle teste seulement les espaces de noms OAI/DC. -->
+<oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <dc:title>Notice culturelle synthétique</dc:title>
+  <dc:creator>Collectif Exemple</dc:creator>
+  <dc:subject>Culture</dc:subject>
+  <dc:type>Image</dc:type>
+  <dc:identifier>https://gallica.bnf.fr/ark:/12148/bpt6ksynthetic</dc:identifier>
+</oai_dc:dc>
