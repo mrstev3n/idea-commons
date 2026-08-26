@@ -5,3 +5,7 @@
 .idea/
 .vscode/
 *.log
+node_modules
+.local/
+__pycache__/
+*.py[cod]

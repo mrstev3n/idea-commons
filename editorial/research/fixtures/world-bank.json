@@ -1,0 +1,8 @@
+[
+  {"page": 1, "pages": 1, "per_page": 3, "total": 3},
+  [
+    {"indicator": {"id": "SYN.IND", "value": "Indicateur synthétique"}, "country": {"value": "Bénin"}, "countryiso3code": "BEN", "date": "2025", "value": 42},
+    {"indicator": {"id": "SYN.IND", "value": "Indicateur synthétique"}, "country": {"value": "Bénin"}, "countryiso3code": "BEN", "date": "2024", "value": 40},
+    {"indicator": {"id": "SYN.IND", "value": "Indicateur synthétique"}, "country": {"value": "Bénin"}, "countryiso3code": "BEN", "date": "2023", "value": null}
+  ]
+]

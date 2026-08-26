@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fixture synthétique et minimisée : aucun contenu d'article réel. -->
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Recherche synthétique</title>
+  <entry>
+    <id>urn:synthetic:paper:1</id>
+    <title>Mesurer l'accès local aux services</title>
+    <link href="https://example.test/recherche/1?utm_medium=fixture" />
+    <published>2026-08</published>
+    <author><name>Ada Exemple</name></author>
+    <summary type="html">&lt;strong&gt;Résumé&lt;/strong&gt; synthétique.</summary>
+    <category term="innovation" />
+  </entry>
+  <entry>
+    <id>urn:synthetic:paper:2</id>
+    <title>Cartographier une mobilité de proximité</title>
+    <link href="https://example.test/recherche/2" />
+    <updated>2026-08-26T10:30:00Z</updated>
+    <author><name>Sam Exemple</name></author>
+  </entry>
+</feed>

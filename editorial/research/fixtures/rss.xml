@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fixture synthétique et minimisée : aucun contenu d'article réel. -->
+<rss version="2.0">
+  <channel>
+    <title>Flux de démonstration</title>
+    <item>
+      <guid>synthetic-1</guid>
+      <title>Ouverture d'un guichet public de données</title>
+      <link>https://example.test/actualites/guichet?utm_source=test</link>
+      <pubDate>Tue, 26 Aug 2026 08:00:00 +0000</pubDate>
+      <description><![CDATA[<p>Un court résumé synthétique, sans article intégral.</p>]]></description>
+      <category>données ouvertes</category>
+    </item>
+    <item>
+      <guid>synthetic-2</guid>
+      <title>Le guichet reçoit une seconde annonce</title>
+      <link>https://example.test/actualites/guichet</link>
+      <description>Résumé sans date pour tester le diagnostic.</description>
+      <category>territoires</category>
+    </item>
+    <item>
+      <guid>synthetic-3</guid>
+      <title>Un atelier teste le service</title>
+      <link>https://example.test/actualites/atelier</link>
+      <pubDate>Tue, 26 Aug 2026 09:00:00 +0000</pubDate>
+      <description>Troisième élément synthétique.</description>
+    </item>
+    <item>
+      <guid>synthetic-4</guid>
+      <title>Élément hors limite</title>
+      <link>https://example.test/actualites/hors-limite</link>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "capturedAt": "2026-08-26",
+  "source": ".local/source-collection-research/probe-2026-08-26.json",
+  "notice": "Échantillon minimisé issu du probe live. Il ne contient aucun article intégral, profil ou donnée privée ; seulement les champs nécessaires aux tests de traçabilité.",
+  "records": {
+    "world-bank-2025": {"sourceId":"world-bank-benin-indicators","identifier":"BEN:SP.POP.TOTL:2025","title":"Population, total — Benin","date":"2025","value":"14814460","url":null},
+    "world-bank-2024": {"sourceId":"world-bank-benin-indicators","identifier":"BEN:SP.POP.TOTL:2024","title":"Population, total — Benin","date":"2024","value":"14462724","url":null},
+    "world-bank-2023": {"sourceId":"world-bank-benin-indicators","identifier":"BEN:SP.POP.TOTL:2023","title":"Population, total — Benin","date":"2023","value":"14111034","url":null},
+    "techcrunch-africa-fund": {"sourceId":"techcrunch-rss","identifier":"https://techcrunch.com/?p=3156817","title":"Ventures Platform goes bigger — and broader — with its second Africa fund","date":"2026-08-26T07:00:00Z","author":"Dominic-Madori Davis","summary":"The Pan-African venture firm has raised $84 million and plans to invest in startups beyond its home market of Nigeria.","url":"https://techcrunch.com/2026/08/26/ventures-platform-goes-bigger-and-broader-with-its-second-africa-fund/"},
+    "arxiv-adoption": {"sourceId":"arxiv","identifier":"http://arxiv.org/abs/1208.2589v1","title":"Why, when, and how fast innovations are adopted","date":"2012-08-10T17:00:49Z","author":"Sebastian Goncalves","url":"https://arxiv.org/abs/1208.2589v1"},
+    "bnf-gaspard": {"sourceId":"bnf-gallica","identifier":"https://gallica.bnf.fr/ark:/12148/bpt6k9633077k","title":"Les malices de Gaspard (10e série) / Par Georges Haurigot ; Illustrations de P. Kauffmann","date":null,"author":"Haurigot, Georges (1856-1915). Auteur du texte; Kauffmann, P.. Illustrateur","categories":["text","monographie imprimée","printed monograph"],"url":"https://gallica.bnf.fr/ark:/12148/bpt6k9633077k"},
+    "crossref-measurement": {"sourceId":"crossref","identifier":"10.1515/9783112206720-008","title":"1778 Can innovation be measuredmeasurement of innovation?","date":"2025-12-27","url":"https://doi.org/10.1515/9783112206720-008"}
+  }
+}
