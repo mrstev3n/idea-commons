@@ -1,0 +1,331 @@
+{
+  "schemaVersion": "1.0.0",
+  "createdAt": "2026-08-26",
+  "notice": "Dix démonstrations de recherche, jamais publiables automatiquement. Les faits reproduisent uniquement des métadonnées minimisées ; les témoignages synthétiques sont des observations déclaratives. Toute interprétation, estimation ou recommandation est explicitement typée et reste soumise à revue humaine.",
+  "provenanceDisplayContract": {
+    "showOriginBeforeInterpretation": true,
+    "requiredOriginFields": ["sourceLabel", "canonicalUrl", "capturedStatement", "captureDate", "evidenceMode"],
+    "derivedSectionLabel": "Analyse et hypothèses Idea Commons",
+    "marketClaimsRequireIndependentCitations": true
+  },
+  "cases": [
+    {
+      "id": "population-service-capacity",
+      "evidenceMode": "live_minimized",
+      "rightsBasis": "compatible_license",
+      "evidence": [
+        {"id":"wb-2023","sourceId":"world-bank-benin-indicators","collectedIdentifier":"BEN:SP.POP.TOTL:2023","fixtureFile":"editorial/research/fixtures/live-sample-minimized.json","fixturePointer":"/records/world-bank-2023","statement":"La valeur collectée pour l'indicateur Population, total — Benin est 14 111 034 en 2023.","sourceUrl":"https://api.worldbank.org/v2/country/BEN/indicator/SP.POP.TOTL?format=json&per_page=3"},
+        {"id":"wb-2024","sourceId":"world-bank-benin-indicators","collectedIdentifier":"BEN:SP.POP.TOTL:2024","fixtureFile":"editorial/research/fixtures/live-sample-minimized.json","fixturePointer":"/records/world-bank-2024","statement":"La valeur collectée pour le même indicateur est 14 462 724 en 2024.","sourceUrl":"https://api.worldbank.org/v2/country/BEN/indicator/SP.POP.TOTL?format=json&per_page=3"},
+        {"id":"wb-2025","sourceId":"world-bank-benin-indicators","collectedIdentifier":"BEN:SP.POP.TOTL:2025","fixtureFile":"editorial/research/fixtures/live-sample-minimized.json","fixturePointer":"/records/world-bank-2025","statement":"La valeur collectée pour le même indicateur est 14 814 460 en 2025.","sourceUrl":"https://api.worldbank.org/v2/country/BEN/indicator/SP.POP.TOTL?format=json&per_page=3"}
+      ],
+      "interpretationAngles": [
+        {"type":"hypothesis","statement":"Une population nationale en hausse pourrait accroître la difficulté de dimensionner certains services locaux."},
+        {"type":"hypothesis","statement":"Les petites collectivités pourraient avoir besoin d'un outil de scénarios plus simple qu'un système de planification complet."}
+      ],
+      "problemOrOpportunity": {"type":"hypothesis","statement":"Les responsables locaux pourraient manquer d'un moyen transparent de relier des hypothèses démographiques à des capacités de service révisables."},
+      "candidate": {
+        "title":"Canevas de capacité communale",
+        "summary":"Un calculateur explicable qui transforme des hypothèses démographiques choisies par l'utilisateur en scénarios de capacité, sans présenter ces scénarios comme des prévisions.",
+        "beneficiaries":["collectivités locales","gestionnaires de services de proximité","associations de planification"],
+        "mechanism":["importer un indicateur daté","faire varier des hypothèses visibles","produire un tableau de scénarios et questions à vérifier"],
+        "limits":["la série nationale ne décrit pas la répartition locale","aucune demande de service n'est mesurée","aucune causalité n'est établie"],
+        "risks":["fausse précision","décision budgétaire fondée sur un indicateur trop agrégé"],
+        "openQuestions":["Quelles données locales autorisées complètent l'indicateur national ?","Quel service pilote justifierait un test ?"]
+      },
+      "claims": [
+        {"type":"fact","statement":"Les trois valeurs collectées sont 14 111 034, 14 462 724 et 14 814 460 pour 2023, 2024 et 2025.","citationIds":["wb-2023","wb-2024","wb-2025"]},
+        {"type":"estimate","statement":"La différence arithmétique entre 2023 et 2025 est de 703 426 personnes ; elle n'est pas une projection locale.","citationIds":["wb-2023","wb-2025"]},
+        {"type":"hypothesis","statement":"Un canevas de scénarios pourrait réduire le temps de préparation d'une discussion de capacité.","citationIds":[]},
+        {"type":"recommendation","statement":"Tester d'abord un seul service et afficher toutes les hypothèses de calcul.","citationIds":[]},
+        {"type":"validation_question","statement":"Des responsables locaux utilisent-ils aujourd'hui ces données pour dimensionner un service ?","citationIds":[]}
+      ],
+      "editorialReview":{"evidenceStrength":5,"userNeedSignal":2,"novelty":3,"feasibility":4,"responsibility":5,"total":19,"outcome":"human_review","explanation":"Données solides et mécanisme borné ; le besoin utilisateur local n'est pas encore observé."},
+      "simulatorScenario":"success",
+      "publicationState":"human_review_required"
+    },
+    {
+      "id": "africa-funding-translation",
+      "evidenceMode": "live_minimized",
+      "rightsBasis": "temporary_analysis",
+      "evidence": [
+        {"id":"tc-fund","sourceId":"techcrunch-rss","collectedIdentifier":"https://techcrunch.com/?p=3156817","fixtureFile":"editorial/research/fixtures/live-sample-minimized.json","fixturePointer":"/records/techcrunch-africa-fund","statement":"Le flux TechCrunch daté du 26 août 2026 titre sur le second fonds africain de Ventures Platform et son résumé de flux mentionne 84 millions de dollars ainsi qu'un périmètre au-delà du Nigeria.","sourceUrl":"https://techcrunch.com/2026/08/26/ventures-platform-goes-bigger-and-broader-with-its-second-africa-fund/"}
+      ],
+      "interpretationAngles":[{"type":"hypothesis","statement":"Une annonce d'investissement panafricain peut signaler de nouvelles thèses à traduire en questions concrètes pour des fondateurs locaux."}],
+      "problemOrOpportunity":{"type":"hypothesis","statement":"Des porteurs de projet pourraient voir l'annonce sans comprendre quelles preuves locales préparer ni si leur problème correspond réellement à la thèse du fonds."},
+      "candidate":{
+        "title":"Décodeur local de thèses d'investissement",
+        "summary":"Une fiche de lecture qui sépare l'annonce sourcée, les secteurs explicitement cités et les questions locales à valider, sans promettre d'accès au financement.",
+        "beneficiaries":["fondateurs africains","incubateurs","réseaux d'accompagnement"],
+        "mechanism":["citer l'annonce originale","extraire uniquement les critères explicitement publiés","générer un entretien de validation locale"],
+        "limits":["un article secondaire n'est pas le mandat du fonds","aucune admissibilité n'est déduite"],
+        "risks":["surinterprétation d'une levée de fonds","incitation à adapter artificiellement un projet"],
+        "openQuestions":["Le fonds publie-t-il une thèse primaire et des critères vérifiables ?","Quels fondateurs trouvent cette traduction utile ?"]
+      },
+      "claims":[
+        {"type":"fact","statement":"Le titre, la date, l'auteur, l'URL et le bref résumé ont été collectés dans le flux officiel TechCrunch.","citationIds":["tc-fund"]},
+        {"type":"hypothesis","statement":"La traduction locale d'une thèse d'investissement pourrait améliorer la préparation des fondateurs.","citationIds":[]},
+        {"type":"recommendation","statement":"Remonter à une source primaire du fonds avant de produire une fiche utilisable.","citationIds":[]},
+        {"type":"validation_question","statement":"Les fondateurs ciblés déclarent-ils un problème de compréhension des critères ?","citationIds":[]}
+      ],
+      "editorialReview":{"evidenceStrength":3,"userNeedSignal":2,"novelty":3,"feasibility":4,"responsibility":4,"total":16,"outcome":"hold","explanation":"Signal pertinent, mais source secondaire et besoin utilisateur non établi."},
+      "simulatorScenario":"success",
+      "publicationState":"human_review_required"
+    },
+    {
+      "id":"innovation-adoption-interviews",
+      "evidenceMode":"live_minimized",
+      "rightsBasis":"compatible_license",
+      "evidence":[
+        {"id":"arxiv-adoption","sourceId":"arxiv","collectedIdentifier":"http://arxiv.org/abs/1208.2589v1","fixtureFile":"editorial/research/fixtures/live-sample-minimized.json","fixturePointer":"/records/arxiv-adoption","statement":"Les métadonnées arXiv indiquent un article intitulé Why, when, and how fast innovations are adopted, soumis le 10 août 2012 par Sebastian Goncalves.","sourceUrl":"https://arxiv.org/abs/1208.2589v1"}
+      ],
+      "interpretationAngles":[{"type":"hypothesis","statement":"Les équipes pourraient gagner à distinguer motivation, moment et vitesse d'adoption dans leurs entretiens."}],
+      "problemOrOpportunity":{"type":"hypothesis","statement":"Les recherches produit risquent de réduire l'adoption à une intention générale, sans observer ses déclencheurs ni son rythme."},
+      "candidate":{
+        "title":"Guide d'entretien en trois temps d'adoption",
+        "summary":"Un guide qui fait documenter séparément pourquoi une personne adopte, à quel moment et à quel rythme, puis relie chaque réponse à une preuve.",
+        "beneficiaries":["chercheurs produit","équipes innovation","incubateurs"],
+        "mechanism":["questions structurées","journal de citations","comparaison manuelle de segments"],
+        "limits":["le contenu scientifique n'a pas été évalué dans ce cas","la métadonnée seule ne valide pas le cadre"],
+        "risks":["donner une autorité scientifique injustifiée au guide"],
+        "openQuestions":["Le texte intégral et sa méthode soutiennent-ils réellement ces trois dimensions ?"]
+      },
+      "claims":[
+        {"type":"fact","statement":"L'article et ses métadonnées d'auteur et de date existent dans l'échantillon collecté.","citationIds":["arxiv-adoption"]},
+        {"type":"hypothesis","statement":"Séparer trois dimensions d'adoption pourrait améliorer les entretiens.","citationIds":[]},
+        {"type":"recommendation","statement":"Lire et évaluer la méthode avant tout usage présenté comme scientifique.","citationIds":[]},
+        {"type":"validation_question","statement":"Les équipes confondent-elles actuellement intention et adoption observée ?","citationIds":[]}
+      ],
+      "editorialReview":{"evidenceStrength":2,"userNeedSignal":1,"novelty":3,"feasibility":5,"responsibility":4,"total":15,"outcome":"hold","explanation":"Piste simple et testable, mais fondée ici sur des métadonnées anciennes seulement."},
+      "simulatorScenario":"success",
+      "publicationState":"human_review_required"
+    },
+    {
+      "id":"cultural-notice-challenges",
+      "evidenceMode":"live_minimized",
+      "rightsBasis":"compatible_license",
+      "evidence":[
+        {"id":"bnf-notice","sourceId":"bnf-gallica","collectedIdentifier":"https://gallica.bnf.fr/ark:/12148/bpt6k9633077k","fixtureFile":"editorial/research/fixtures/live-sample-minimized.json","fixturePointer":"/records/bnf-gaspard","statement":"La notice Gallica collectée décrit Les malices de Gaspard (10e série), attribue le texte à Georges Haurigot et les illustrations à P. Kauffmann, et classe la ressource comme monographie imprimée.","sourceUrl":"https://gallica.bnf.fr/ark:/12148/bpt6k9633077k"}
+      ],
+      "interpretationAngles":[{"type":"hypothesis","statement":"Les notices patrimoniales pourraient servir d'amorces à des activités éducatives sans reproduire les œuvres."}],
+      "problemOrOpportunity":{"type":"hypothesis","statement":"Des médiateurs pourraient manquer de briefs rapides reliant une notice à une activité locale et à une vérification des droits du document."},
+      "candidate":{
+        "title":"Briefs pédagogiques depuis les notices patrimoniales",
+        "summary":"Un générateur de questions et d'activités basé sur les métadonnées ouvertes, avec gate distinct pour les droits de l'œuvre numérisée.",
+        "beneficiaries":["médiateurs culturels","enseignants","bibliothèques"],
+        "mechanism":["import de notice","questions contextuelles","checklist de droits avant usage du document"],
+        "limits":["la licence de métadonnées ne s'étend pas automatiquement au document","aucune activité n'est adaptée sans revue pédagogique"],
+        "risks":["confusion entre notice ouverte et œuvre réutilisable"],
+        "openQuestions":["Quels médiateurs utilisent déjà Gallica ?","Quel niveau de vérification des droits est praticable ?"]
+      },
+      "claims":[
+        {"type":"fact","statement":"Le titre, les contributeurs et le type proviennent de la notice OAI collectée.","citationIds":["bnf-notice"]},
+        {"type":"hypothesis","statement":"Un brief construit depuis la notice pourrait réduire le temps de préparation d'une activité.","citationIds":[]},
+        {"type":"recommendation","statement":"Bloquer tout usage de l'œuvre tant que ses droits propres ne sont pas vérifiés.","citationIds":[]},
+        {"type":"validation_question","statement":"Une notice seule fournit-elle assez de contexte aux médiateurs ?","citationIds":[]}
+      ],
+      "editorialReview":{"evidenceStrength":4,"userNeedSignal":1,"novelty":3,"feasibility":4,"responsibility":5,"total":17,"outcome":"hold","explanation":"Métadonnées traçables et garde-fou clair ; besoin et valeur pédagogique restent à observer."},
+      "simulatorScenario":"success",
+      "publicationState":"human_review_required"
+    },
+    {
+      "id":"innovation-measurement-ledger",
+      "evidenceMode":"live_minimized",
+      "rightsBasis":"compatible_license",
+      "evidence":[
+        {"id":"crossref-measure","sourceId":"crossref","collectedIdentifier":"10.1515/9783112206720-008","fixtureFile":"editorial/research/fixtures/live-sample-minimized.json","fixturePointer":"/records/crossref-measurement","statement":"Crossref a renvoyé le DOI 10.1515/9783112206720-008, le titre 1778 Can innovation be measuredmeasurement of innovation? et la date 2025-12-27.","sourceUrl":"https://doi.org/10.1515/9783112206720-008"}
+      ],
+      "interpretationAngles":[{"type":"hypothesis","statement":"La difficulté de mesurer l'innovation pourrait être abordée par un registre séparant preuves, estimations et jugements."}],
+      "problemOrOpportunity":{"type":"hypothesis","statement":"Les équipes pourraient déclarer une innovation réussie sans enregistrer la nature et les limites de leurs mesures."},
+      "candidate":{
+        "title":"Registre de preuves d'innovation",
+        "summary":"Un journal minimal où chaque indicateur est lié à une source, une méthode, une date et une limite avant revue humaine.",
+        "beneficiaries":["équipes innovation","financeurs","programmes publics"],
+        "mechanism":["typologie de claims","liens de preuve","revue périodique manuelle"],
+        "limits":["le titre d'un document ne prouve pas le besoin","aucune méthode du document n'a été consultée"],
+        "risks":["bureaucratie de mesure","confusion entre quantité d'indicateurs et valeur"],
+        "openQuestions":["Quelles décisions souffrent aujourd'hui d'un manque de traçabilité ?"]
+      },
+      "claims":[
+        {"type":"fact","statement":"Le DOI, le titre et la date sont présents dans les métadonnées Crossref collectées.","citationIds":["crossref-measure"]},
+        {"type":"hypothesis","statement":"Un registre typé pourrait améliorer la qualité des revues d'innovation.","citationIds":[]},
+        {"type":"recommendation","statement":"Observer d'abord une décision réelle et son dossier de preuves.","citationIds":[]},
+        {"type":"validation_question","statement":"Les équipes savent-elles distinguer mesure, estimation et appréciation ?","citationIds":[]}
+      ],
+      "editorialReview":{"evidenceStrength":2,"userNeedSignal":1,"novelty":2,"feasibility":5,"responsibility":5,"total":15,"outcome":"hold","explanation":"Mécanisme prudent mais signal source très faible ; entretien utilisateur indispensable."},
+      "simulatorScenario":"success",
+      "publicationState":"human_review_required"
+    },
+    {
+      "id":"conversation-availability-window",
+      "evidenceMode":"synthetic",
+      "rightsBasis":"temporary_analysis",
+      "evidence":[
+        {"id":"conv-call","sourceId":"synthetic-community-exchange","collectedIdentifier":"comment-1","fixtureFile":"editorial/research/fixtures/conversation-snapshot.json","fixturePointer":"/items/1","statement":"Observation synthétique : une personne fictive dit appeler plusieurs ateliers avant de trouver une disponibilité.","sourceUrl":"https://example.test/community/problems"},
+        {"id":"conv-stale","sourceId":"synthetic-community-exchange","collectedIdentifier":"comment-2","fixtureFile":"editorial/research/fixtures/conversation-snapshot.json","fixturePointer":"/items/2","statement":"Observation synthétique : une personne fictive dit que les horaires publiés sont souvent trop anciens pour décider d'un déplacement.","sourceUrl":"https://example.test/community/problems"},
+        {"id":"conv-manual","sourceId":"synthetic-community-exchange","collectedIdentifier":"comment-3","fixtureFile":"editorial/research/fixtures/conversation-snapshot.json","fixturePointer":"/items/3","statement":"Observation synthétique : un atelier fictif préférerait confirmer manuellement un créneau plutôt que gérer un agenda complet.","sourceUrl":"https://example.test/community/problems"}
+      ],
+      "interpretationAngles":[
+        {"type":"hypothesis","statement":"Le besoin pourrait être une information fraîche et légère, pas un agenda complet."},
+        {"type":"hypothesis","statement":"Une confirmation manuelle à durée courte pourrait mieux correspondre aux pratiques d'un petit atelier."}
+      ],
+      "problemOrOpportunity":{"type":"hypothesis","statement":"Des clients pourraient perdre du temps à chercher une disponibilité tandis que les ateliers refusent la charge d'un système de réservation complet."},
+      "candidate":{
+        "title":"Fenêtre de disponibilité légère pour ateliers",
+        "summary":"Un statut temporaire confirmé manuellement — disponible, rappeler, complet — qui expire automatiquement sans gérer de rendez-vous ni profil client.",
+        "beneficiaries":["petits ateliers","clients de proximité"],
+        "mechanism":["trois statuts","expiration courte","confirmation par l'atelier","aucun compte client"],
+        "limits":["tous les signaux de ce cas sont synthétiques","aucune disponibilité réelle n'est garantie"],
+        "risks":["statut obsolète","pression sur les ateliers","effet d'exclusion numérique"],
+        "openQuestions":["Ce problème apparaît-il dans plusieurs discussions réelles autorisées ?","Quel canal de mise à jour est acceptable ?"]
+      },
+      "claims":[
+        {"type":"source_observation","statement":"Trois commentaires synthétiques expriment appels multiples, horaires obsolètes et préférence pour une confirmation manuelle.","citationIds":["conv-call","conv-stale","conv-manual"]},
+        {"type":"hypothesis","statement":"Un statut expirant répondrait mieux qu'un agenda complet.","citationIds":[]},
+        {"type":"recommendation","statement":"Chercher le même motif dans plusieurs discussions réelles avant de prototyper.","citationIds":[]},
+        {"type":"validation_question","statement":"Combien d'appels et déplacements inutiles les personnes déclarent-elles réellement ?","citationIds":[]}
+      ],
+      "editorialReview":{"evidenceStrength":1,"userNeedSignal":3,"novelty":3,"feasibility":5,"responsibility":5,"total":17,"outcome":"hold","explanation":"Le mécanisme est concret, mais les signaux sont entièrement synthétiques et exigent une collecte conversationnelle autorisée."},
+      "simulatorScenario":"success",
+      "publicationState":"human_review_required"
+    },
+    {
+      "id":"energy-outage-adaptation-log",
+      "evidenceMode":"synthetic",
+      "rightsBasis":"compatible_license",
+      "evidence":[
+        {"id":"syn-energy","sourceId":"syn-fr-05","collectedIdentifier":"syn-fr-05","fixtureFile":"editorial/corpus/manifest.json","fixturePointer":"/sources/4","statement":"Fixture synthétique : trois boutiques fictives consignent les heures de coupure pour adapter la recharge de petits appareils ; les relevés sont incomplets le dimanche.","sourceUrl":null}
+      ],
+      "interpretationAngles":[{"type":"hypothesis","statement":"Un journal partagé minimal pourrait aider des commerces à planifier des tâches énergivores sans prédire le réseau."}],
+      "problemOrOpportunity":{"type":"hypothesis","statement":"De petits commerces pourraient manquer d'un historique local simple pour coordonner leurs adaptations aux coupures."},
+      "candidate":{
+        "title":"Journal collectif d'adaptation aux coupures",
+        "summary":"Un relevé local daté qui rend visibles les lacunes de mesure et aide à préparer des décisions manuelles, sans annoncer de disponibilité future.",
+        "beneficiaries":["petits commerces","associations de quartier"],
+        "mechanism":["relevé horaire","indicateur de couverture","export papier"],
+        "limits":["fixture fictive","aucune prédiction","relevés incomplets"],
+        "risks":["fausse confiance","confusion avec une information officielle du réseau"],
+        "openQuestions":["Des commerces tiennent-ils déjà ce type de journal ?"]
+      },
+      "claims":[
+        {"type":"source_observation","statement":"La fixture synthétique décrit trois boutiques et des relevés incomplets le dimanche.","citationIds":["syn-energy"]},
+        {"type":"hypothesis","statement":"Partager les relevés pourrait améliorer une coordination locale.","citationIds":[]},
+        {"type":"recommendation","statement":"Afficher systématiquement la couverture et l'ancienneté des relevés.","citationIds":[]},
+        {"type":"validation_question","statement":"Quelle décision concrète un historique permettrait-il d'améliorer ?","citationIds":[]}
+      ],
+      "editorialReview":{"evidenceStrength":1,"userNeedSignal":2,"novelty":2,"feasibility":4,"responsibility":5,"total":14,"outcome":"hold","explanation":"Cas utile pour tester les garde-fous, mais aucun besoin réel n'est démontré."},
+      "simulatorScenario":"success",
+      "publicationState":"human_review_required"
+    },
+    {
+      "id":"water-maintenance-triage",
+      "evidenceMode":"synthetic",
+      "rightsBasis":"compatible_license",
+      "evidence":[
+        {"id":"syn-water","sourceId":"syn-long-01","collectedIdentifier":"syn-long-01","fixtureFile":"editorial/corpus/manifest.json","fixturePointer":"/sources/5","statement":"Fixture synthétique : cinq comités fictifs consignent deux fois par semaine l'état de pompes ; l'absence de signalement ne prouve pas le fonctionnement et aucun nom d'usager n'est prévu.","sourceUrl":null}
+      ],
+      "interpretationAngles":[{"type":"hypothesis","statement":"L'information la plus utile pourrait être l'incertitude sur l'état, pas un statut binaire supposé fiable."}],
+      "problemOrOpportunity":{"type":"hypothesis","statement":"Les équipes de maintenance pourraient prioriser difficilement les vérifications lorsque les silences sont confondus avec un bon fonctionnement."},
+      "candidate":{
+        "title":"File de vérification des points d'eau",
+        "summary":"Une file qui distingue signalé, vérifié, inconnu et ancien, afin d'organiser une tournée sans collecter d'identité d'usager.",
+        "beneficiaries":["comités de maintenance","collectivités","équipes terrain"],
+        "mechanism":["statuts d'incertitude","date de dernière vérification","priorisation manuelle"],
+        "limits":["fixture fictive","aucun diagnostic technique automatique"],
+        "risks":["oubli des zones sans signalement","usage comme preuve de potabilité"],
+        "openQuestions":["Qui peut vérifier un statut et selon quel protocole ?"]
+      },
+      "claims":[
+        {"type":"source_observation","statement":"La fixture décrit cinq comités, deux relevés hebdomadaires et une incertitude explicite en l'absence de signalement.","citationIds":["syn-water"]},
+        {"type":"hypothesis","statement":"Un statut inconnu visible pourrait améliorer la priorisation des tournées.","citationIds":[]},
+        {"type":"recommendation","statement":"Interdire toute interprétation sanitaire du statut de maintenance.","citationIds":[]},
+        {"type":"validation_question","statement":"Comment les tournées sont-elles priorisées aujourd'hui ?","citationIds":[]}
+      ],
+      "editorialReview":{"evidenceStrength":1,"userNeedSignal":2,"novelty":3,"feasibility":4,"responsibility":5,"total":15,"outcome":"hold","explanation":"Bonne matérialisation de l'incertitude, mais aucun terrain réel n'est observé."},
+      "simulatorScenario":"success",
+      "publicationState":"human_review_required"
+    },
+    {
+      "id":"cross-source-local-service-scout",
+      "evidenceMode":"mixed",
+      "rightsBasis":"temporary_analysis",
+      "evidence":[
+        {"id":"cross-wb","sourceId":"world-bank-benin-indicators","collectedIdentifier":"BEN:SP.POP.TOTL:2025","fixtureFile":"editorial/research/fixtures/live-sample-minimized.json","fixturePointer":"/records/world-bank-2025","statement":"La Banque mondiale fournit une valeur nationale datée de population totale du Bénin pour 2025.","sourceUrl":"https://api.worldbank.org/v2/country/BEN/indicator/SP.POP.TOTL?format=json&per_page=3"},
+        {"id":"cross-conv-1","sourceId":"synthetic-community-exchange","collectedIdentifier":"comment-1","fixtureFile":"editorial/research/fixtures/conversation-snapshot.json","fixturePointer":"/items/1","statement":"Un commentaire synthétique signale plusieurs appels avant de trouver un atelier disponible.","sourceUrl":"https://example.test/community/problems"},
+        {"id":"cross-conv-2","sourceId":"synthetic-community-exchange","collectedIdentifier":"comment-2","fixtureFile":"editorial/research/fixtures/conversation-snapshot.json","fixturePointer":"/items/2","statement":"Un commentaire synthétique signale des horaires trop anciens pour décider d'un déplacement.","sourceUrl":"https://example.test/community/problems"}
+      ],
+      "interpretationAngles":[
+        {"type":"hypothesis","statement":"Une tendance macro peut aider à choisir un territoire de recherche, mais ne confirme pas un problème de disponibilité."},
+        {"type":"hypothesis","statement":"La répétition d'un motif conversationnel sur plusieurs plateformes indépendantes serait plus informative qu'un commentaire isolé."}
+      ],
+      "problemOrOpportunity":{"type":"hypothesis","statement":"Idea Commons pourrait avoir besoin d'une file de recherche qui rapproche contexte statistique et motifs conversationnels sans les fusionner en une fausse preuve."},
+      "candidate":{
+        "title":"Éclaireur de besoins multi-sources",
+        "summary":"Un tableau de clusters où statistiques, annonces, questions et commentaires restent typés séparément avant qu'un humain décide de lancer un entretien.",
+        "beneficiaries":["chercheurs Idea Commons","équipes produit","facilitateurs locaux"],
+        "mechanism":["empreintes et citations","clusters de motifs","contre-sources","gate d'entretien humain"],
+        "limits":["aucune causalité entre population et disponibilité","les signaux conversationnels du cas sont synthétiques","un cluster ne prouve pas un besoin"],
+        "risks":["biais de disponibilité","surreprésentation de communautés en ligne","confusion entre volume de mentions et gravité"],
+        "openQuestions":["Combien de sources indépendantes suffisent pour lancer une revue ?","Comment pondérer les contextes peu représentés en ligne ?"]
+      },
+      "claims":[
+        {"type":"fact","statement":"Une valeur nationale datée est disponible pour 2025.","citationIds":["cross-wb"]},
+        {"type":"source_observation","statement":"Deux commentaires synthétiques expriment une friction de disponibilité.","citationIds":["cross-conv-1","cross-conv-2"]},
+        {"type":"hypothesis","statement":"Croiser les types de signaux pourrait mieux orienter les entretiens sans valider le besoin.","citationIds":[]},
+        {"type":"recommendation","statement":"Exiger au moins une contre-source et une revue humaine avant tout prototype.","citationIds":[]},
+        {"type":"validation_question","statement":"Le motif apparaît-il dans plusieurs communautés réelles et plusieurs territoires ?","citationIds":[]}
+      ],
+      "editorialReview":{"evidenceStrength":2,"userNeedSignal":3,"novelty":4,"feasibility":3,"responsibility":5,"total":17,"outcome":"human_review","explanation":"Architecture de découverte prometteuse ; la preuve conversationnelle réelle reste à acquérir par un canal autorisé."},
+      "simulatorScenario":"success",
+      "publicationState":"human_review_required"
+    },
+    {
+      "id": "physical-availability-signal",
+      "evidenceMode": "synthetic",
+      "rightsBasis": "temporary_analysis",
+      "evidence": [
+        {
+          "id": "social-post",
+          "sourceId": "synthetic-social-post",
+          "collectedIdentifier": "post-1",
+          "fixtureFile": "editorial/research/fixtures/social-post-snapshot.json",
+          "fixturePointer": "/items/0",
+          "statement": "Post synthétique : une personne fictive utilise un objet coloré pour signaler silencieusement qu'elle ne veut pas être interrompue.",
+          "sourceUrl": "https://example.test/x/status/synthetic-1"
+        },
+        {
+          "id": "social-reply",
+          "sourceId": "synthetic-social-post",
+          "collectedIdentifier": "reply-1",
+          "fixtureFile": "editorial/research/fixtures/social-post-snapshot.json",
+          "fixturePointer": "/items/1",
+          "statement": "Réponse synthétique : une personne fictive préfère un signal physique réversible à une application ou notification.",
+          "sourceUrl": "https://example.test/x/status/synthetic-1"
+        }
+      ],
+      "interpretationAngles": [
+        {"type":"hypothesis","statement":"Certains environnements partagés pourraient manquer d'un signal de disponibilité immédiatement visible."},
+        {"type":"hypothesis","statement":"Le geste physique pourrait être plus acceptable qu'une application quand le problème est local et fugace."}
+      ],
+      "problemOrOpportunity":{"type":"hypothesis","statement":"Une convention physique, réversible et non connectée pourrait réduire certaines interruptions sans créer un nouveau canal numérique."},
+      "candidate": {
+        "title": "Kit de signal de disponibilité sans application",
+        "summary": "Un petit jeu de marqueurs physiques et de conventions testables pour communiquer disponible, concentré ou besoin d'aide dans un espace partagé.",
+        "beneficiaries": ["équipes en espace partagé", "ateliers", "foyers multiactivités"],
+        "mechanism": ["trois marqueurs visibles", "signification choisie collectivement", "rituel d'activation et retrait", "test d'une semaine"],
+        "limits": ["le post et la réponse sont entièrement synthétiques", "le signal ne remplace pas une règle d'équipe", "aucun marché n'est démontré"],
+        "risks": ["convention incomprise", "pression sociale", "exclusion de personnes qui ne voient pas le marqueur"],
+        "openQuestions": ["Quelles interruptions sont réellement coûteuses ?", "Un objet existant suffit-il déjà ?", "Quel signal alternatif reste accessible ?"]
+      },
+      "claims": [
+        {"type":"source_observation","statement":"La fixture synthétique associe un marqueur physique à une préférence déclarée pour éviter une nouvelle application.","citationIds":["social-post","social-reply"]},
+        {"type":"hypothesis","statement":"Une convention partagée pourrait réduire certaines interruptions.","citationIds":[]},
+        {"type":"estimate","statement":"Un test d'une semaine est une estimation de protocole, pas une durée validée.","citationIds":["social-post"]},
+        {"type":"recommendation","statement":"Observer d'abord les interruptions et tester avec des objets déjà disponibles.","citationIds":[]},
+        {"type":"validation_question","statement":"Le motif se retrouve-t-il dans des posts réels et des entretiens indépendants ?","citationIds":[]}
+      ],
+      "editorialReview":{"evidenceStrength":1,"userNeedSignal":2,"novelty":3,"feasibility":5,"responsibility":5,"total":16,"outcome":"hold","explanation":"Le mécanisme illustre bien une idée née d'un post, mais toutes les observations sont synthétiques et aucun besoin réel n'est établi."},
+      "simulatorScenario":"success",
+      "publicationState":"human_review_required"
+    }
+  ]
+}

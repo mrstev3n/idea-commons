@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idea-commons.example/schemas/source-catalogue/1.0.0",
+  "title": "IdeaCommonsSourceCatalogue",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "accessedAt", "sourceLockNotice", "collectorPolicy", "sources"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "accessedAt": {"type": "string", "format": "date"},
+    "sourceLockNotice": {"type": "string", "minLength": 1},
+    "collectorPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["networkMode", "maxItemsPerSource", "retainFullText", "liveOutputDirectory"],
+      "properties": {
+        "networkMode": {"const": "explicit_live_only"},
+        "maxItemsPerSource": {"type": "integer", "minimum": 1, "maximum": 3},
+        "retainFullText": {"const": false},
+        "liveOutputDirectory": {"const": ".local/source-collection-research"}
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source"}
+    }
+  },
+  "$defs": {
+    "evidenceValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "value", "evidenceUrl"],
+      "properties": {
+        "status": {"enum": ["verified", "observed_in_probe", "not_found", "not_checked", "conflicting"]},
+        "value": {"type": ["string", "null"]},
+        "evidenceUrl": {"type": ["string", "null"]}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "publisher", "canonicalUrl", "accessType", "languages", "coverage", "subjects", "cadence", "metadata", "endpoint", "rights", "access", "qualificationRecommendation", "rationale", "consultedUrls"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "publisher": {"type": "string", "minLength": 1},
+        "canonicalUrl": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "accessType": {"enum": ["rss", "atom", "api_json", "api_xml", "html", "dataset", "sitemap"]},
+        "languages": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "coverage": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "subjects": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "cadence": {"$ref": "#/$defs/evidenceValue"},
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["title", "url", "date", "author", "summary", "categories", "identifier"],
+          "properties": {
+            "title": {"type": "boolean"}, "url": {"type": "boolean"}, "date": {"type": "boolean"},
+            "author": {"type": "boolean"}, "summary": {"type": "boolean"}, "categories": {"type": "boolean"},
+            "identifier": {"type": "boolean"}
+          }
+        },
+        "endpoint": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["url", "testStatus", "parser", "lastTestedAt"],
+          "properties": {
+            "url": {"type": ["string", "null"]},
+            "testStatus": {"enum": ["planned", "live_success", "live_error", "not_tested", "blocked"]},
+            "parser": {"type": ["string", "null"]},
+            "lastTestedAt": {"type": ["string", "null"]}
+          }
+        },
+        "rights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["license", "attribution", "robotsOrLimits", "textRetention", "keyOrAccount", "quota"],
+          "properties": {
+            "license": {"$ref": "#/$defs/evidenceValue"},
+            "attribution": {"$ref": "#/$defs/evidenceValue"},
+            "robotsOrLimits": {"$ref": "#/$defs/evidenceValue"},
+            "textRetention": {"$ref": "#/$defs/evidenceValue"},
+            "keyOrAccount": {"$ref": "#/$defs/evidenceValue"},
+            "quota": {"$ref": "#/$defs/evidenceValue"}
+          }
+        },
+        "access": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "observation"],
+          "properties": {
+            "status": {"enum": ["opened_online", "documentation_opened", "blocked_online", "not_tested"]},
+            "observation": {"type": "string", "minLength": 1}
+          }
+        },
+        "qualificationRecommendation": {"enum": ["m1_candidate", "observation", "not_selected_for_current_probe", "insufficient_information"]},
+        "rationale": {"type": "string", "minLength": 1},
+        "consultedUrls": {"type": "array", "minItems": 1, "items": {"type": "string", "format": "uri"}, "uniqueItems": true}
+      }
+    }
+  }
+}

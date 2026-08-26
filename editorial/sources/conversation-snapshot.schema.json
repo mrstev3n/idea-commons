@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://idea-commons.example/schemas/conversation-snapshot/1.0.0",
+  "title": "IdeaCommonsConversationSnapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "sourceId", "sourceUrl", "capturedAt", "captureMethod", "rightsBasis", "containsProfiles", "synthetic", "items"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "sourceId": {"type": "string", "minLength": 1, "maxLength": 120},
+    "sourceUrl": {"type": "string", "format": "uri"},
+    "capturedAt": {"type": "string", "format": "date-time"},
+    "captureMethod": {"enum": ["manual_browser_export", "authorized_platform_export", "synthetic_fixture"]},
+    "rightsBasis": {"const": "temporary_analysis"},
+    "containsProfiles": {"const": false},
+    "synthetic": {"type": "boolean"},
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "text", "parentId", "locator"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "maxLength": 120},
+          "kind": {"enum": ["topic", "question", "answer", "comment", "post"]},
+          "text": {"type": "string", "minLength": 1, "maxLength": 1000},
+          "parentId": {"type": ["string", "null"], "maxLength": 120},
+          "locator": {"type": "string", "minLength": 1, "maxLength": 240}
+        }
+      }
+    }
+  }
+}
