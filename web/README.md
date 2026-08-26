@@ -1,6 +1,6 @@
-# Idea Commons — application web (premier incrément vertical IC-07)
+# Idea Commons — prototype web local (premier incrément vertical IC-07)
 
-Application Next.js/TypeScript qui implémente le parcours IC-07 de bout en bout :
+Prototype Next.js/TypeScript qui exerce localement le parcours IC-07 de bout en bout :
 **source publique → analyse IA (simulée) → revue humaine → publication immuable →
 lecture publique anonyme.** Tout s'exécute en local, à 0 USD, sans réseau ni
 service distant : la base PostgreSQL est embarquée (PGlite), l'authentification
@@ -28,7 +28,7 @@ et la version publiée du skill `source-to-idea@1.0.0` sont amorcés. Supprimer
 |---|---|---|
 | Catalogue public | `/` | anonyme |
 | Fiche publiée (immuable, claims typés et cités, crédits, licence) | `/idees/[slug]` | anonyme |
-| Harnais d'identités synthétiques | `/identite` | tous |
+| Écran de connexion et d'inscription (non connecté) | `/identite` | tous |
 | Cas éditoriaux | `/editorial` | authentifié (RLS) |
 | Ajout de source (droits explicites, extraits, empreinte) | `/editorial/sources/nouvelle` | contributor |
 | Suivi de cas : provenance, analyse, tentatives, décision | `/editorial/cas/[id]` | créateur ou reviewer |
@@ -46,9 +46,10 @@ et la version publiée du skill `source-to-idea@1.0.0` sont amorcés. Supprimer
   le consomme, exécute l'adaptateur simulé via un pont Node
   (`scripts/adapter-bridge.mjs`) et matérialise l'état terminal ; le client
   suit par polling (`/api/cas/[id]/statut`).
-- **Identités synthétiques.** Cookie httpOnly → identité → rôle SQL. Le
-  masquage d'interface n'est jamais un contrôle d'accès : les frontières sont
-  prouvées côté base.
+- **Identités synthétiques de test.** Les scripts de vérification projettent des
+  identités synthétiques vers les rôles SQL afin de prouver les frontières de
+  la base. L'écran public `/identite` est uniquement une interface locale : il
+  ne transmet ni ne persiste encore les données et ne pilote pas ce harnais.
 - **Design system.** Tokens sémantiques OKLCH, typographie, espacement et
   mouvement dans `src/design/` ; composants sans dépendance UI externe ;
   `prefers-reduced-motion` respecté partout.
@@ -69,3 +70,13 @@ des versions publiées (trigger M0) et le chemin d'échec « cascade épuisée �
 
 Les tests de contrat de l'adaptateur simulé restent à la racine du dépôt :
 `node editorial/tests/run-contract-tests.mjs`.
+
+## Limites de déploiement
+
+Ce lot est un prototype local vérifiable, pas encore une application à déployer
+tel quel. La base PGlite écrit sur le système de fichiers local, le worker
+simulé lance un processus Node et le polling fait avancer l'outbox de manière
+opportuniste. Une mise en ligne exige d'abord les adaptateurs d'authentification,
+de base de données et de worker prévus pour l'environnement cible. Les pages
+publiques peuvent servir à une revue visuelle locale, mais leur présence ne
+constitue pas une preuve de compatibilité Vercel, Cloudflare ou Netlify.
