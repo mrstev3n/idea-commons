@@ -1,27 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useId, useState } from "react";
+import { useActionState, useId, useState } from "react";
 import { IconArrowLeft, IconAt, IconLock, IconUser } from "@tabler/icons-react";
 import { ActionButton } from "@/components/ui/Action";
 import { Field, FieldLabel, InputGroup, InputGroupInput } from "@/components/ui/Field";
 import styles from "./identite.module.css";
+import { authenticate, type AuthFormState } from "./actions";
 
 type AccessMode = "login" | "register";
 
 export function IdentityAccess() {
   const [mode, setMode] = useState<AccessMode>("login");
-  const [message, setMessage] = useState("");
+  const [state, formAction, pending] = useActionState<AuthFormState, FormData>(
+    authenticate,
+    { error: null },
+  );
   const panelId = useId();
 
   function selectMode(nextMode: AccessMode) {
     setMode(nextMode);
-    setMessage("");
-  }
-
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setMessage("Cette version locale ne transmet encore aucune donnée.");
   }
 
   return (
@@ -83,7 +81,8 @@ export function IdentityAccess() {
             </button>
           </div>
 
-          <form className={styles.form} onSubmit={submit}>
+          <form className={styles.form} action={formAction}>
+            <input type="hidden" name="mode" value={mode} />
             {mode === "register" ? (
               <Field>
                 <FieldLabel htmlFor={`${panelId}-name`}>Nom</FieldLabel>
@@ -120,12 +119,9 @@ export function IdentityAccess() {
               <div className={styles.passwordLabel}>
                 <FieldLabel htmlFor={`${panelId}-password`}>Mot de passe</FieldLabel>
                 {mode === "login" ? (
-                  <button
-                    type="button"
-                    onClick={() => setMessage("La récupération de compte sera disponible avec l’authentification.")}
-                  >
+                  <span>
                     Mot de passe oublié&nbsp;?
-                  </button>
+                  </span>
                 ) : null}
               </div>
               <InputGroup>
@@ -142,12 +138,12 @@ export function IdentityAccess() {
               </InputGroup>
             </Field>
 
-            <ActionButton className={styles.submit} size="lg" type="submit" variant="primary">
-              {mode === "login" ? "Se connecter" : "Créer mon compte"}
+            <ActionButton className={styles.submit} disabled={pending} size="lg" type="submit" variant="primary">
+              {pending ? "Connexion…" : mode === "login" ? "Se connecter" : "Créer mon compte"}
             </ActionButton>
 
-            <p className={styles.formStatus} role="status" aria-live="polite">
-              {message}
+            <p className={styles.formStatus} role={state.error ? "alert" : "status"} aria-live="polite">
+              {state.error}
             </p>
           </form>
         </div>
