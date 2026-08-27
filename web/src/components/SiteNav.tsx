@@ -6,6 +6,7 @@ import { CSSProperties, FormEvent, useEffect, useId, useRef, useState } from "re
 import { IconChevronDown, IconSearch } from "@tabler/icons-react";
 import { BorderBeam } from "border-beam";
 import { FieldLabel, InputGroup, InputGroupInput } from "@/components/ui/Field";
+import { logout } from "@/app/identite/actions";
 
 const EXPLORE_GROUPS = [
   {
@@ -115,7 +116,7 @@ const SEARCH_ITEMS = [
 type DesktopMenu = "explorer" | "use-cases" | "about" | null;
 type MenuLayout = { x: number; width: number };
 
-export function SiteNav() {
+export function SiteNav({ accountName }: { accountName: string | null }) {
   const pathname = usePathname();
   const router = useRouter();
   const desktopPanelId = useId();
@@ -405,14 +406,22 @@ export function SiteNav() {
             </div>
           </div>
         </div>
-        <Link
-          className="site-header__account"
-          href="/identite"
-          aria-current={onIdentity ? "page" : undefined}
-          aria-label="Se connecter ou créer un compte"
-        >
-          Se connecter
-        </Link>
+        {accountName ? (
+          <form action={logout}>
+            <button className="site-header__account" type="submit" aria-label={`Déconnecter ${accountName}`}>
+              Se déconnecter
+            </button>
+          </form>
+        ) : (
+          <Link
+            className="site-header__account"
+            href="/identite"
+            aria-current={onIdentity ? "page" : undefined}
+            aria-label="Se connecter ou créer un compte"
+          >
+            Se connecter
+          </Link>
+        )}
       </div>
 
       <button
@@ -554,9 +563,15 @@ export function SiteNav() {
             <h2>Blog</h2>
             <Link href="/blog" onClick={closeAll}>Lire le Blog</Link>
           </section>
-          <Link className="mobile-navigation__account" href="/identite" onClick={closeAll}>
-            Se connecter
-          </Link>
+          {accountName ? (
+            <form action={logout}>
+              <button className="mobile-navigation__account" type="submit">Se déconnecter</button>
+            </form>
+          ) : (
+            <Link className="mobile-navigation__account" href="/identite" onClick={closeAll}>
+              Se connecter
+            </Link>
+          )}
         </nav>
       </div>
     </div>

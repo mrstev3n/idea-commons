@@ -1,0 +1,10 @@
+# Valeurs publiques par environnement (l'URL Auth ne contient aucun secret).
+NEON_AUTH_BASE_URL=https://your-development-endpoint.neonauth.region.aws.neon.tech/neondb/auth
+
+# Secret serveur d'au moins 32 caractères, à générer séparément et à stocker
+# avec `wrangler secret put NEON_AUTH_COOKIE_SECRET`. Ne jamais le committer.
+NEON_AUTH_COOKIE_SECRET=replace-with-a-server-only-secret
+
+# Endpoint Data API propre à la branche. Le JWT Neon Auth est ajouté côté
+# serveur aux appels PostgREST/RPC; aucune connexion propriétaire n'est utilisée.
+NEON_DATA_API_URL=https://your-endpoint.apirest.region.aws.neon.tech/neondb/rest/v1
