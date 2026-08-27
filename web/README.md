@@ -4,8 +4,9 @@ Application Next.js/TypeScript qui porte le parcours IC-07 :
 **source publique → analyse IA (simulée) → revue humaine → publication immuable →
 lecture publique.** Les actions membre passent par Neon Data API/PostgREST avec
 un JWT Neon Auth vérifié. Hyperdrive est réservé au consommateur Queue/outbox.
-L'authentification applicative est un chantier séparé et l'IA est l'adaptateur simulé canonique du dépôt
-(`editorial/simulator`) : aucun appel IA réel n'est effectué.
+Neon Auth porte désormais l'inscription, la connexion et la session applicative.
+L'IA reste l'adaptateur simulé canonique du dépôt (`editorial/simulator`) :
+aucun appel IA réel n'est effectué.
 
 ## Démarrer
 
@@ -16,9 +17,18 @@ export NEON_DATA_API_URL='https://…/neondb/rest/v1'
 npm run dev    # http://localhost:3000
 ```
 
+Pour exercer Neon Auth, copiez `.dev.vars.example` vers un fichier local ignoré,
+puis renseignez l'URL Auth de la branche et un secret cookie serveur d'au moins
+32 caractères. Ne commitez jamais ce secret.
+
 La Data API doit viser une base migrée avec `database/migrations/0001 → 0006`.
 Une configuration absente ou invalide échoue avant requête et sa valeur
 n'est jamais journalisée. Créer une base, un rôle ou un secret reste séparé.
+
+Limite development : le cycle JWT utilisateur → `runtime_identity` reste à
+prouver avec une session réelle. Sans session, Neon Auth ne délivre actuellement
+pas le JWT anonyme requis par les RPC publiques; le catalogue distant anonyme
+reste donc un verrou d'intégration avant toute preview ou production.
 
 ## Parcours et surfaces
 
@@ -26,7 +36,7 @@ n'est jamais journalisée. Créer une base, un rôle ou un secret reste séparé
 |---|---|---|
 | Catalogue public | `/` | anonyme |
 | Fiche publiée (immuable, claims typés et cités, crédits, licence) | `/idees/[slug]` | anonyme |
-| Écran de connexion et d'inscription (non connecté) | `/identite` | tous |
+| Connexion et inscription Neon Auth | `/identite` | tous |
 | Cas éditoriaux | `/editorial` | authentifié (RLS) |
 | Ajout de source (droits explicites, extraits, empreinte) | `/editorial/sources/nouvelle` | contributor |
 | Suivi de cas : provenance, analyse, tentatives, décision | `/editorial/cas/[id]` | créateur ou reviewer |
@@ -42,7 +52,8 @@ n'est jamais journalisée. Créer une base, un rôle ou un secret reste séparé
   dans la même transaction que la réservation de quota. Un relais Cron borné
   l'envoie à Cloudflare Queues ; le consommateur idempotent exécute directement
   l'adaptateur simulé Worker-safe. Le polling `/api/cas/[id]/statut` est sans effet.
-- **Identités.** Le runtime compare l'identifiant de `app.runtime_identity()` à
+- **Identités.** Le serveur obtient le JWT depuis la session Neon Auth. Le runtime
+  compare l'identifiant de `app.runtime_identity()` à
   `session.user.id`; les rôles métier proviennent uniquement de
   `app.member_role_assignments`. Les fixtures synthétiques restent dans les tests.
 - **Design system.** Tokens sémantiques OKLCH, typographie, espacement et
@@ -53,6 +64,7 @@ n'est jamais journalisée. Créer une base, un rôle ou un secret reste séparé
 
 ```bash
 npm run typecheck   # TypeScript strict
+npm run test:auth-runtime # contrat d'amorçage Auth/Data API
 npm run build       # build de production
 npm run smoke       # contrats runtime Worker-safe + empreinte canonique
 ```
