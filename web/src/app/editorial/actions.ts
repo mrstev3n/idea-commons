@@ -13,11 +13,9 @@ import {
 import {
   CLAIM_TYPES,
   RIGHTS_BASES,
-  SIMULATOR_SCENARIOS,
   type CandidateContent,
   type ClaimType,
   type RightsBasis,
-  type SimulatorScenario,
   type SourceExcerpt,
 } from "@/server/types";
 
@@ -38,7 +36,6 @@ export async function submitSourceAction(
   const fullText = String(formData.get("fullText") ?? "");
   const rightsBasisRaw = String(formData.get("rightsBasis") ?? "");
   const rightsNote = String(formData.get("rightsNote") ?? "").trim() || null;
-  const scenarioRaw = String(formData.get("scenario") ?? "");
   const idempotencyKey = String(formData.get("idempotencyKey") ?? "");
 
   let excerpts: SourceExcerpt[] = [];
@@ -96,10 +93,6 @@ export async function submitSourceAction(
     };
   }
 
-  const scenario = SIMULATOR_SCENARIOS.some((option) => option.value === scenarioRaw)
-    ? (scenarioRaw as SimulatorScenario)
-    : null;
-
   const result = await createSourceIntake(identity, {
     inputMode,
     title,
@@ -109,7 +102,6 @@ export async function submitSourceAction(
     excerpts,
     rightsBasis: rightsBasis as RightsBasis,
     rightsNote,
-    scenario,
     idempotencyKey,
   });
 

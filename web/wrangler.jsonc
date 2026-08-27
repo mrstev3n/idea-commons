@@ -7,7 +7,42 @@
   ],
   "workers_dev": true,
   "preview_urls": true,
-  "main": "vinext/server/fetch-handler",
+  "main": "worker.ts",
+  "vars": {
+    "NEON_DATA_API_URL": "https://ep-square-breeze-a2ftwoml.apirest.eu-central-1.aws.neon.tech/neondb/rest/v1"
+  },
+  "hyperdrive": [
+    {
+      "binding": "OUTBOX_DATABASE",
+      "id": "ec02f5ff529043fdb57354a8060cbb6d"
+    }
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "GENERATION_QUEUE",
+        "queue": "idea-commons-generation-development"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "idea-commons-generation-development",
+        "max_batch_size": 5,
+        "max_batch_timeout": 5,
+        "max_retries": 5,
+        "dead_letter_queue": "idea-commons-generation-dlq-development",
+        "max_concurrency": 1,
+        "retry_delay": 15
+      }
+    ]
+  },
+  "triggers": {
+    "crons": ["*/5 * * * *"]
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.1
+  },
   "assets": {
     "directory": "dist/client",
     "not_found_handling": "none",

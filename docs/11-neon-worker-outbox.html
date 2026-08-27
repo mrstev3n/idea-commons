@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="fr"><meta charset="utf-8"><title>IC-07 — Neon Data API, Workers et outbox</title>
+<body><main>
+  <h1>IC-07 — frontière runtime Cloudflare</h1>
+  <p><strong>Statut :</strong> spécification locale, cible <code>dev</code>. PR #7 intégrée dans <code>dev</code> au SHA <code>6c322978</code>. Aucune validation distante de ce lot n’est encore acquise.</p>
+  <section><h2>Contexte</h2><p>PGlite persistant, le sous-processus Node et la consommation opportuniste de l’outbox depuis GET sont incompatibles avec Cloudflare Workers. Neon Data API est active sur development et constitue la frontière membre normative.</p></section>
+  <section><h2>Objectif</h2><p>Servir les actions membre via PostgREST/Data API et JWT Neon Auth, exécuter l’adaptateur simulé sans spawn, et relayer l’outbox par Cron + Queue avec lots et retries bornés.</p></section>
+  <section><h2>Non-objectifs</h2><p>Les routes Auth et l’interface identité appartiennent au lot Auth. Aucun appel IA réel, domaine personnalisé, service payant, déploiement production ou credential propriétaire n’est introduit.</p></section>
+  <section><h2>Principes</h2><ul>
+    <li><strong>Membre :</strong> <code>NEON_DATA_API_URL</code>, JWT serveur, profil <code>app</code>, RPC métier étroites. Aucune URL <code>authenticated@</code>, aucun SQL arbitraire, aucun accès direct aux tables.</li>
+    <li><strong>Identité :</strong> <code>runtime_identity()</code> renvoie <code>{authUserId, memberId, roles}</code>; le runtime compare strictement <code>authUserId</code> à la session et n’accepte que contributor/reviewer/admin.</li>
+    <li><strong>Continuation :</strong> <code>ic_trusted_continuation</code> n’exécute que <code>record_verified_source_fingerprint</code> via un secret serveur distinct.</li>
+    <li><strong>Outbox :</strong> <code>ic_runtime_service</code> passe uniquement par <code>OUTBOX_DATABASE</code>/Hyperdrive. Cron prend au plus 5 leases; Queue consomme à concurrence 1, avec backoff 15–900 s, cinq retries et DLQ.</li>
+    <li><strong>HTTP :</strong> GET ne produit aucun effet outbox. Le consommateur est idempotent; un crash après envoi peut rejouer le même identifiant durable.</li>
+  </ul></section>
+  <section><h2>Surfaces Data API exposées</h2><p>Schéma <code>app</code>; fonctions seulement : <code>runtime_identity</code>, <code>runtime_source_by_fingerprint</code>, <code>runtime_source_to_idea_skill_version</code>, <code>runtime_publication_receipt</code>, <code>runtime_list_published_ideas</code>, <code>runtime_get_published_idea</code>, <code>runtime_list_editorial_cases</code>, <code>runtime_get_editorial_case</code> et les cinq commandes métier M1 déjà définies. La migration révoque tous les privilèges de tables <code>app</code> à <code>anonymous</code>/<code>authenticated</code>.</p></section>
+  <section><h2>Critères d’acceptation</h2><ol>
+    <li>Typecheck indépendant des artefacts <code>.next</code>/<code>dist</code>; builds Next et vinext reproductibles.</li>
+    <li>Tests exécutables du JWT/RPC mock, relay/lease, crash après send, doublon, ack/retry/backoff, épuisement/DLQ et composition fetch/scheduled/queue.</li>
+    <li>Audit fail-closed des attributs, memberships, tables, séquences et fonctions des identités service.</li>
+    <li>Readiness distante refusée tant que JWT/RLS positif+négatif, deux rôles minimaux et bindings Cloudflare ne sont pas prouvés.</li>
+  </ol></section>
+  <section><h2>Preuve distante suivante</h2><p>Après contre-revue : appliquer 0006, exposer uniquement <code>app</code>, rafraîchir le cache PostgREST, prouver JWT A et témoin B/anonyme, auditer les deux rôles, configurer le secret de continuation, puis vérifier Queue/DLQ/Hyperdrive/Cron sur preview. Le fichier <code>runtime-readiness.json</code> reste faux jusque-là.</p></section>
+</main></body></html>
