@@ -12,7 +12,13 @@
     "test:fingerprint": "node --import tsx scripts/source-fingerprint-contract.mts",
     "smoke": "tsx scripts/smoke.mts",
     "seed": "tsx scripts/seed-demo.mts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "dev:vinext": "vinext dev --port 3001",
+    "build:vinext": "vinext build",
+    "start:vinext": "wrangler dev --config dist/server/wrangler.json",
+    "cloudflare:preflight": "node scripts/cloudflare-preflight.mjs",
+    "preview:dev": "npm run cloudflare:preflight && npm run build:vinext && wrangler versions upload --config dist/server/wrangler.json --preview-alias dev",
+    "deploy:production": "npm run cloudflare:preflight && npm run build:vinext && vinext-cloudflare deploy --config dist/server/wrangler.json"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.7",
@@ -20,16 +26,24 @@
     "@fontsource-variable/instrument-sans": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@tabler/icons-react": "3.46.0",
+    "@vinext/cloudflare": "^1.0.0-beta.6",
     "border-beam": "1.3.0",
     "next": "^16.3.2",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-server-dom-webpack": "^19.2.8",
+    "vinext": "^1.0.0-beta.8"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.54.0",
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.0",
+    "@vitejs/plugin-rsc": "^0.5.34",
     "tsx": "^4.23.12",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2",
+    "wrangler": "^4.126.0"
   }
 }
