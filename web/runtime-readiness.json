@@ -1,0 +1,8 @@
+{
+  "neonDataApi": { "jwtRlsPositiveNegative": false },
+  "neonRoles": {
+    "outboxLeastPrivilege": false,
+    "trustedContinuationLeastPrivilege": false
+  },
+  "cloudflare": { "bindingsVerified": false }
+}

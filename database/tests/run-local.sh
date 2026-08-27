@@ -27,6 +27,13 @@ psql -X -v ON_ERROR_STOP=1 -d "$database_name" -f database/migrations/0002_m0_da
 psql -X -v ON_ERROR_STOP=1 -d "$database_name" -f database/tests/m0_rls_test.sql
 psql -X -v ON_ERROR_STOP=1 -d "$database_name" -f database/migrations/0003_m1_editorial_pipeline.sql
 psql -X -v ON_ERROR_STOP=1 -d "$database_name" -f database/tests/m1_editorial_pipeline_test.sql
+psql -X -v ON_ERROR_STOP=1 -d "$database_name" -f database/migrations/0004_cloudflare_outbox_delivery.sql
+
+outbox_delivery_shape="$(psql -X -A -t -d "$database_name" -c "select count(*) from information_schema.columns where table_schema='app_private' and table_name='outbox_events' and column_name in ('available_at','attempt_count','dispatched_at','dispatch_lease_until','last_error_code')")"
+if [ "$outbox_delivery_shape" != "5" ]; then
+  echo "Outbox delivery migration shape failed: $outbox_delivery_shape (expected 5 including two existing columns)." >&2
+  exit 1
+fi
 
 psql -X -v ON_ERROR_STOP=1 -d "$database_name" <<'SQL'
 insert into app.members(id,auth_user_id,display_name) values

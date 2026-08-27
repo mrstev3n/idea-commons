@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPublishedIdea } from "@/server/queries";
+import { getCurrentIdentity } from "@/server/identity";
 import { CLAIM_TYPE_LABELS, formatDate } from "@/lib/labels";
 import { Badge } from "@/components/Badge";
 
@@ -12,7 +13,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const idea = await getPublishedIdea(slug);
+  const idea = await getPublishedIdea(await getCurrentIdentity(), slug);
   if (!idea) return { title: "Fiche introuvable" };
   return { title: idea.content.title, description: idea.content.oneLineSummary };
 }
@@ -33,7 +34,7 @@ function ListSection({ id, title, items }: { id: string; title: string; items: s
 
 export default async function FichePubliquePage({ params }: PageProps) {
   const { slug } = await params;
-  const idea = await getPublishedIdea(slug);
+  const idea = await getPublishedIdea(await getCurrentIdentity(), slug);
   if (!idea) notFound();
 
   const { content } = idea;

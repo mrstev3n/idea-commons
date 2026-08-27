@@ -1,26 +1,24 @@
 # Idea Commons — prototype web local (premier incrément vertical IC-07)
 
-Prototype Next.js/TypeScript qui exerce localement le parcours IC-07 de bout en bout :
+Application Next.js/TypeScript qui porte le parcours IC-07 :
 **source publique → analyse IA (simulée) → revue humaine → publication immuable →
-lecture publique anonyme.** Tout s'exécute en local, à 0 USD, sans réseau ni
-service distant : la base PostgreSQL est embarquée (PGlite), l'authentification
-est un harnais d'identités synthétiques et l'IA est l'adaptateur simulé
-canonique du dépôt (`editorial/simulator`).
+lecture publique.** Les actions membre passent par Neon Data API/PostgREST avec
+un JWT Neon Auth vérifié. Hyperdrive est réservé au consommateur Queue/outbox.
+L'authentification applicative est un chantier séparé et l'IA est l'adaptateur simulé canonique du dépôt
+(`editorial/simulator`) : aucun appel IA réel n'est effectué.
 
 ## Démarrer
 
 ```bash
 cd web
 npm install
-npm run seed   # optionnel : publie 2 fiches et laisse 1 cas en revue
+export NEON_DATA_API_URL='https://…/neondb/rest/v1'
 npm run dev    # http://localhost:3000
 ```
 
-La base est créée au premier accès dans `web/.data/pglite` : les migrations
-réelles `database/migrations/0001 → 0003` sont appliquées, puis les rôles
-PostgreSQL (`anonymous`, `authenticated`, `service`), les membres synthétiques
-et la version publiée du skill `source-to-idea@1.0.0` sont amorcés. Supprimer
-`web/.data` remet l'environnement à zéro.
+La Data API doit viser une base migrée avec `database/migrations/0001 → 0006`.
+Une configuration absente ou invalide échoue avant requête et sa valeur
+n'est jamais journalisée. Créer une base, un rôle ou un secret reste séparé.
 
 ## Parcours et surfaces
 
@@ -35,21 +33,18 @@ et la version publiée du skill `source-to-idea@1.0.0` sont amorcés. Supprimer
 | Atelier de revue côte à côte | `/editorial/cas/[id]/revue` | créateur (édition) / reviewer (décision) |
 | Reçu de décision | `/editorial/cas/[id]/recu` | créateur ou reviewer |
 
-## Architecture locale
+## Architecture d'exécution
 
-- **Autorisation dans la base.** Chaque requête s'exécute sous le rôle
-  PostgreSQL réel (`set local role` + `request.jwt.claim.sub`), avec la RLS et
-  les fonctions `security definer` M1. Le serveur web ne décide de rien : il
-  traduit les erreurs SQL en réponses normatives 401/403/404/409/422.
+- **Autorisation dans la base.** Le repository membre appelle uniquement des RPC
+  étroites via Data API, avec JWT Neon Auth et profils `app`. Aucun credential
+  owner, `SET ROLE`, SQL arbitraire ou accès direct aux tables n'est exposé.
 - **Transport asynchrone.** Le lancement d'analyse écrit un événement outbox
-  dans la même transaction que la réservation de quota. Un worker en processus
-  le consomme, exécute l'adaptateur simulé via un pont Node
-  (`scripts/adapter-bridge.mjs`) et matérialise l'état terminal ; le client
-  suit par polling (`/api/cas/[id]/statut`).
-- **Identités synthétiques de test.** Les scripts de vérification projettent des
-  identités synthétiques vers les rôles SQL afin de prouver les frontières de
-  la base. L'écran public `/identite` est uniquement une interface locale : il
-  ne transmet ni ne persiste encore les données et ne pilote pas ce harnais.
+  dans la même transaction que la réservation de quota. Un relais Cron borné
+  l'envoie à Cloudflare Queues ; le consommateur idempotent exécute directement
+  l'adaptateur simulé Worker-safe. Le polling `/api/cas/[id]/statut` est sans effet.
+- **Identités.** Le runtime compare l'identifiant de `app.runtime_identity()` à
+  `session.user.id`; les rôles métier proviennent uniquement de
+  `app.member_role_assignments`. Les fixtures synthétiques restent dans les tests.
 - **Design system.** Tokens sémantiques OKLCH, typographie, espacement et
   mouvement dans `src/design/` ; composants sans dépendance UI externe ;
   `prefers-reduced-motion` respecté partout.
@@ -59,24 +54,20 @@ et la version publiée du skill `source-to-idea@1.0.0` sont amorcés. Supprimer
 ```bash
 npm run typecheck   # TypeScript strict
 npm run build       # build de production
-npm run smoke       # parcours complet + frontières normatives sur base jetable
+npm run smoke       # contrats runtime Worker-safe + empreinte canonique
 ```
 
-Le smoke (`scripts/smoke.mts`) rejoue le parcours IC-07 sur une base PGlite
-temporaire et vérifie notamment : 401 anonyme, 403 sans capacité, déduplication
-par empreinte (409), RLS (cas étranger invisible), verrou optimiste (409),
-séparation contributeur/reviewer, idempotence de la publication, immuabilité
-des versions publiées (trigger M0) et le chemin d'échec « cascade épuisée ».
+Le test runtime exécute le contrat JWT/RPC mock, les bornes de batch/retry,
+le crash après envoi, le doublon, la DLQ, les handlers, l'adaptateur simulé pur et l'absence de consommation depuis les GET. RLS,
+immutabilité et concurrence restent couvertes par `database/tests/run-local.sh`
+lorsqu'un PostgreSQL local est disponible.
 
 Les tests de contrat de l'adaptateur simulé restent à la racine du dépôt :
 `node editorial/tests/run-contract-tests.mjs`.
 
 ## Limites de déploiement
 
-Ce lot est un prototype local vérifiable, pas encore une application à déployer
-tel quel. La base PGlite écrit sur le système de fichiers local, le worker
-simulé lance un processus Node et le polling fait avancer l'outbox de manière
-opportuniste. Une mise en ligne exige d'abord les adaptateurs d'authentification,
-de base de données et de worker prévus pour l'environnement cible. Les pages
-publiques peuvent servir à une revue visuelle locale, mais leur présence ne
-constitue pas une preuve de compatibilité Vercel, Cloudflare ou Netlify.
+La PR #7 est intégrée et les bindings sont composés localement. Le fichier
+`runtime-readiness.json` bloque preview/production tant que les preuves JWT/RLS,
+moindre privilège des deux identités et bindings Cloudflare ne sont pas toutes
+validées. Un build local n'est pas une preuve de déploiement Cloudflare.

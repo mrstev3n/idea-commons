@@ -8,7 +8,6 @@ import {
   memberDisplayName,
   type EditorialCaseDetail,
 } from "@/server/queries";
-import { processOutboxOnce } from "@/server/worker";
 import { AccessNotice } from "@/components/AccessNotice";
 import { Badge } from "@/components/Badge";
 import { AnalysisPoller } from "@/app/editorial/cas/[id]/AnalysisPoller";
@@ -75,7 +74,6 @@ export default async function CasEditorialPage({
   const identity = await getCurrentIdentity();
   if (!identity.authUserId) return <AccessNotice kind={401} />;
 
-  await processOutboxOnce();
 
   const { id } = await params;
   const detail = await getEditorialCase(identity, id);

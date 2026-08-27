@@ -1,15 +1,16 @@
 import { randomUUID } from "node:crypto";
-import { withDbRole, withDbRoleThenService } from "./db";
+import { withTrustedDb } from "./db";
+import { dataApiRpc, verifyRuntimeIdentity } from "./data-api";
 import { fingerprintRequest } from "./canonical";
 import { deriveCanonicalSourceFingerprint } from "./source-fingerprint";
 import { toCommandError } from "./sql-error";
-import { setScenarioOverride } from "./scenario";
 import type { SyntheticIdentity } from "./identities";
+
+type DatabaseIdentity = SyntheticIdentity & { databaseAuthToken?: string | null };
 import type {
   CandidateContent,
   CommandResult,
   RightsBasis,
-  SimulatorScenario,
   SourceExcerpt,
 } from "./types";
 
@@ -28,7 +29,6 @@ export interface SourceIntakeInput {
   excerpts: SourceExcerpt[];
   rightsBasis: RightsBasis;
   rightsNote: string | null;
-  scenario: SimulatorScenario | null;
   idempotencyKey: string;
 }
 
@@ -39,7 +39,7 @@ export interface CreatedIntake {
 }
 
 export async function createSourceIntake(
-  identity: SyntheticIdentity,
+  identity: DatabaseIdentity,
   input: SourceIntakeInput,
 ): Promise<CommandResult<CreatedIntake>> {
   if (!identity.authUserId) {
@@ -55,58 +55,48 @@ export async function createSourceIntake(
   });
 
   try {
-    const result = await withDbRoleThenService(
-      "authenticated",
-      identity.authUserId,
-      async (tx) => {
-        const duplicate = await tx.query<{ id: string }>(
-          "select id from app.source_intakes where fingerprint_sha256 = $1 limit 1",
-          [fingerprint],
-        );
-        if (duplicate.rows.length > 0) {
-          return { kind: "duplicate", duplicateOf: duplicate.rows[0].id } as const;
-        }
-        const created = await tx.query<{ id: string }>(
-          `select app.create_source_intake(
-             $1::app.source_input_mode, $2, $3, $4::timestamptz, now(),
-             $5, $6::jsonb, $7::app.source_rights_basis, $8, $9, $10, $11
-           ) as id`,
-          [
-            input.inputMode,
-            input.title,
-            input.sourceUrl,
-            input.publishedAt,
-            fingerprint,
-            JSON.stringify(input.excerpts),
-            input.rightsBasis,
-            input.rightsNote,
-            input.rightsBasis === "temporary_analysis" ? input.fullText : null,
-            input.idempotencyKey,
-            requestFingerprint,
-          ],
-        );
-        return { kind: "created", id: created.rows[0].id } as const;
-      },
-      async (tx, memberResult) => {
-        if (memberResult.kind === "duplicate") return memberResult;
+    const token = identity.databaseAuthToken ?? "";
+    await verifyRuntimeIdentity(identity.authUserId, token);
+    const duplicateOf = await dataApiRpc<string | null>("runtime_source_by_fingerprint", {
+      target_fingerprint: fingerprint,
+    }, token);
+    const result = duplicateOf
+      ? { kind: "duplicate", duplicateOf } as const
+      : await (async () => {
+        const id = await dataApiRpc<string>("create_source_intake", {
+          input_mode: input.inputMode,
+          title: input.title,
+          source_url: input.sourceUrl,
+          published_at: input.publishedAt,
+          accessed_at: new Date().toISOString(),
+          fingerprint_sha256: fingerprint,
+          excerpts: input.excerpts,
+          rights_basis: input.rightsBasis,
+          rights_note: input.rightsNote,
+          full_text: input.rightsBasis === "temporary_analysis" ? input.fullText : null,
+          idempotency_key: input.idempotencyKey,
+          request_fingerprint_sha256: requestFingerprint,
+        }, token);
         if (input.inputMode === "url") {
-          return { kind: "created", id: memberResult.id, revision: 1 } as const;
+          return { kind: "created", id, revision: 1 } as const;
         }
 
         // Re-dériver depuis le texte brut dans la continuation de confiance :
         // l'indice contributor précédent n'acquiert jamais d'autorité par copie.
         const verifiedFingerprint = deriveCanonicalSourceFingerprint(input.fullText);
-        const verified = await tx.query<{ revision: string }>(
-          "select app.record_verified_source_fingerprint($1, $2, $3) as revision",
-          [memberResult.id, 1, verifiedFingerprint],
-        );
+        const revision = await withTrustedDb(async (tx) => {
+          const verified = await tx.query<{ revision: string }>(
+            "select app.record_verified_source_fingerprint($1, $2, $3) as revision",
+            [id, 1, verifiedFingerprint],
+          );
+          return Number(verified.rows[0].revision);
+        });
         return {
           kind: "created",
-          id: memberResult.id,
-          revision: Number(verified.rows[0].revision),
+          id,
+          revision,
         } as const;
-      },
-    );
+      })();
 
     if (result.kind === "duplicate") {
       return {
@@ -114,9 +104,6 @@ export async function createSourceIntake(
         status: 409,
         message: `Cette empreinte de source existe déjà (cas ${result.duplicateOf}). Une soumission rejouée retrouve la même empreinte : ouvrez le cas existant plutôt que de le dupliquer.`,
       };
-    }
-    if (input.scenario) {
-      setScenarioOverride(result.id, input.scenario);
     }
     return {
       ok: true,
@@ -128,7 +115,7 @@ export async function createSourceIntake(
 }
 
 export async function startCandidateGeneration(
-  identity: SyntheticIdentity,
+  identity: DatabaseIdentity,
   intakeId: string,
   expectedRevision: number,
 ): Promise<CommandResult<{ generationId: string }>> {
@@ -138,21 +125,15 @@ export async function startCandidateGeneration(
   const idempotencyKey = `gen:${intakeId}:${expectedRevision}`;
   const requestFingerprint = fingerprintRequest({ intakeId, expectedRevision });
   try {
-    const generationId = await withDbRole("authenticated", identity.authUserId, async (tx) => {
-      const skill = await tx.query<{ id: string }>(
-        `select v.id from app.prompt_skill_versions v
-           join app.prompt_skills s on s.id = v.skill_id
-          where s.slug = 'source-to-idea' and v.version = '1.0.0'`,
-      );
-      if (skill.rows.length === 0) {
-        throw new Error("published skill version missing");
-      }
-      const started = await tx.query<{ id: string }>(
-        "select app.start_candidate_generation($1, $2, $3, $4, $5) as id",
-        [intakeId, skill.rows[0].id, expectedRevision, idempotencyKey, requestFingerprint],
-      );
-      return started.rows[0].id;
-    });
+    const token = identity.databaseAuthToken ?? "";
+    await verifyRuntimeIdentity(identity.authUserId, token);
+    const skillVersionId = await dataApiRpc<string | null>("runtime_source_to_idea_skill_version", {}, token);
+    if (!skillVersionId) throw new Error("published skill version missing");
+    const generationId = await dataApiRpc<string>("start_candidate_generation", {
+      target_source_intake_id: intakeId, target_skill_version_id: skillVersionId,
+      expected_source_revision: expectedRevision, idempotency_key: idempotencyKey,
+      request_fingerprint_sha256: requestFingerprint,
+    }, token);
     return { ok: true, value: { generationId } };
   } catch (error) {
     return toCommandError(error);
@@ -160,7 +141,7 @@ export async function startCandidateGeneration(
 }
 
 export async function updateCandidateDraft(
-  identity: SyntheticIdentity,
+  identity: DatabaseIdentity,
   candidateId: string,
   expectedRevision: number,
   content: CandidateContent,
@@ -170,13 +151,12 @@ export async function updateCandidateDraft(
     return { ok: false, status: 401, message: "Authentification requise." };
   }
   try {
-    const revision = await withDbRole("authenticated", identity.authUserId, async (tx) => {
-      const updated = await tx.query<{ revision: string }>(
-        "select app.update_candidate_draft($1, $2, $3::jsonb, $4) as revision",
-        [candidateId, expectedRevision, JSON.stringify(content), changeSummary],
-      );
-      return Number(updated.rows[0].revision);
-    });
+    const token = identity.databaseAuthToken ?? "";
+    await verifyRuntimeIdentity(identity.authUserId, token);
+    const revision = Number(await dataApiRpc<string>("update_candidate_draft", {
+      target_candidate_id: candidateId, expected_revision: expectedRevision,
+      content, change_summary: changeSummary,
+    }, token));
     return { ok: true, value: { revision } };
   } catch (error) {
     return toCommandError(error);
@@ -200,41 +180,25 @@ export interface PublicationReceipt {
 }
 
 export async function approveAndPublishCandidate(
-  identity: SyntheticIdentity,
+  identity: DatabaseIdentity,
   input: PublicationDecisionInput,
 ): Promise<CommandResult<PublicationReceipt>> {
   if (!identity.authUserId) {
     return { ok: false, status: 401, message: "Authentification requise." };
   }
   try {
-    const receipt = await withDbRole("authenticated", identity.authUserId, async (tx) => {
-      const published = await tx.query<{ id: string }>(
-        "select app.approve_and_publish_candidate($1, $2, $3, $4::jsonb, $5, $6, $7, $8, $9) as id",
-        [
-          input.candidateId,
-          input.expectedRevision,
-          input.reason,
-          JSON.stringify(input.checklist),
-          input.approvedSlug,
-          input.contentLicense,
-          input.creditName,
-          `publish:${input.candidateId}:${input.expectedRevision}`,
-          fingerprintRequest(input),
-        ],
-      );
-      const versionId = published.rows[0].id;
-      const idea = await tx.query<{ slug: string; published_at: string }>(
-        `select i.slug, v.published_at
-           from app.idea_versions v join app.ideas i on i.id = v.idea_id
-          where v.id = $1`,
-        [versionId],
-      );
-      return {
-        ideaVersionId: versionId,
-        slug: idea.rows[0].slug,
-        publishedAt: idea.rows[0].published_at,
-      };
-    });
+    const token = identity.databaseAuthToken ?? "";
+    await verifyRuntimeIdentity(identity.authUserId, token);
+    const versionId = await dataApiRpc<string>("approve_and_publish_candidate", {
+      target_candidate_id: input.candidateId, expected_revision: input.expectedRevision,
+      reason: input.reason, checklist: input.checklist, approved_slug: input.approvedSlug,
+      content_license: input.contentLicense, credit_name: input.creditName,
+      idempotency_key: `publish:${input.candidateId}:${input.expectedRevision}`,
+      request_fingerprint_sha256: fingerprintRequest(input),
+    }, token);
+    const receipt = await dataApiRpc<PublicationReceipt>("runtime_publication_receipt", {
+      target_version_id: versionId,
+    }, token);
     return { ok: true, value: receipt };
   } catch (error) {
     return toCommandError(error);
@@ -242,7 +206,7 @@ export async function approveAndPublishCandidate(
 }
 
 export async function rejectCandidate(
-  identity: SyntheticIdentity,
+  identity: DatabaseIdentity,
   candidateId: string,
   expectedRevision: number,
   reason: string,
@@ -252,13 +216,11 @@ export async function rejectCandidate(
     return { ok: false, status: 401, message: "Authentification requise." };
   }
   try {
-    const decisionId = await withDbRole("authenticated", identity.authUserId, async (tx) => {
-      const rejected = await tx.query<{ id: string }>(
-        "select app.reject_candidate($1, $2, $3, $4::jsonb) as id",
-        [candidateId, expectedRevision, reason, JSON.stringify(checklist)],
-      );
-      return rejected.rows[0].id;
-    });
+    const token = identity.databaseAuthToken ?? "";
+    await verifyRuntimeIdentity(identity.authUserId, token);
+    const decisionId = await dataApiRpc<string>("reject_candidate", {
+      target_candidate_id: candidateId, expected_revision: expectedRevision, reason, checklist,
+    }, token);
     return { ok: true, value: { decisionId } };
   } catch (error) {
     return toCommandError(error);

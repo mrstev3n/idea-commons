@@ -4,7 +4,7 @@ import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { submitSourceAction } from "@/app/editorial/actions";
 import { IDLE_FORM_STATE } from "@/app/editorial/form-state";
 import { RIGHTS_BASIS_DESCRIPTIONS, RIGHTS_BASIS_LABELS } from "@/lib/labels";
-import { RIGHTS_BASES, SIMULATOR_SCENARIOS } from "@/server/types";
+import { RIGHTS_BASES } from "@/server/types";
 
 interface ExcerptDraft {
   key: number;
@@ -329,31 +329,6 @@ export function SourceForm() {
           ) : null}
         </div>
       </fieldset>
-
-      <details className="card" style={{ padding: "var(--space-4)" }}>
-        <summary style={{ cursor: "pointer", fontWeight: 650 }}>
-          Harnais de test — analyse simulée
-        </summary>
-        <div className="stack-2" style={{ marginTop: "var(--space-3)" }}>
-          <p className="text-sm text-muted">
-            Aucun fournisseur d'IA n'est branché. L'analyse rejoue un scénario local. Tu
-            peux forcer un échec pour éprouver les états.
-          </p>
-          <div className="field">
-            <label className="field__label" htmlFor="scenario">
-              Scénario forcé <span className="field__optional">(facultatif)</span>
-            </label>
-            <select id="scenario" name="scenario" defaultValue="">
-              <option value="">Automatique (succès, sauf si le corpus dit autrement)</option>
-              {SIMULATOR_SCENARIOS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </details>
 
       <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
 

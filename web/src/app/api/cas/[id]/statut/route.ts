@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
 import { getCurrentIdentity } from "@/server/identity";
 import { getEditorialCase } from "@/server/queries";
-import { processOutboxOnce } from "@/server/worker";
 
 export const dynamic = "force-dynamic";
 
 /**
- * Statut d'analyse par polling (transport alpha IC-07). Le worker outbox est
- * avancé de façon opportuniste à chaque interrogation : en production, un
- * worker durable indépendant assumerait cette consommation.
+ * Statut d'analyse par polling. Cette route est une lecture sans effet : la
+ * consommation de l'outbox appartient exclusivement au consommateur durable.
  */
 export async function GET(
   _request: Request,
@@ -18,8 +16,6 @@ export async function GET(
   if (!identity.authUserId) {
     return NextResponse.json({ message: "Authentification requise." }, { status: 401 });
   }
-
-  await processOutboxOnce();
 
   const { id } = await params;
   const detail = await getEditorialCase(identity, id);
