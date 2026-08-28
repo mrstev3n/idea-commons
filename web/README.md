@@ -29,8 +29,10 @@ Les preuves development JWT → RPC, séparation de deux identités et RLS méti
 sont acquises. La limite restante est le cycle applicatif déployé : cookies HTTPS,
 `getSession()`, `token()` puis logout. La migration 0007 ajoute deux projections
 catalogue en lecture seule pour `anonymous`, sans accès REST direct aux tables ni
-élargissement des RPC membre. Son application et son témoin distant development
-restent obligatoires avant une nouvelle preview.
+élargissement des RPC membre. Avec Managed Better Auth, le serveur obtient à la
+demande le JWT court de `/token/anonymous`, le conserve uniquement en mémoire
+avec une marge avant expiration et l'envoie seulement aux deux RPC publiques.
+Le témoin distant development de ce transport reste obligatoire avant preview.
 
 ## Parcours et surfaces
 
@@ -58,6 +60,8 @@ restent obligatoires avant une nouvelle preview.
   compare l'identifiant de `app.runtime_identity()` à
   `session.user.id`; les rôles métier proviennent uniquement de
   `app.member_role_assignments`. Les fixtures synthétiques restent dans les tests.
+  Le catalogue utilise une identité `anonymous` distincte, sans session utilisateur,
+  jamais exposée au navigateur ni persistée.
 - **Design system.** Tokens sémantiques OKLCH, typographie, espacement et
   mouvement dans `src/design/` ; composants sans dépendance UI externe ;
   `prefers-reduced-motion` respecté partout.
@@ -67,6 +71,7 @@ restent obligatoires avant une nouvelle preview.
 ```bash
 npm run typecheck   # TypeScript strict
 npm run test:auth-runtime # contrat d'amorçage Auth/Data API
+npm run test:anonymous-catalog-auth # transport et cache du JWT anonyme serveur
 npm run test:public-catalog # projections anonymes et refus des surfaces privées
 npm run build       # build de production
 npm run smoke       # contrats runtime Worker-safe + empreinte canonique

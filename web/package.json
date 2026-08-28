@@ -11,6 +11,7 @@
     "start": "next start",
     "test:fingerprint": "node --import tsx scripts/source-fingerprint-contract.mts",
     "test:auth-runtime": "node --import tsx scripts/auth-runtime-contract.mts",
+    "test:anonymous-catalog-auth": "node --import tsx scripts/anonymous-catalog-auth-contract.mts",
     "test:cloudflare-preflight": "node --import tsx scripts/cloudflare-preflight-contract.mts",
     "test:public-catalog": "node --import tsx scripts/public-catalog-contract.mts",
     "test:runtime": "node --import tsx scripts/runtime-contract.mts",

@@ -9,13 +9,14 @@ import {
 
 export interface CloudflareRuntimeEnv {
   NEON_DATA_API_URL: string;
+  NEON_AUTH_BASE_URL: string;
   TRUSTED_DATABASE_URL: string;
   OUTBOX_DATABASE: { connectionString: string };
   GENERATION_QUEUE: { send(message: OutboxQueueMessage): Promise<unknown> };
 }
 
 export function configureCloudflareDatabase(env: CloudflareRuntimeEnv): void {
-  configureDataApi(env.NEON_DATA_API_URL);
+  configureDataApi(env.NEON_DATA_API_URL, env.NEON_AUTH_BASE_URL);
   configureDatabase({
     trustedConnectionString: env.TRUSTED_DATABASE_URL,
     outboxConnectionString: env.OUTBOX_DATABASE.connectionString,
