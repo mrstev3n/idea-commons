@@ -3,6 +3,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
+import { isWorkerVersionId } from "./cloudflare-preview.mjs";
 
 const execFileAsync = promisify(execFile);
 const scriptPath = fileURLToPath(import.meta.url);
@@ -117,7 +118,7 @@ export function collectPreUploadFailures({ config, evidence, hyperdrive, queueLi
 export function collectPostUploadFailures({ config, evidence, version, versionId }) {
   const failures = [];
   requireCheck(failures, evidence.cloudflare?.postUpload?.required === true, "preuve post-upload non exigée par le contrat");
-  requireCheck(failures, typeof versionId === "string" && /^[0-9a-f-]{16,}$/i.test(versionId), "ID de version Worker explicite requis");
+  requireCheck(failures, isWorkerVersionId(versionId), "ID de version Worker explicite requis");
   requireCheck(failures, version?.id === versionId, "version Worker demandée introuvable");
   const handlers = version?.resources?.script?.handlers ?? [];
   for (const handler of ["fetch", "scheduled", "queue"]) {

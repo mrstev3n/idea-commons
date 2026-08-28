@@ -66,6 +66,11 @@ assert.match(collectPostUploadFailures({ ...inputs, version: missingQueue, versi
 const missingHandler = structuredClone(version);
 missingHandler.resources.script.handlers = missingHandler.resources.script.handlers.filter((handler) => handler !== "scheduled");
 assert.match(collectPostUploadFailures({ ...inputs, version: missingHandler, versionId }).join("\n"), /handler Worker absent : scheduled/);
+const malformedVersionId = "----------------";
+assert.match(
+  collectPostUploadFailures({ ...inputs, version: { ...version, id: malformedVersionId }, versionId: malformedVersionId }).join("\n"),
+  /ID de version Worker explicite requis/,
+);
 assert.match(
   collectPostUploadFailures({
     ...inputs,
@@ -100,17 +105,31 @@ assert.throws(
   /ID de version uploadée absent ou invalide/,
 );
 const workflowCalls: Array<{ command: string; args: string[] }> = [];
+let cleanupCount = 0;
 const workflowUpload = await runPreviewWorkflow({
   runCommand: async (command: string, args: string[]) => { workflowCalls.push({ command, args }); },
   resetOutput: async () => {},
   readOutput: async () => uploadEvent,
+  cleanupOutput: async () => { cleanupCount += 1; },
 });
 assert.equal(workflowUpload.versionId, versionId);
+assert.equal(cleanupCount, 1);
 assert.deepEqual(workflowCalls.map(({ command, args }) => [command, ...args]), [
   ["npm", "run", "cloudflare:readiness"],
   ["npm", "run", "build:vinext"],
   ["wrangler", "versions", "upload", "--config", "dist/server/wrangler.json", "--preview-alias", "dev"],
   ["npm", "run", "cloudflare:post-upload", "--", "--version-id", versionId],
 ]);
+let failureCleanupCount = 0;
+await assert.rejects(
+  runPreviewWorkflow({
+    runCommand: async () => {},
+    resetOutput: async () => {},
+    readOutput: async () => { throw new Error("lecture simulée refusée"); },
+    cleanupOutput: async () => { failureCleanupCount += 1; },
+  }),
+  /lecture simulée refusée/,
+);
+assert.equal(failureCleanupCount, 1);
 
 console.log("cloudflare preflight contract: local, pre-upload and post-upload gates passed");
