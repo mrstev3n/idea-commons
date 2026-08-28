@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -7,8 +7,13 @@ const scriptPath = fileURLToPath(import.meta.url);
 const webRoot = path.resolve(path.dirname(scriptPath), "..");
 const outputPath = path.join(webRoot, "dist", "wrangler-version-upload.ndjson");
 
+export function isWorkerVersionId(value) {
+  return typeof value === "string"
+    && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
+
 function requireVersionId(value) {
-  if (typeof value !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)) {
+  if (!isWorkerVersionId(value)) {
     throw new Error("ID de version uploadée absent ou invalide");
   }
   return value;
@@ -55,16 +60,25 @@ export async function runPreviewWorkflow({
   runCommand = run,
   resetOutput = () => writeFile(outputPath, "", { encoding: "utf8", mode: 0o600 }),
   readOutput = () => readFile(outputPath, "utf8"),
+  cleanupOutput = () => unlink(outputPath).catch((error) => {
+    if (error?.code !== "ENOENT") throw error;
+  }),
 } = {}) {
   await runCommand("npm", ["run", "cloudflare:readiness"]);
   await runCommand("npm", ["run", "build:vinext"]);
   await resetOutput();
-  await runCommand("wrangler", [
-    "versions", "upload",
-    "--config", "dist/server/wrangler.json",
-    "--preview-alias", "dev",
-  ], { ...process.env, WRANGLER_OUTPUT_FILE_PATH: outputPath });
-  const upload = extractVersionUpload(await readOutput());
+  let structuredOutput;
+  try {
+    await runCommand("wrangler", [
+      "versions", "upload",
+      "--config", "dist/server/wrangler.json",
+      "--preview-alias", "dev",
+    ], { ...process.env, WRANGLER_OUTPUT_FILE_PATH: outputPath });
+    structuredOutput = await readOutput();
+  } finally {
+    await cleanupOutput();
+  }
+  const upload = extractVersionUpload(structuredOutput);
   await runCommand("npm", ["run", "cloudflare:post-upload", "--", "--version-id", upload.versionId]);
   return upload;
 }
