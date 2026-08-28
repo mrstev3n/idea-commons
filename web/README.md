@@ -21,15 +21,16 @@ Pour exercer Neon Auth, copiez `.dev.vars.example` vers un fichier local ignoré
 puis renseignez l'URL Auth de la branche et un secret cookie serveur d'au moins
 32 caractères. Ne commitez jamais ce secret.
 
-La Data API doit viser une base migrée avec `database/migrations/0001 → 0006`.
+La Data API doit viser une base migrée avec `database/migrations/0001 → 0007`.
 Une configuration absente ou invalide échoue avant requête et sa valeur
 n'est jamais journalisée. Créer une base, un rôle ou un secret reste séparé.
 
 Les preuves development JWT → RPC, séparation de deux identités et RLS métier
 sont acquises. La limite restante est le cycle applicatif déployé : cookies HTTPS,
-`getSession()`, `token()` puis logout. Le catalogue anonyme reste bloqué séparément
-car les RPC publiques de la migration 0006 sont encore réservées au rôle
-`authenticated`.
+`getSession()`, `token()` puis logout. La migration 0007 ajoute deux projections
+catalogue en lecture seule pour `anonymous`, sans accès REST direct aux tables ni
+élargissement des RPC membre. Son application et son témoin distant development
+restent obligatoires avant une nouvelle preview.
 
 ## Parcours et surfaces
 
@@ -66,6 +67,7 @@ car les RPC publiques de la migration 0006 sont encore réservées au rôle
 ```bash
 npm run typecheck   # TypeScript strict
 npm run test:auth-runtime # contrat d'amorçage Auth/Data API
+npm run test:public-catalog # projections anonymes et refus des surfaces privées
 npm run build       # build de production
 npm run smoke       # contrats runtime Worker-safe + empreinte canonique
 ```

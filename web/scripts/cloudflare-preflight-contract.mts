@@ -21,22 +21,31 @@ const remote = {
   },
   queueList: [...inputs.evidence.cloudflare.resources.queues],
 };
-assert.deepEqual(collectPreUploadFailures({ ...inputs, ...remote }), []);
 assert.match(
-  collectPreUploadFailures({ ...inputs, ...remote, hyperdrive: { ...remote.hyperdrive, origin: { user: "neondb_owner" } } }).join("\n"),
+  collectPreUploadFailures({ ...inputs, ...remote }).join("\n"),
+  /preuve distante catalogue anonyme positive\+négative absente/,
+);
+const readyInputs = structuredClone(inputs);
+readyInputs.evidence.neonDataApi.publicCatalogAnonymous.verified = true;
+assert.deepEqual(collectPreUploadFailures({ ...readyInputs, ...remote }), []);
+assert.match(
+  collectPreUploadFailures({ ...readyInputs, ...remote, hyperdrive: { ...remote.hyperdrive, origin: { user: "neondb_owner" } } }).join("\n"),
   /identité Hyperdrive inattendue/,
 );
 assert.match(
-  collectPreUploadFailures({ ...inputs, ...remote, queueList: remote.queueList.slice(0, 1) }).join("\n"),
+  collectPreUploadFailures({ ...readyInputs, ...remote, queueList: remote.queueList.slice(0, 1) }).join("\n"),
   /DLQ development absente/,
 );
 assert.match(
   collectPreUploadFailures({
-    ...inputs,
+    ...readyInputs,
     ...remote,
     evidence: {
-      ...inputs.evidence,
-      neonDataApi: { jwtRlsPositiveNegative: { verified: false } },
+      ...readyInputs.evidence,
+      neonDataApi: {
+        ...readyInputs.evidence.neonDataApi,
+        jwtRlsPositiveNegative: { verified: false },
+      },
     },
   }).join("\n"),
   /preuve distante JWT\/RLS positive\+négative absente/,

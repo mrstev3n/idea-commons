@@ -17,6 +17,7 @@ try {
     "0004_cloudflare_outbox_delivery.sql",
     "0005_server_verified_identity.sql",
     "0006_data_api_rpc_boundary.sql",
+    "0007_public_catalog_rpc.sql",
   ]) {
     await db.exec(await readFile(new URL(`database/migrations/${migration}`, root), "utf8"));
   }
@@ -34,7 +35,7 @@ try {
     "select pg_get_functiondef('app.current_auth_user_id()'::regprocedure) like '%request.jwt.claim.sub%' as present",
   );
   assert.equal(identity.rows[0]?.present, true);
-  console.log("migration contract: 0001→0006 applied in-memory; Data API, outbox and server identity contracts present");
+  console.log("migration contract: 0001→0007 applied in-memory; public catalogue, Data API, outbox and server identity contracts present");
 } finally {
   await db.close();
 }

@@ -39,21 +39,26 @@ export async function loadStaticInputs(root = webRoot) {
     provision: await readFile(path.join(root, "scripts/provision-neon-development.mjs"), "utf8"),
     dataApi: await readFile(path.join(root, "src/server/data-api.ts"), "utf8"),
     boundary: await readFile(path.join(root, "../database/migrations/0006_data_api_rpc_boundary.sql"), "utf8"),
+    publicBoundary: await readFile(path.join(root, "../database/migrations/0007_public_catalog_rpc.sql"), "utf8"),
     evidence: JSON.parse(await readFile(path.join(root, "runtime-readiness.json"), "utf8")),
     routes,
   };
 }
 
-export function collectStaticFailures({ config, packageManifest, previewWorkflow, worker, db, outbox, provision, dataApi, boundary, routes }) {
+export function collectStaticFailures({ config, packageManifest, previewWorkflow, worker, db, outbox, provision, dataApi, boundary, publicBoundary, routes }) {
   const failures = [];
   requireCheck(failures, config.main === "worker.ts", "entrypoint Worker custom absent");
   requireCheck(failures, packageManifest.scripts?.["preview:dev"] === "node scripts/cloudflare-preview.mjs", "workflow preview fail-closed absent");
   requireCheck(failures, previewWorkflow.includes("WRANGLER_OUTPUT_FILE_PATH") && previewWorkflow.includes('"cloudflare:post-upload"'), "contrôle post-upload obligatoire absent du workflow preview");
   requireCheck(failures, worker.includes("createCloudflareEntrypoint"), "composition fetch/scheduled/queue absente");
   requireCheck(failures, config.vars?.NEON_DATA_API_URL?.endsWith("/neondb/rest/v1"), "endpoint Data API absent ou invalide");
-  requireCheck(failures, dataApi.includes("Authorization: `Bearer ${authToken}`") && dataApi.includes('"Accept-Profile": "app"'), "JWT/profil app Data API non câblé");
+  requireCheck(failures, dataApi.includes("headers.Authorization = `Bearer ${authToken}`") && dataApi.includes('"Accept-Profile": "app"'), "JWT/profil app Data API non câblé");
+  requireCheck(failures, dataApi.includes("dataApiPublicRpc") && dataApi.includes("return callDataApiRpc(name, parameters);"), "transport RPC public sans JWT absent");
   requireCheck(failures, boundary.includes("revoke all privileges on all tables in schema app from anonymous, authenticated"), "tables app directement exposées à la Data API");
   requireCheck(failures, boundary.includes("app.runtime_identity()") && boundary.includes("to authenticated"), "RPC Data API étroites absentes");
+  requireCheck(failures, publicBoundary.includes("app.public_list_published_ideas()") && publicBoundary.includes("app.public_get_published_idea(text)"), "projections catalogue publiques absentes");
+  requireCheck(failures, publicBoundary.includes("to anonymous") && publicBoundary.includes("from public, authenticated"), "grants anonymes du catalogue non bornés");
+  requireCheck(failures, publicBoundary.includes("revoke all privileges on all tables in schema app from anonymous, authenticated"), "projection catalogue restaure un accès table direct");
   requireCheck(failures, !db.includes("@electric-sql/pglite") && !db.includes("IC_DATA_DIR"), "adaptateur DB filesystem/PGlite actif");
   requireCheck(failures, !outbox.includes('from "node:child_process"') && !outbox.includes("spawn(process.execPath"), "child_process actif dans le Worker");
   const outboxBinding = config.hyperdrive?.find(({ binding }) => binding === "OUTBOX_DATABASE");
@@ -96,6 +101,7 @@ export function collectPreUploadFailures({ config, evidence, hyperdrive, queueLi
   requireCheck(failures, evidence.schemaVersion === 2, "schéma de readiness inconnu");
   requireCheck(failures, evidence.environment === "development", "readiness hors development refusée");
   requireCheck(failures, hasDocumentedEvidence(evidence.neonDataApi?.jwtRlsPositiveNegative), "preuve distante JWT/RLS positive+négative absente ou non documentée");
+  requireCheck(failures, hasDocumentedEvidence(evidence.neonDataApi?.publicCatalogAnonymous), "preuve distante catalogue anonyme positive+négative absente ou non documentée");
   requireCheck(failures, hasDocumentedEvidence(evidence.neonRoles?.outboxLeastPrivilege), "preuve distante moindre privilège outbox absente ou non documentée");
   requireCheck(failures, hasDocumentedEvidence(evidence.neonRoles?.trustedContinuationLeastPrivilege), "preuve distante moindre privilège continuation absente ou non documentée");
   requireCheck(failures, hasDocumentedEvidence(evidence.cloudflare?.resources), "preuve distante des ressources Cloudflare absente ou non documentée");

@@ -15,22 +15,22 @@ export function configureDataApi(url: string): void {
   configuredUrl = url.replace(/\/$/, "");
 }
 
-export async function dataApiRpc<Result>(
+async function callDataApiRpc<Result>(
   name: string,
   parameters: Record<string, unknown>,
-  authToken: string,
+  authToken?: string,
 ): Promise<Result> {
   if (!configuredUrl) throw new Error("Data API non configurée");
-  if (!authToken) throw new Error("JWT Neon Auth requis");
   if (!/^[a-z][a-z0-9_]*$/.test(name)) throw new Error("nom RPC invalide");
+  const headers: Record<string, string> = {
+    "Accept-Profile": "app",
+    "Content-Profile": "app",
+    "Content-Type": "application/json",
+  };
+  if (authToken) headers.Authorization = `Bearer ${authToken}`;
   const response = await fetch(`${configuredUrl}/rpc/${name}`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-      "Accept-Profile": "app",
-      "Content-Profile": "app",
-      "Content-Type": "application/json",
-    },
+    headers,
     body: JSON.stringify(parameters),
   });
   const payload = await response.json().catch(() => null);
@@ -43,6 +43,22 @@ export async function dataApiRpc<Result>(
     throw error;
   }
   return payload as Result;
+}
+
+export async function dataApiPublicRpc<Result>(
+  name: "public_list_published_ideas" | "public_get_published_idea",
+  parameters: Record<string, unknown>,
+): Promise<Result> {
+  return callDataApiRpc(name, parameters);
+}
+
+export async function dataApiRpc<Result>(
+  name: string,
+  parameters: Record<string, unknown>,
+  authToken: string,
+): Promise<Result> {
+  if (!authToken) throw new Error("JWT Neon Auth requis");
+  return callDataApiRpc(name, parameters, authToken);
 }
 
 export async function verifyRuntimeIdentity(

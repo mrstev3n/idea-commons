@@ -1,4 +1,4 @@
-import { dataApiRpc, verifyRuntimeIdentity } from "./data-api";
+import { dataApiPublicRpc, dataApiRpc, verifyRuntimeIdentity } from "./data-api";
 import type { SyntheticIdentity } from "./identities";
 import type { CandidateContent, SourceExcerpt, TerminalState } from "./types";
 
@@ -10,8 +10,8 @@ export interface PublishedIdeaSummary {
   claimCounts: Record<string, number>; sourceTitle: string | null; sourceType: string | null;
 }
 export interface PublicClaim {
-  id: string; type: string; statement: string; validationStatus: string; rationale: string | null;
-  citations: { title: string; urlOrReference: string; license: string | null }[];
+  type: string; statement: string; rationale: string | null;
+  citations: { title: string; urlOrReference: string }[];
 }
 export interface PublicIdea {
   slug: string; versionNumber: number; language: string; contentLicense: string; publishedAt: string;
@@ -53,11 +53,11 @@ async function tokenFor(identity: DatabaseIdentity): Promise<string> {
   return token;
 }
 
-export async function listPublishedIdeas(identity: DatabaseIdentity): Promise<PublishedIdeaSummary[]> {
-  return dataApiRpc("runtime_list_published_ideas", {}, await tokenFor(identity));
+export async function listPublishedIdeas(): Promise<PublishedIdeaSummary[]> {
+  return dataApiPublicRpc("public_list_published_ideas", {});
 }
-export async function getPublishedIdea(identity: DatabaseIdentity, slug: string): Promise<PublicIdea | null> {
-  return dataApiRpc("runtime_get_published_idea", { target_slug: slug }, await tokenFor(identity));
+export async function getPublishedIdea(slug: string): Promise<PublicIdea | null> {
+  return dataApiPublicRpc("public_get_published_idea", { target_slug: slug });
 }
 export async function listEditorialCases(identity: DatabaseIdentity): Promise<EditorialCaseSummary[]> {
   if (!identity.authUserId) return [];
