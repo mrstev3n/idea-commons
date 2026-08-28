@@ -25,10 +25,11 @@ La Data API doit viser une base migrée avec `database/migrations/0001 → 0006`
 Une configuration absente ou invalide échoue avant requête et sa valeur
 n'est jamais journalisée. Créer une base, un rôle ou un secret reste séparé.
 
-Limite development : le cycle JWT utilisateur → `runtime_identity` reste à
-prouver avec une session réelle. Sans session, Neon Auth ne délivre actuellement
-pas le JWT anonyme requis par les RPC publiques; le catalogue distant anonyme
-reste donc un verrou d'intégration avant toute preview ou production.
+Les preuves development JWT → RPC, séparation de deux identités et RLS métier
+sont acquises. La limite restante est le cycle applicatif déployé : cookies HTTPS,
+`getSession()`, `token()` puis logout. Le catalogue anonyme reste bloqué séparément
+car les RPC publiques de la migration 0006 sont encore réservées au rôle
+`authenticated`.
 
 ## Parcours et surfaces
 
