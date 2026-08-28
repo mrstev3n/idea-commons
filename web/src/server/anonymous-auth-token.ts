@@ -66,7 +66,6 @@ export function createAnonymousTokenAcquirer(
         method: "GET",
         headers: { Accept: "application/json", "Cache-Control": "no-store" },
         cache: "no-store",
-        redirect: "error",
         signal: controller.signal,
       });
     } catch {
