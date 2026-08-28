@@ -11,6 +11,7 @@
     "start": "next start",
     "test:fingerprint": "node --import tsx scripts/source-fingerprint-contract.mts",
     "test:auth-runtime": "node --import tsx scripts/auth-runtime-contract.mts",
+    "test:cloudflare-preflight": "node --import tsx scripts/cloudflare-preflight-contract.mts",
     "test:runtime": "node --import tsx scripts/runtime-contract.mts",
     "test:migrations": "node --import tsx scripts/migration-contract.mts",
     "smoke": "npm run test:runtime && npm run test:fingerprint && npm run test:migrations",
@@ -19,7 +20,8 @@
     "build:vinext": "vinext build",
     "start:vinext": "wrangler dev --config dist/server/wrangler.json",
     "cloudflare:preflight": "node scripts/cloudflare-preflight.mjs --local",
-    "cloudflare:readiness": "node scripts/cloudflare-preflight.mjs",
+    "cloudflare:readiness": "node scripts/cloudflare-preflight.mjs --pre-upload",
+    "cloudflare:post-upload": "node scripts/cloudflare-preflight.mjs --post-upload",
     "preview:dev": "npm run cloudflare:readiness && npm run build:vinext && wrangler versions upload --config dist/server/wrangler.json --preview-alias dev",
     "deploy:production": "npm run cloudflare:readiness && npm run build:vinext && vinext-cloudflare deploy --config dist/server/wrangler.json"
   },
