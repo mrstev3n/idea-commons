@@ -21,8 +21,10 @@ const remote = {
   },
   queueList: [...inputs.evidence.cloudflare.resources.queues],
 };
+const unverifiedInputs = structuredClone(inputs);
+unverifiedInputs.evidence.neonDataApi.publicCatalogAnonymous.verified = false;
 assert.match(
-  collectPreUploadFailures({ ...inputs, ...remote }).join("\n"),
+  collectPreUploadFailures({ ...unverifiedInputs, ...remote }).join("\n"),
   /preuve distante catalogue anonyme positive\+négative absente/,
 );
 const readyInputs = structuredClone(inputs);

@@ -16,15 +16,16 @@
       ]
     },
     "publicCatalogAnonymous": {
-      "verified": false,
+      "verified": true,
       "source": {
         "environment": "development",
-        "reference": "Migration 0007 and local contract only; no Neon development application or Data API witness in this lot",
+        "reference": "Neon development remote witness after PR #12: server-only /token/anonymous JWT; public list/detail positive; unlisted absent from list but detail positive; private detail null; member RPC and direct app table denied; app_private schema excluded",
         "verifiedAt": "2026-08-28"
       },
       "limits": [
-        "The anonymous public catalogue projection is not yet applied or proven on Neon development",
-        "A positive published-row witness and negative private-table/member-RPC witness are required before preview upload"
+        "Development only; no production branch, credential, or deployment was exercised",
+        "The positive and negative catalogue rows were marker-scoped synthetic fixtures and were purged after the bounded development witness",
+        "The anonymous JWT is acquired server-side, held in memory only, and does not prove the separate authenticated cookie/session/logout lifecycle"
       ]
     }
   },
