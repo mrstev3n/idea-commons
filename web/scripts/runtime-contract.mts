@@ -4,7 +4,12 @@ import {
   setDatabaseTransactionRunnerForTests,
   validateDatabaseConnectionString,
 } from "../src/server/db";
-import { configureDataApi, dataApiRpc, verifyRuntimeIdentity } from "../src/server/data-api";
+import {
+  configureDataApi,
+  dataApiPublicRpc,
+  dataApiRpc,
+  verifyRuntimeIdentity,
+} from "../src/server/data-api";
 import {
   consumeQueueBatch,
   OUTBOX_BATCH_LIMIT,
@@ -32,14 +37,24 @@ const dataApiRequests: Request[] = [];
 globalThis.fetch = async (input, init) => {
   const request = new Request(input, init);
   dataApiRequests.push(request);
+  return Response.json([]);
+};
+assert.deepEqual(await dataApiPublicRpc("public_list_published_ideas", {}), []);
+assert.equal(dataApiRequests[0].url, "https://example.test/neondb/rest/v1/rpc/public_list_published_ideas");
+assert.equal(dataApiRequests[0].headers.get("authorization"), null);
+assert.equal(dataApiRequests[0].headers.get("accept-profile"), "app");
+
+globalThis.fetch = async (input, init) => {
+  const request = new Request(input, init);
+  dataApiRequests.push(request);
   return Response.json({ authUserId: "user-a", memberId: "member-a", roles: ["contributor", "contributor"] });
 };
 assert.deepEqual(await verifyRuntimeIdentity("user-a", "jwt-test-only"), {
   authUserId: "user-a", memberId: "member-a", roles: ["contributor"],
 });
-assert.equal(dataApiRequests[0].url, "https://example.test/neondb/rest/v1/rpc/runtime_identity");
-assert.equal(dataApiRequests[0].headers.get("authorization"), "Bearer jwt-test-only");
-assert.equal(dataApiRequests[0].headers.get("accept-profile"), "app");
+assert.equal(dataApiRequests[1].url, "https://example.test/neondb/rest/v1/rpc/runtime_identity");
+assert.equal(dataApiRequests[1].headers.get("authorization"), "Bearer jwt-test-only");
+assert.equal(dataApiRequests[1].headers.get("accept-profile"), "app");
 await assert.rejects(verifyRuntimeIdentity("user-b", "jwt-test-only"), /incohérente/);
 globalThis.fetch = async () => Response.json({ code: "42501" }, { status: 403 });
 await assert.rejects(dataApiRpc("runtime_identity", {}, "jwt-test-only"), /refusée \(403\)/);

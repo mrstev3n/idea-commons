@@ -5,7 +5,6 @@ import { LandingStory } from "@/components/LandingStory";
 import { LandingMotion } from "@/components/home/LandingMotion";
 import { ActionLink } from "@/components/ui/Action";
 import { listPublishedIdeas, type PublishedIdeaSummary } from "@/server/queries";
-import { getCurrentIdentity } from "@/server/identity";
 
 export const dynamic = "force-dynamic";
 
@@ -75,8 +74,7 @@ function HeroDossier({ idea }: { idea?: PublishedIdeaSummary }) {
 }
 
 export default async function CataloguePage() {
-  const identity = await getCurrentIdentity();
-  const ideas = await listPublishedIdeas(identity);
+  const ideas = await listPublishedIdeas();
   const landingIdeas = ideas.map((idea) => {
     const presentation = presentationFor(idea);
 

@@ -12,7 +12,19 @@
       "limits": [
         "No production branch or credential was exercised",
         "The deployed HTTPS cookie, getSession, token, and logout lifecycle remains a post-upload proof",
-        "Anonymous catalogue access remains blocked while migration 0006 grants runtime RPCs only to authenticated"
+        "This JWT/RLS witness does not establish the separate anonymous catalogue projection introduced by migration 0007"
+      ]
+    },
+    "publicCatalogAnonymous": {
+      "verified": false,
+      "source": {
+        "environment": "development",
+        "reference": "Migration 0007 and local contract only; no Neon development application or Data API witness in this lot",
+        "verifiedAt": "2026-08-28"
+      },
+      "limits": [
+        "The anonymous public catalogue projection is not yet applied or proven on Neon development",
+        "A positive published-row witness and negative private-table/member-RPC witness are required before preview upload"
       ]
     }
   },

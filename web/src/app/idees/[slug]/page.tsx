@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPublishedIdea } from "@/server/queries";
-import { getCurrentIdentity } from "@/server/identity";
 import { CLAIM_TYPE_LABELS, formatDate } from "@/lib/labels";
 import { Badge } from "@/components/Badge";
 
@@ -13,7 +12,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const idea = await getPublishedIdea(await getCurrentIdentity(), slug);
+  const idea = await getPublishedIdea(slug);
   if (!idea) return { title: "Fiche introuvable" };
   return { title: idea.content.title, description: idea.content.oneLineSummary };
 }
@@ -34,7 +33,7 @@ function ListSection({ id, title, items }: { id: string; title: string; items: s
 
 export default async function FichePubliquePage({ params }: PageProps) {
   const { slug } = await params;
-  const idea = await getPublishedIdea(await getCurrentIdentity(), slug);
+  const idea = await getPublishedIdea(slug);
   if (!idea) notFound();
 
   const { content } = idea;
@@ -84,8 +83,8 @@ export default async function FichePubliquePage({ params }: PageProps) {
             n'est jamais un fait.
           </p>
           <div>
-            {idea.claims.map((claim) => (
-              <article key={claim.id} className="claim" data-claim-type={claim.type}>
+            {idea.claims.map((claim, index) => (
+              <article key={`${claim.type}-${index}`} className="claim" data-claim-type={claim.type}>
                 <Badge tone={claim.type as never}>{CLAIM_TYPE_LABELS[claim.type] ?? claim.type}</Badge>
                 <p className="claim__statement">{claim.statement}</p>
                 {claim.rationale ? (
