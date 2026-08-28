@@ -1,8 +1,80 @@
 {
-  "neonDataApi": { "jwtRlsPositiveNegative": false },
-  "neonRoles": {
-    "outboxLeastPrivilege": false,
-    "trustedContinuationLeastPrivilege": false
+  "schemaVersion": 2,
+  "environment": "development",
+  "neonDataApi": {
+    "jwtRlsPositiveNegative": {
+      "verified": true,
+      "source": {
+        "environment": "development",
+        "reference": "PR #8 remote proof: two real Neon Auth JWT identities, runtime RPC isolation, and an A-visible/B-null business-row witness; independently reviewed before merge",
+        "verifiedAt": "2026-08-27"
+      },
+      "limits": [
+        "No production branch or credential was exercised",
+        "The deployed HTTPS cookie, getSession, token, and logout lifecycle remains a post-upload proof",
+        "Anonymous catalogue access remains blocked while migration 0006 grants runtime RPCs only to authenticated"
+      ]
+    }
   },
-  "cloudflare": { "bindingsVerified": false }
+  "neonRoles": {
+    "outboxLeastPrivilege": {
+      "verified": true,
+      "source": {
+        "environment": "development",
+        "reference": "PR #8 effective privilege audit including PUBLIC, memberships, app, and app_private for ic_runtime_service",
+        "verifiedAt": "2026-08-27"
+      },
+      "limits": [
+        "The proof is development-only and is rechecked indirectly through the configured Hyperdrive identity before upload"
+      ]
+    },
+    "trustedContinuationLeastPrivilege": {
+      "verified": true,
+      "source": {
+        "environment": "development",
+        "reference": "PR #8 effective privilege audit including PUBLIC, memberships, app, and app_private for ic_trusted_continuation",
+        "verifiedAt": "2026-08-27"
+      },
+      "limits": [
+        "The proof is development-only; the connection secret is required but its value must never be versioned or printed"
+      ]
+    }
+  },
+  "cloudflare": {
+    "resources": {
+      "verified": true,
+      "source": {
+        "environment": "development",
+        "reference": "Wrangler metadata-only inventory of the existing free-tier Hyperdrive, generation Queue, and DLQ",
+        "verifiedAt": "2026-08-28"
+      },
+      "limits": [
+        "Remote resource state can drift, so pre-upload re-queries Cloudflare and fails closed",
+        "Resource verification does not claim that a Worker version or its bindings already exists"
+      ],
+      "hyperdrive": {
+        "id": "ec02f5ff529043fdb57354a8060cbb6d",
+        "expectedUser": "ic_runtime_service",
+        "originConnectionLimit": 5,
+        "cachingDisabled": true
+      },
+      "queues": [
+        "idea-commons-generation-development",
+        "idea-commons-generation-dlq-development"
+      ]
+    },
+    "postUpload": {
+      "required": true,
+      "requiredSecrets": [
+        "NEON_AUTH_BASE_URL",
+        "NEON_AUTH_COOKIE_SECRET",
+        "TRUSTED_DATABASE_URL"
+      ],
+      "limits": [
+        "Requires the exact uploaded Worker version ID",
+        "Checks binding and secret names only; values are never returned",
+        "Does not promote a version to production"
+      ]
+    }
+  }
 }

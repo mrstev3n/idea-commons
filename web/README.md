@@ -81,6 +81,9 @@ Les tests de contrat de l'adaptateur simulé restent à la racine du dépôt :
 ## Limites de déploiement
 
 La PR #7 est intégrée et les bindings sont composés localement. Le fichier
-`runtime-readiness.json` bloque preview/production tant que les preuves JWT/RLS,
-moindre privilège des deux identités et bindings Cloudflare ne sont pas toutes
-validées. Un build local n'est pas une preuve de déploiement Cloudflare.
+`runtime-readiness.json` documente les preuves development acquises et leurs
+limites. `npm run cloudflare:readiness` les exige puis revalide en lecture seule
+Hyperdrive, Queue et DLQ avant tout upload. Après upload, exécuter
+`npm run cloudflare:post-upload -- --version-id <id>` : cette seconde phase
+contrôle la version exacte, ses handlers, bindings et noms de secrets sans lire
+leurs valeurs. Un build local n'est pas une preuve de déploiement Cloudflare.

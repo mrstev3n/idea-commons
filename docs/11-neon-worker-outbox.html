@@ -2,7 +2,7 @@
 <html lang="fr"><meta charset="utf-8"><title>IC-07 — Neon Data API, Workers et outbox</title>
 <body><main>
   <h1>IC-07 — frontière runtime Cloudflare</h1>
-  <p><strong>Statut :</strong> spécification locale, cible <code>dev</code>. PR #7 intégrée dans <code>dev</code> au SHA <code>6c322978</code>. Aucune validation distante de ce lot n’est encore acquise.</p>
+  <p><strong>Statut :</strong> cible <code>dev</code>. Les preuves Neon development JWT/RPC/RLS et moindre privilège ont été acquises et revues avec la PR #8 ; aucune preuve production n’en est déduite.</p>
   <section><h2>Contexte</h2><p>PGlite persistant, le sous-processus Node et la consommation opportuniste de l’outbox depuis GET sont incompatibles avec Cloudflare Workers. Neon Data API est active sur development et constitue la frontière membre normative.</p></section>
   <section><h2>Objectif</h2><p>Servir les actions membre via PostgREST/Data API et JWT Neon Auth, exécuter l’adaptateur simulé sans spawn, et relayer l’outbox par Cron + Queue avec lots et retries bornés.</p></section>
   <section><h2>Non-objectifs</h2><p>Les routes Auth et l’interface identité appartiennent au lot Auth. Aucun appel IA réel, domaine personnalisé, service payant, déploiement production ou credential propriétaire n’est introduit.</p></section>
@@ -20,5 +20,5 @@
     <li>Audit fail-closed des attributs, memberships, tables, séquences et fonctions des identités service.</li>
     <li>Readiness distante refusée tant que JWT/RLS positif+négatif, deux rôles minimaux et bindings Cloudflare ne sont pas prouvés.</li>
   </ol></section>
-  <section><h2>Preuve distante suivante</h2><p>Après contre-revue : appliquer 0006, exposer uniquement <code>app</code>, rafraîchir le cache PostgREST, prouver JWT A et témoin B/anonyme, auditer les deux rôles, configurer le secret de continuation, puis vérifier Queue/DLQ/Hyperdrive/Cron sur preview. Le fichier <code>runtime-readiness.json</code> reste faux jusque-là.</p></section>
+  <section><h2>Preflight de preview</h2><p>La phase pré-upload exige les preuves Neon documentées et revalide les métadonnées des ressources development existantes sans exiger un Worker encore inexistant. La phase post-upload reçoit l’ID exact de version et vérifie handlers, bindings et présence des noms de secrets sans afficher leurs valeurs. Les cookies HTTPS, la session, le logout et le catalogue anonyme restent des preuves runtime séparées ; aucune production n’est couverte.</p></section>
 </main></body></html>

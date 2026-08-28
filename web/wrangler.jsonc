@@ -11,6 +11,13 @@
   "vars": {
     "NEON_DATA_API_URL": "https://ep-square-breeze-a2ftwoml.apirest.eu-central-1.aws.neon.tech/neondb/rest/v1"
   },
+  "secrets": {
+    "required": [
+      "NEON_AUTH_BASE_URL",
+      "NEON_AUTH_COOKIE_SECRET",
+      "TRUSTED_DATABASE_URL"
+    ]
+  },
   "hyperdrive": [
     {
       "binding": "OUTBOX_DATABASE",
