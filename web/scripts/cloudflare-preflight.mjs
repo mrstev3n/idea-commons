@@ -38,6 +38,7 @@ export async function loadStaticInputs(root = webRoot) {
     outbox: await readFile(path.join(root, "src/server/worker.ts"), "utf8"),
     provision: await readFile(path.join(root, "scripts/provision-neon-development.mjs"), "utf8"),
     dataApi: await readFile(path.join(root, "src/server/data-api.ts"), "utf8"),
+    anonymousAuth: await readFile(path.join(root, "src/server/anonymous-auth-token.ts"), "utf8"),
     boundary: await readFile(path.join(root, "../database/migrations/0006_data_api_rpc_boundary.sql"), "utf8"),
     publicBoundary: await readFile(path.join(root, "../database/migrations/0007_public_catalog_rpc.sql"), "utf8"),
     evidence: JSON.parse(await readFile(path.join(root, "runtime-readiness.json"), "utf8")),
@@ -45,7 +46,7 @@ export async function loadStaticInputs(root = webRoot) {
   };
 }
 
-export function collectStaticFailures({ config, packageManifest, previewWorkflow, worker, db, outbox, provision, dataApi, boundary, publicBoundary, routes }) {
+export function collectStaticFailures({ config, packageManifest, previewWorkflow, worker, db, outbox, provision, dataApi, anonymousAuth, boundary, publicBoundary, routes }) {
   const failures = [];
   requireCheck(failures, config.main === "worker.ts", "entrypoint Worker custom absent");
   requireCheck(failures, packageManifest.scripts?.["preview:dev"] === "node scripts/cloudflare-preview.mjs", "workflow preview fail-closed absent");
@@ -53,7 +54,9 @@ export function collectStaticFailures({ config, packageManifest, previewWorkflow
   requireCheck(failures, worker.includes("createCloudflareEntrypoint"), "composition fetch/scheduled/queue absente");
   requireCheck(failures, config.vars?.NEON_DATA_API_URL?.endsWith("/neondb/rest/v1"), "endpoint Data API absent ou invalide");
   requireCheck(failures, dataApi.includes("headers.Authorization = `Bearer ${authToken}`") && dataApi.includes('"Accept-Profile": "app"'), "JWT/profil app Data API non câblé");
-  requireCheck(failures, dataApi.includes("dataApiPublicRpc") && dataApi.includes("return callDataApiRpc(name, parameters);"), "transport RPC public sans JWT absent");
+  requireCheck(failures, dataApi.includes("anonymousTokens.getToken()") && dataApi.includes("return callDataApiRpc(name, parameters, authToken);"), "bearer anonyme absent des RPC publiques");
+  requireCheck(failures, anonymousAuth.includes('"/token/anonymous"') && anonymousAuth.includes('claims.role !== "anonymous"'), "acquisition JWT anonymous Neon absente ou non bornée");
+  requireCheck(failures, anonymousAuth.includes("REFRESH_MARGIN_MS") && anonymousAuth.includes("MAX_CACHE_LIFETIME_MS") && !anonymousAuth.includes("console."), "cache mémoire du JWT anonyme absent, non borné ou journalisé");
   requireCheck(failures, boundary.includes("revoke all privileges on all tables in schema app from anonymous, authenticated"), "tables app directement exposées à la Data API");
   requireCheck(failures, boundary.includes("app.runtime_identity()") && boundary.includes("to authenticated"), "RPC Data API étroites absentes");
   requireCheck(failures, publicBoundary.includes("app.public_list_published_ideas()") && publicBoundary.includes("app.public_get_published_idea(text)"), "projections catalogue publiques absentes");

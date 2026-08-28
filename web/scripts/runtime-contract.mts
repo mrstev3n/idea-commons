@@ -29,19 +29,27 @@ assert.equal(
   validateDatabaseConnectionString("postgresql://service@example.test/idea_commons"),
   "postgresql://service@example.test/idea_commons",
 );
-assert.throws(() => configureDataApi("http://example.test/neondb/rest/v1"), /invalide/);
-assert.throws(() => configureDataApi("https://example.test/rest/v1"), /invalide/);
-configureDataApi("https://example.test/neondb/rest/v1");
+assert.throws(() => configureDataApi("http://example.test/neondb/rest/v1", "https://auth.example.test"), /invalide/);
+assert.throws(() => configureDataApi("https://example.test/rest/v1", "https://auth.example.test"), /invalide/);
 const originalFetch = globalThis.fetch;
 const dataApiRequests: Request[] = [];
 globalThis.fetch = async (input, init) => {
   const request = new Request(input, init);
+  if (request.url.endsWith("/token/anonymous")) {
+    return Response.json({
+      token: "e30.eyJleHAiOjQxMDI0NDQ4MDAsInJvbGUiOiJhbm9ueW1vdXMifQ.test-only",
+    });
+  }
   dataApiRequests.push(request);
   return Response.json([]);
 };
+configureDataApi("https://example.test/neondb/rest/v1", "https://auth.example.test/neondb/auth");
 assert.deepEqual(await dataApiPublicRpc("public_list_published_ideas", {}), []);
 assert.equal(dataApiRequests[0].url, "https://example.test/neondb/rest/v1/rpc/public_list_published_ideas");
-assert.equal(dataApiRequests[0].headers.get("authorization"), null);
+assert.equal(
+  dataApiRequests[0].headers.get("authorization"),
+  "Bearer e30.eyJleHAiOjQxMDI0NDQ4MDAsInJvbGUiOiJhbm9ueW1vdXMifQ.test-only",
+);
 assert.equal(dataApiRequests[0].headers.get("accept-profile"), "app");
 
 globalThis.fetch = async (input, init) => {
