@@ -5,6 +5,7 @@ import {
   collectStaticFailures,
   loadStaticInputs,
 } from "./cloudflare-preflight.mjs";
+import { extractVersionUpload, runPreviewWorkflow } from "./cloudflare-preview.mjs";
 
 const inputs = await loadStaticInputs();
 assert.deepEqual(collectStaticFailures(inputs), []);
@@ -80,5 +81,36 @@ assert.match(
   }).join("\n"),
   /preuve post-upload non exigée par le contrat/,
 );
+
+const uploadEvent = JSON.stringify({
+  type: "version-upload",
+  worker_name: "idea-commons-web",
+  version_id: versionId,
+  preview_alias_url: "https://dev-idea-commons-web.example.workers.dev",
+  secret_value: "must-not-be-read",
+});
+assert.deepEqual(extractVersionUpload(uploadEvent), {
+  versionId,
+  previewAliasUrl: "https://dev-idea-commons-web.example.workers.dev",
+});
+assert.throws(() => extractVersionUpload(""), /événement version-upload unique absent/);
+assert.throws(() => extractVersionUpload(`${uploadEvent}\n${uploadEvent}`), /événement version-upload unique absent/);
+assert.throws(
+  () => extractVersionUpload(JSON.stringify({ type: "version-upload", worker_name: "idea-commons-web", version_id: "invalid" })),
+  /ID de version uploadée absent ou invalide/,
+);
+const workflowCalls: Array<{ command: string; args: string[] }> = [];
+const workflowUpload = await runPreviewWorkflow({
+  runCommand: async (command: string, args: string[]) => { workflowCalls.push({ command, args }); },
+  resetOutput: async () => {},
+  readOutput: async () => uploadEvent,
+});
+assert.equal(workflowUpload.versionId, versionId);
+assert.deepEqual(workflowCalls.map(({ command, args }) => [command, ...args]), [
+  ["npm", "run", "cloudflare:readiness"],
+  ["npm", "run", "build:vinext"],
+  ["wrangler", "versions", "upload", "--config", "dist/server/wrangler.json", "--preview-alias", "dev"],
+  ["npm", "run", "cloudflare:post-upload", "--", "--version-id", versionId],
+]);
 
 console.log("cloudflare preflight contract: local, pre-upload and post-upload gates passed");

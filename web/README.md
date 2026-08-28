@@ -86,4 +86,7 @@ limites. `npm run cloudflare:readiness` les exige puis revalide en lecture seule
 Hyperdrive, Queue et DLQ avant tout upload. Après upload, exécuter
 `npm run cloudflare:post-upload -- --version-id <id>` : cette seconde phase
 contrôle la version exacte, ses handlers, bindings et noms de secrets sans lire
-leurs valeurs. Un build local n'est pas une preuve de déploiement Cloudflare.
+leurs valeurs. `npm run preview:dev` enchaîne obligatoirement ces deux phases :
+il récupère l'ID exact depuis la sortie structurée de Wrangler et refuse le
+succès ou le handoff si le post-upload échoue. Un build local n'est pas une
+preuve de déploiement Cloudflare.

@@ -22,7 +22,7 @@
     "cloudflare:preflight": "node scripts/cloudflare-preflight.mjs --local",
     "cloudflare:readiness": "node scripts/cloudflare-preflight.mjs --pre-upload",
     "cloudflare:post-upload": "node scripts/cloudflare-preflight.mjs --post-upload",
-    "preview:dev": "npm run cloudflare:readiness && npm run build:vinext && wrangler versions upload --config dist/server/wrangler.json --preview-alias dev",
+    "preview:dev": "node scripts/cloudflare-preview.mjs",
     "deploy:production": "npm run cloudflare:readiness && npm run build:vinext && vinext-cloudflare deploy --config dist/server/wrangler.json"
   },
   "dependencies": {

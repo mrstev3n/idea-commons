@@ -30,6 +30,8 @@ export async function loadStaticInputs(root = webRoot) {
   }
   return {
     config: JSON.parse(await readFile(path.join(root, "wrangler.jsonc"), "utf8")),
+    packageManifest: JSON.parse(await readFile(path.join(root, "package.json"), "utf8")),
+    previewWorkflow: await readFile(path.join(root, "scripts/cloudflare-preview.mjs"), "utf8"),
     worker: await readFile(path.join(root, "worker.ts"), "utf8"),
     db: await readFile(path.join(root, "src/server/db.ts"), "utf8"),
     outbox: await readFile(path.join(root, "src/server/worker.ts"), "utf8"),
@@ -41,9 +43,11 @@ export async function loadStaticInputs(root = webRoot) {
   };
 }
 
-export function collectStaticFailures({ config, worker, db, outbox, provision, dataApi, boundary, routes }) {
+export function collectStaticFailures({ config, packageManifest, previewWorkflow, worker, db, outbox, provision, dataApi, boundary, routes }) {
   const failures = [];
   requireCheck(failures, config.main === "worker.ts", "entrypoint Worker custom absent");
+  requireCheck(failures, packageManifest.scripts?.["preview:dev"] === "node scripts/cloudflare-preview.mjs", "workflow preview fail-closed absent");
+  requireCheck(failures, previewWorkflow.includes("WRANGLER_OUTPUT_FILE_PATH") && previewWorkflow.includes('"cloudflare:post-upload"'), "contrôle post-upload obligatoire absent du workflow preview");
   requireCheck(failures, worker.includes("createCloudflareEntrypoint"), "composition fetch/scheduled/queue absente");
   requireCheck(failures, config.vars?.NEON_DATA_API_URL?.endsWith("/neondb/rest/v1"), "endpoint Data API absent ou invalide");
   requireCheck(failures, dataApi.includes("Authorization: `Bearer ${authToken}`") && dataApi.includes('"Accept-Profile": "app"'), "JWT/profil app Data API non câblé");
