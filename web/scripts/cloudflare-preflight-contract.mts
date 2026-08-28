@@ -4,6 +4,7 @@ import {
   collectPreUploadFailures,
   collectStaticFailures,
   loadStaticInputs,
+  main as preflightMain,
 } from "./cloudflare-preflight.mjs";
 import { extractVersionUpload, runPreviewWorkflow } from "./cloudflare-preview.mjs";
 
@@ -86,6 +87,19 @@ assert.match(
   }).join("\n"),
   /preuve post-upload non exigée par le contrat/,
 );
+let invalidCliRemoteCalls = 0;
+const previousExitCode = process.exitCode;
+process.exitCode = undefined;
+await preflightMain(["--post-upload", "--version-id", malformedVersionId], {
+  loadInputs: async () => inputs,
+  loadResources: async () => { invalidCliRemoteCalls += 1; return remote; },
+  loadVersion: async () => { invalidCliRemoteCalls += 1; return version; },
+  logError: () => {},
+  logSuccess: () => {},
+});
+assert.equal(process.exitCode, 1);
+assert.equal(invalidCliRemoteCalls, 0);
+process.exitCode = previousExitCode;
 
 const uploadEvent = JSON.stringify({
   type: "version-upload",

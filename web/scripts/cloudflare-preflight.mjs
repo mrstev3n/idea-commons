@@ -200,37 +200,42 @@ function parseOptions(argv) {
   };
 }
 
-export async function main(argv = process.argv.slice(2)) {
+export async function main(argv = process.argv.slice(2), {
+  loadInputs = loadStaticInputs,
+  loadResources = loadRemoteResources,
+  loadVersion = loadWorkerVersion,
+  logError = console.error,
+  logSuccess = console.log,
+} = {}) {
   const { phase, versionId } = parseOptions(argv);
-  const inputs = await loadStaticInputs();
+  const inputs = await loadInputs();
   const failures = collectStaticFailures(inputs);
+  if (phase === "post-upload" && !isWorkerVersionId(versionId)) {
+    failures.push("ID de version Worker explicite requis");
+  }
   if (phase !== "local" && failures.length === 0) {
     try {
-      const remote = await loadRemoteResources(inputs.config);
+      const remote = await loadResources(inputs.config);
       failures.push(...collectPreUploadFailures({ ...inputs, ...remote }));
     } catch (error) {
       failures.push(error instanceof Error ? error.message : "lecture des ressources Cloudflare refusée");
     }
   }
   if (phase === "post-upload" && failures.length === 0) {
-    if (!versionId) {
-      failures.push("ID de version Worker explicite requis");
-    } else {
-      try {
-        const version = await loadWorkerVersion(inputs.config, versionId);
-        failures.push(...collectPostUploadFailures({ ...inputs, version, versionId }));
-      } catch (error) {
-        failures.push(error instanceof Error ? error.message : "lecture de la version Worker refusée");
-      }
+    try {
+      const version = await loadVersion(inputs.config, versionId);
+      failures.push(...collectPostUploadFailures({ ...inputs, version, versionId }));
+    } catch (error) {
+      failures.push(error instanceof Error ? error.message : "lecture de la version Worker refusée");
     }
   }
   if (failures.length) {
-    console.error(`Préflight Cloudflare refusé (${phase}) :`);
-    failures.forEach((failure) => console.error(`- ${failure}`));
+    logError(`Préflight Cloudflare refusé (${phase}) :`);
+    failures.forEach((failure) => logError(`- ${failure}`));
     process.exitCode = 1;
     return;
   }
-  console.log(`Préflight Cloudflare ${phase} réussi.`);
+  logSuccess(`Préflight Cloudflare ${phase} réussi.`);
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
