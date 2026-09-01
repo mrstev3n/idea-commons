@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { CLAIM_TYPE_LABELS, formatDate } from "@/lib/labels";
 import { LandingStory } from "@/components/LandingStory";
+import { HeroDossier } from "@/components/home/HeroDossier";
 import { LandingMotion } from "@/components/home/LandingMotion";
 import { ActionLink } from "@/components/ui/Action";
 import { listPublishedIdeas, type PublishedIdeaSummary } from "@/server/queries";
@@ -40,36 +40,21 @@ function presentationFor(idea: PublishedIdeaSummary) {
   );
 }
 
-function HeroDossier({ idea }: { idea?: PublishedIdeaSummary }) {
+function renderHeroDossier(idea?: PublishedIdeaSummary) {
   if (!idea) return null;
-  const claimTypes = Object.keys(idea.claimCounts).slice(0, 3);
+  const claimTypes = Object.keys(idea.claimCounts)
+    .slice(0, 3)
+    .map((type) => CLAIM_TYPE_LABELS[type] ?? type);
   const presentation = presentationFor(idea);
 
   return (
-    <aside className="hero-dossier" aria-label={`Idée vedette : ${idea.title}`}>
-      <div className="hero-dossier__sheet">
-        <p className="hero-dossier__eyebrow">Idée vérifiée</p>
-        <h2>{idea.title}</h2>
-        <dl>
-          <div>
-            <dt>Source</dt>
-            <dd>{presentation.sourceLabel}</dd>
-          </div>
-          <div>
-            <dt>Publication</dt>
-            <dd>Revue humaine · {formatDate(idea.publishedAt)}</dd>
-          </div>
-        </dl>
-        {claimTypes.length > 0 ? (
-          <ul className="hero-dossier__claims" aria-label="Types d’affirmations">
-            {claimTypes.map((type) => (
-              <li key={type}>{CLAIM_TYPE_LABELS[type] ?? type}</li>
-            ))}
-          </ul>
-        ) : null}
-        <Link href={`/idees/${idea.slug}`}>Ouvrir l’idée</Link>
-      </div>
-    </aside>
+    <HeroDossier
+      title={idea.title}
+      slug={idea.slug}
+      sourceLabel={presentation.sourceLabel}
+      publicationLabel={`Revue humaine · ${formatDate(idea.publishedAt)}`}
+      claimTypes={claimTypes}
+    />
   );
 }
 
@@ -126,7 +111,7 @@ export default async function CataloguePage() {
               Ouvert à tous. Gratuit et sans inscription pour explorer.
             </p>
           </div>
-          <HeroDossier idea={ideas[0]} />
+          {renderHeroDossier(ideas[0])}
         </div>
       </section>
 

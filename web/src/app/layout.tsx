@@ -11,6 +11,7 @@ import "@/design/base.css";
 import "@/design/components.css";
 import "@/design/motion.css";
 import { SiteHeader } from "@/components/SiteHeader";
+import { DevelopmentTools } from "@/components/dev/DevelopmentTools";
 
 export const metadata: Metadata = {
   title: {
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </div>
           </div>
         </footer>
+        <DevelopmentTools />
       </body>
     </html>
   );
