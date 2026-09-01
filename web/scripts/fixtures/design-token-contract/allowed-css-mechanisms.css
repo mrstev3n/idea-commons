@@ -1,0 +1,6 @@
+/* Les commentaires ne sont pas une consommation : var(--ic-green-6), #fff, oklch(0 0 0). */
+.white-space-example {
+  color: currentColor;
+  background: transparent;
+  mask: url("#fff");
+}

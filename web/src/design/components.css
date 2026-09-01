@@ -40,10 +40,10 @@
 .btn--inverse {
   background: var(--action-inverse);
   color: var(--action-inverse-ink);
-  box-shadow: 0 1px 0 oklch(0.7 0.08 148), 0 6px 16px oklch(0.8 0.1 148 / 0.28);
+  box-shadow: var(--shadow-button-inverse);
 }
 .btn--inverse:hover:not([disabled]) {
-  background: color-mix(in oklch, var(--action-inverse) 88%, white);
+  background: var(--action-inverse-hover);
   transform: translateY(-1px);
 }
 
@@ -51,7 +51,7 @@
   background: var(--sur-raised);
   border-color: var(--line-strong);
   color: var(--ink);
-  box-shadow: 0 1px 0 oklch(0.215 0.032 165 / 0.06);
+  box-shadow: var(--shadow-control-subtle);
 }
 .btn--secondary:hover:not([disabled]) {
   border-color: var(--ink-muted);
@@ -64,7 +64,7 @@
   color: var(--ink-inverse);
 }
 .btn--ghost:hover:not([disabled]) {
-  background: oklch(0.965 0.016 95 / 0.08);
+  background: var(--sur-inverse-control-hover);
   border-color: var(--ink-inverse);
 }
 
@@ -84,15 +84,15 @@
 .btn--on-dark {
   background: var(--action-on-dark);
   color: var(--action-on-dark-ink);
-  box-shadow: 0 1px 0 oklch(1 0 0 / 0.35);
+  box-shadow: var(--shadow-button-on-dark);
 }
 .btn--on-dark:hover:not([disabled]) {
-  background: oklch(1 0 0 / 0.92);
+  background: var(--action-on-dark-hover);
   transform: translateY(-1px);
 }
 
 .btn--danger { background: var(--action-danger); color: var(--ink-inverse); box-shadow: var(--shadow-button); }
-.btn--danger:hover:not([disabled]) { background: color-mix(in oklch, var(--action-danger) 88%, black); }
+.btn--danger:hover:not([disabled]) { background: var(--action-danger-hover); }
 
 .btn--sm {
   position: relative;
@@ -120,16 +120,16 @@
   border: 1px solid color-mix(in oklch, currentColor 18%, transparent);
 }
 
-.badge--fact { background: var(--claim-fact-soft); color: oklch(0.318 0.11 163); }
-.badge--hypothesis { background: var(--claim-hypothesis-soft); color: oklch(0.33 0.11 68); }
-.badge--estimate { background: var(--claim-estimate-soft); color: oklch(0.318 0.09 235); }
-.badge--recommendation { background: var(--claim-recommendation-soft); color: oklch(0.318 0.1 300); }
-.badge--validation_question { background: var(--claim-validation-question-soft); color: oklch(0.318 0.08 200); }
+.badge--fact { background: var(--claim-fact-soft); color: var(--claim-fact-ink); }
+.badge--hypothesis { background: var(--claim-hypothesis-soft); color: var(--claim-hypothesis-ink); }
+.badge--estimate { background: var(--claim-estimate-soft); color: var(--claim-estimate-ink); }
+.badge--recommendation { background: var(--claim-recommendation-soft); color: var(--claim-recommendation-ink); }
+.badge--validation_question { background: var(--claim-validation-question-soft); color: var(--claim-validation-question-ink); }
 
-.badge--ready { background: var(--state-ready-soft); color: oklch(0.318 0.11 163); }
-.badge--running { background: var(--state-running-soft); color: oklch(0.318 0.09 235); }
-.badge--caution { background: var(--state-caution-soft); color: oklch(0.33 0.11 68); }
-.badge--failure { background: var(--state-failure-soft); color: oklch(0.318 0.11 28); }
+.badge--ready { background: var(--state-ready-soft); color: var(--state-ready-ink); }
+.badge--running { background: var(--state-running-soft); color: var(--state-running-ink); }
+.badge--caution { background: var(--state-caution-soft); color: var(--state-caution-ink); }
+.badge--failure { background: var(--state-failure-soft); color: var(--state-failure-ink); }
 .badge--neutral { background: var(--sur-sunken); color: var(--ink-soft); }
 
 .badge__dot {
@@ -189,8 +189,8 @@
   min-width: 0;
   padding: var(--space-5);
   background:
-    radial-gradient(120% 90% at 8% 0%, oklch(0.82 0.08 152 / 0.38), transparent 46%),
-    radial-gradient(90% 70% at 92% 0%, oklch(0.9 0.045 130 / 0.28), transparent 42%),
+    radial-gradient(120% 90% at 8% 0%, var(--sur-card-glow-primary), transparent 46%),
+    radial-gradient(90% 70% at 92% 0%, var(--sur-card-glow-secondary), transparent 42%),
     var(--sur-raised);
 }
 
@@ -247,7 +247,7 @@
 }
 
 .card--idea__pills .badge {
-  box-shadow: 0 1px 2px oklch(0.22 0.04 163 / 0.06);
+  box-shadow: var(--shadow-badge-subtle);
 }
 
 /* ---------- Champ de formulaire ---------- */
@@ -473,7 +473,7 @@ dialog.dialog {
 }
 
 dialog.dialog::backdrop {
-  background: oklch(0.215 0.032 165 / 0.48);
+  background: var(--sur-overlay);
   backdrop-filter: blur(3px);
 }
 
@@ -582,8 +582,8 @@ dialog.dialog[open] { animation: dialog-in var(--dur-ui) var(--ease-lift); }
   color: var(--action-on-dark-ink);
 }
 
-.ui-action--on-dark:hover { background: oklch(1 0 0 / 0.1); }
-.ui-action--on-dark[data-emphasis="strong"]:hover { background: oklch(0.94 0.016 95); }
+.ui-action--on-dark:hover { background: var(--sur-inverse-control-hover-strong); }
+.ui-action--on-dark[data-emphasis="strong"]:hover { background: var(--action-on-dark-hover-muted); }
 
 .ui-action--inverse {
   background: var(--action-solid);
@@ -1292,7 +1292,7 @@ dialog.dialog[open] { animation: dialog-in var(--dur-ui) var(--ease-lift); }
   font-size: var(--text-lg);
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: white;
+  color: var(--ink-inverse);
   text-decoration: none;
 }
 
@@ -1335,7 +1335,7 @@ dialog.dialog[open] { animation: dialog-in var(--dur-ui) var(--ease-lift); }
 }
 
 .site-footer a:hover {
-  color: white;
+  color: var(--ink-inverse);
   text-decoration: underline;
 }
 
@@ -1515,7 +1515,7 @@ dialog.dialog[open] { animation: dialog-in var(--dur-ui) var(--ease-lift); }
   width: min(355px, 100%);
   min-height: 350px;
   margin: 0 var(--space-control-inline) var(--space-nested-control) 0;
-  color: oklch(0.22 0.028 105);
+  color: var(--ink-paper);
   transform:
     perspective(var(--hero-group-perspective))
     translate3d(
@@ -1574,7 +1574,7 @@ dialog.dialog[open] { animation: dialog-in var(--dur-ui) var(--ease-lift); }
 
 .hero-dossier__eyebrow {
   margin-bottom: var(--space-control-inline);
-  color: oklch(0.45 0.035 115);
+  color: var(--ink-paper-muted);
   font-size: var(--text-card-label);
   font-weight: 650;
   letter-spacing: 0.1em;
@@ -1593,12 +1593,12 @@ dialog.dialog[open] { animation: dialog-in var(--dur-ui) var(--ease-lift); }
 .hero-dossier dl {
   margin: var(--space-card-inset) 0 var(--space-control-inline);
   padding: var(--space-control-inline) 0;
-  border-top: 1px solid oklch(0.64 0.025 100 / 0.45);
-  border-bottom: 1px solid oklch(0.64 0.025 100 / 0.45);
+  border-top: 1px solid var(--line-paper);
+  border-bottom: 1px solid var(--line-paper);
 }
 
 .hero-dossier dl > div + div { margin-top: var(--space-control-gap); }
-.hero-dossier dt { color: oklch(0.48 0.025 110); font-size: var(--text-card-label); }
+.hero-dossier dt { color: var(--ink-paper-subtle); font-size: var(--text-card-label); }
 .hero-dossier dd { margin: var(--space-nested-control) 0 0; font-size: var(--text-card-meta); line-height: 1.35; }
 
 .hero-dossier__claims {
@@ -1612,14 +1612,14 @@ dialog.dialog[open] { animation: dialog-in var(--dur-ui) var(--ease-lift); }
 
 .hero-dossier__claims li {
   padding: var(--space-control-gap);
-  border: 1px solid oklch(0.6 0.03 115 / 0.4);
+  border: 1px solid var(--line-paper-soft);
   border-radius: var(--radius-full);
-  color: oklch(0.4 0.03 115);
+  color: var(--ink-paper-soft);
   font-size: var(--text-card-label);
 }
 
 .hero-dossier a {
-  color: oklch(0.3 0.07 153);
+  color: var(--ink-paper-accent);
   font-size: var(--text-card-meta);
   font-weight: 650;
 }
@@ -1740,7 +1740,7 @@ dialog.dialog[open] { animation: dialog-in var(--dur-ui) var(--ease-lift); }
 .idea-index__row:hover,
 .idea-index__row:focus-visible {
   padding-inline: 8px;
-  background: oklch(0.93 0.025 103 / 0.5);
+  background: var(--sur-paper-row-hover);
 }
 
 .idea-index__image {

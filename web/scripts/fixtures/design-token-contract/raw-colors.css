@@ -1,0 +1,7 @@
+.fixture {
+  color: #123456;
+  background: oklch(0.5 0.1 150);
+  border-color: rgb(10 20 30);
+  outline-color: white;
+  text-decoration-color: red;
+}

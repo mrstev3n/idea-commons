@@ -8,6 +8,8 @@
 export async function DevelopmentTools() {
   if (process.env.NODE_ENV !== "development") return null;
 
-  const { DevelopmentDialRoot } = await import("./DevelopmentDialRoot");
+  const { DevelopmentDialRoot } = await import(
+    "@/components/dev/DevelopmentDialRoot"
+  );
   return <DevelopmentDialRoot />;
 }
