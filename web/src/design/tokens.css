@@ -248,6 +248,7 @@
   --shadow-overlay:
     0 8px 24px oklch(0.18 0.04 165 / 0.12),
     0 28px 72px -20px oklch(0.18 0.04 165 / 0.38);
+  --shadow-paper-filter: 0 16px 16px oklch(0.08 0.02 110 / 0.2);
   --shadow-header: 0 18px 44px -22px oklch(0.04 0.02 170 / 0.82);
   --shadow-deep: 0 28px 70px -28px oklch(0.04 0.02 170 / 0.9);
   --shadow-text-strong: 0 2px 18px oklch(0.04 0.02 170 / 0.48);

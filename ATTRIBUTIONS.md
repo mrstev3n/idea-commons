@@ -54,6 +54,13 @@ package, version 3.46.0, through the targeted `IconChevronDown` and `IconSearch`
 components. Tabler Icons is distributed under the
 [MIT License](https://github.com/tabler/tabler-icons/blob/main/LICENSE).
 
+## Interface motion
+
+The desktop Hero paper deformation uses
+[`three`](https://github.com/mrdoob/three.js), version 0.185.1, distributed under
+the [MIT License](https://github.com/mrdoob/three.js/blob/dev/LICENSE). The paper
+canvas is decorative; the readable dossier content remains HTML.
+
 ## Original project visuals
 
 The following assets were generated specifically for the Idea Commons prototype
@@ -62,5 +69,6 @@ stock photographs or third-party brand marks:
 
 - `web/public/brand/idea-commons-mark.png`;
 - `web/public/images/idea-commons-hero-landscape.jpg`;
+- `web/public/images/hero-paper-texture.webp` (crop of the project paper source);
 - `web/public/images/idea-heat-mapping.jpg`;
 - `web/public/images/idea-repair-workshop.jpg`.

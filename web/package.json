@@ -41,6 +41,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-server-dom-webpack": "^19.2.8",
+    "three": "0.185.1",
     "vinext": "^1.0.0-beta.8"
   },
   "devDependencies": {
@@ -50,8 +51,11 @@
     "@types/pg": "^8.23.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
+    "@types/three": "0.185.4",
     "@vitejs/plugin-react": "^6.1.0",
     "@vitejs/plugin-rsc": "^0.5.34",
+    "dialkit": "1.4.3",
+    "motion": "13.1.1",
     "tsx": "^4.23.12",
     "typescript": "^7.0.2",
     "vite": "^8.2.2",

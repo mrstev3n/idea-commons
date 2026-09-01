@@ -1,0 +1,91 @@
+.launcherShell {
+  --development-launcher-size: var(--space-content-max);
+  --development-menu-width: calc(var(--space-section-xl) + var(--space-content-max));
+  position: fixed;
+  right: var(--space-control-inline);
+  bottom: var(--space-control-inline);
+  z-index: 10000;
+  display: grid;
+  justify-items: end;
+  gap: var(--space-control-gap);
+}
+
+.launcher {
+  display: inline-flex;
+  flex: 0 0 var(--development-launcher-size);
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--development-launcher-size);
+  min-inline-size: var(--development-launcher-size);
+  max-inline-size: var(--development-launcher-size);
+  block-size: var(--development-launcher-size);
+  min-block-size: var(--development-launcher-size);
+  max-block-size: var(--development-launcher-size);
+  aspect-ratio: 1;
+  padding: 0;
+  border: var(--border-standard) solid var(--line-header-active);
+  border-radius: 50%;
+  color: var(--ink-inverse);
+  background: var(--sur-inverse);
+  box-shadow: var(--shadow-overlay);
+  cursor: pointer;
+}
+
+.settingsIcon {
+  display: block;
+  flex: none;
+  width: var(--space-card-inset);
+  height: var(--space-card-inset);
+  color: var(--ink-inverse);
+  opacity: 1;
+  visibility: visible;
+}
+
+.menu {
+  display: grid;
+  width: var(--development-menu-width);
+  padding: var(--space-control-gap);
+  border: var(--border-standard) solid var(--line-header);
+  border-radius: var(--radius-md);
+  background: var(--sur-inverse);
+  box-shadow: var(--shadow-overlay);
+}
+
+.menuItem {
+  width: 100%;
+  padding: var(--space-control-gap) var(--space-control-inline);
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--ink-inverse);
+  background: transparent;
+  font: inherit;
+  font-size: var(--text-control);
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background: var(--sur-inverse-hover);
+}
+
+.launcher:hover {
+  background: var(--action-solid-hover);
+}
+
+.launcher:focus-visible,
+.menuItem:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+@media (max-width: 640px) {
+  .launcherShell {
+    right: var(--space-control-gap);
+    bottom: var(--space-control-gap);
+  }
+
+  .menu {
+    width: min(var(--development-menu-width), calc(100vw - var(--space-control-inline)));
+  }
+}

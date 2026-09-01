@@ -1,0 +1,99 @@
+.isModified :global(.dialkit-slider-value),
+.isModified :global(.dialkit-slider-input) {
+  right: var(--space-content-wide);
+}
+
+.heroControls {
+  position: relative;
+}
+
+.topReset {
+  margin-right: var(--space-content-max);
+}
+
+.collapseAll {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--space-content-wide);
+  height: var(--space-content-wide);
+  flex: none;
+  padding: 0;
+  font-size: var(--text-lg);
+  line-height: 1;
+}
+
+.viewportFolder {
+  padding: 0;
+  border: 0;
+}
+
+.viewportFolder > :global(.dialkit-folder-header) {
+  margin-bottom: var(--space-control-gap);
+  padding: var(--space-control-gap) var(--space-control-inline);
+  border: 1px solid var(--dial-border);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--dial-surface-active) 72%, transparent);
+}
+
+.viewportFolder > :global(.dialkit-folder-header) :global(.dialkit-folder-header-top) {
+  padding: 0;
+}
+
+.viewportFolder > :global(.dialkit-folder-header) :global(.dialkit-folder-title) {
+  color: var(--dial-text-primary);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.viewportFolder > :global(.dialkit-folder-header) :global(.dialkit-folder-icon) {
+  margin-inline-end: var(--space-control-gap);
+}
+
+.viewportIcon {
+  display: block;
+  flex: 0 0 var(--text-lg);
+  width: var(--text-lg);
+  height: var(--text-lg);
+  margin-inline-start: var(--space-control-gap);
+  color: var(--dial-text-focus);
+}
+
+.controlReset {
+  position: absolute;
+  top: 50%;
+  right: var(--space-control-gap);
+  z-index: 3;
+  display: grid;
+  width: var(--space-card-inset);
+  height: var(--space-card-inset);
+  padding: 0;
+  place-items: center;
+  translate: 0 -50%;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--dial-text-label);
+  background: color-mix(in srgb, var(--dial-surface-hover) 88%, transparent);
+  font: inherit;
+  font-size: var(--text-sm);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.controlReset[hidden] {
+  display: none;
+}
+
+.controlReset:hover {
+  color: var(--dial-text-primary);
+  background: var(--dial-surface-active);
+}
+
+.controlReset:focus-visible {
+  outline: var(--border-standard) solid var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+:global(.dialkit-panel-inner:not([data-collapsed="true"]) .dialkit-folder-root > .dialkit-folder-content > .dialkit-folder-inner) {
+  padding-bottom: var(--space-card-inset);
+}
