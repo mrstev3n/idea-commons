@@ -19,7 +19,7 @@ function requireVersionId(value) {
   return value;
 }
 
-export function extractVersionUpload(output, expectedWorker = "idea-commons-web") {
+export function extractVersionUpload(output, expectedWorker = "app") {
   const events = output
     .split(/\r?\n/)
     .filter((line) => line.trim().length > 0)

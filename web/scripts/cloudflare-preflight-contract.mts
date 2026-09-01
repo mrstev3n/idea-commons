@@ -114,19 +114,19 @@ process.exitCode = previousExitCode;
 
 const uploadEvent = JSON.stringify({
   type: "version-upload",
-  worker_name: "idea-commons-web",
+  worker_name: "app",
   version_id: versionId,
-  preview_alias_url: "https://dev-idea-commons-web.example.workers.dev",
+  preview_alias_url: "https://dev-app.example.workers.dev",
   secret_value: "must-not-be-read",
 });
 assert.deepEqual(extractVersionUpload(uploadEvent), {
   versionId,
-  previewAliasUrl: "https://dev-idea-commons-web.example.workers.dev",
+  previewAliasUrl: "https://dev-app.example.workers.dev",
 });
 assert.throws(() => extractVersionUpload(""), /événement version-upload unique absent/);
 assert.throws(() => extractVersionUpload(`${uploadEvent}\n${uploadEvent}`), /événement version-upload unique absent/);
 assert.throws(
-  () => extractVersionUpload(JSON.stringify({ type: "version-upload", worker_name: "idea-commons-web", version_id: "invalid" })),
+  () => extractVersionUpload(JSON.stringify({ type: "version-upload", worker_name: "app", version_id: "invalid" })),
   /ID de version uploadée absent ou invalide/,
 );
 const workflowCalls: Array<{ command: string; args: string[] }> = [];
