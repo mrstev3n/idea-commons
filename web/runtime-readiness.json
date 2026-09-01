@@ -58,15 +58,15 @@
       "verified": true,
       "source": {
         "environment": "development",
-        "reference": "Wrangler metadata-only inventory of the existing free-tier Hyperdrive, generation Queue, and DLQ",
-        "verifiedAt": "2026-08-28"
+        "reference": "Wrangler metadata-only inventory of the dedicated Idea Commons free-tier account Hyperdrive, generation Queue, and DLQ",
+        "verifiedAt": "2026-09-01"
       },
       "limits": [
         "Remote resource state can drift, so pre-upload re-queries Cloudflare and fails closed",
         "Resource verification does not claim that a Worker version or its bindings already exists"
       ],
       "hyperdrive": {
-        "id": "ec02f5ff529043fdb57354a8060cbb6d",
+        "id": "84fd008040774a6aa0712d47d4bb6551",
         "expectedUser": "ic_runtime_service",
         "originConnectionLimit": 5,
         "cachingDisabled": true

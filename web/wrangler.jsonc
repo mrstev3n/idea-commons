@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "idea-commons-web",
+  "name": "app",
   "compatibility_date": "2026-08-26",
   "compatibility_flags": [
     "nodejs_compat"
@@ -21,7 +21,7 @@
   "hyperdrive": [
     {
       "binding": "OUTBOX_DATABASE",
-      "id": "ec02f5ff529043fdb57354a8060cbb6d"
+      "id": "84fd008040774a6aa0712d47d4bb6551"
     }
   ],
   "queues": {
