@@ -8,9 +8,11 @@ export const OUTBOX_MAX_ATTEMPTS = 5;
 export const QUEUE_MAX_RETRIES = 5;
 export const QUEUE_TERMINAL_DELIVERY = QUEUE_MAX_RETRIES + 1;
 
-export interface OutboxQueueMessage { outboxId: string }
+export interface OutboxEventMessage { outboxId: string }
+export interface OutboxRelayMessage { type: "outbox.relay" }
+export type OutboxQueueMessage = OutboxEventMessage | OutboxRelayMessage;
 export interface QueueMessageLike {
-  body: OutboxQueueMessage;
+  body: OutboxEventMessage;
   attempts: number;
   ack(): void;
   retry(options?: { delaySeconds?: number }): void;
@@ -29,13 +31,15 @@ interface PendingEvent {
 }
 
 /**
- * Relais Cron borné. Le verrou/lease PostgreSQL évite deux relais simultanés.
+ * Relais à l'arrivée de travail ou en secours horaire. Le verrou/lease PostgreSQL
+ * évite deux relais simultanés.
  * Un crash après `send` peut produire un doublon Queue : le consommateur est
  * donc idempotent sur l'identifiant durable de l'outbox.
  */
 export async function relayOutboxBatch(
-  send: (message: OutboxQueueMessage) => Promise<void>,
+  send: (message: OutboxEventMessage) => Promise<void>,
   limit = OUTBOX_BATCH_LIMIT,
+  onFullBatch?: () => Promise<void>,
 ): Promise<number> {
   const boundedLimit = Math.max(1, Math.min(limit, OUTBOX_BATCH_LIMIT));
   const claims = await withServiceDb(async (tx) => {
@@ -83,6 +87,9 @@ export async function relayOutboxBatch(
       await scheduleDispatchRetry(outboxId);
     }
   }
+  // Continue a backlog through the Queue rather than waiting another hour.
+  // A failed continuation remains recoverable from the durable outbox sweep.
+  if (claims.length === boundedLimit && onFullBatch) await onFullBatch();
   return sent;
 }
 
@@ -115,7 +122,7 @@ export function retryDelaySeconds(attempt: number): number {
 
 /** Compatibilité des scripts locaux : aucun appel depuis une route GET. */
 export async function processOutboxOnce(): Promise<number> {
-  const messages: OutboxQueueMessage[] = [];
+  const messages: OutboxEventMessage[] = [];
   await relayOutboxBatch(async (message) => { messages.push(message); });
   let processed = 0;
   for (const message of messages) {

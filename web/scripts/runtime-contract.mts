@@ -21,6 +21,9 @@ import {
   retryDelaySeconds,
 } from "../src/server/worker";
 import { createCloudflareEntrypoint } from "../src/server/cloudflare-entrypoint";
+import { notifyOutboxCommitted, withOutboxWakeup } from "../src/server/outbox-wakeup";
+import { queuedOutboxConsumer } from "../src/server/cloudflare-runtime";
+import { startCandidateGeneration } from "../src/server/commands";
 import { runSimulatedAdapter } from "../../editorial/simulator/simulated-adapter.mjs";
 
 assert.throws(() => validateDatabaseConnectionString(undefined), /configuration PostgreSQL absente/);
@@ -85,6 +88,25 @@ assert.equal(await relayOutboxBatch(async ({ outboxId }) => { relayed.push(outbo
 assert.equal(relayed.length, 5);
 assert.match(relaySql[0], /for update skip locked/);
 assert.match(relaySql[0], /dispatch_lease_until/);
+
+let idleQueries = 0;
+let idleSends = 0;
+let continuations = 0;
+setDatabaseTransactionRunnerForTests(async (fn) => fn({
+  query: async () => { idleQueries += 1; return { rows: [] }; },
+  exec: async () => undefined,
+}));
+assert.equal(await relayOutboxBatch(async () => { idleSends += 1; }, 5, async () => { continuations += 1; }), 0);
+assert.equal(idleQueries, 1); // Only the hourly sweep probes an empty DB.
+assert.equal(idleSends, 0);
+assert.equal(continuations, 0);
+setDatabaseTransactionRunnerForTests(async (fn) => fn({
+  query: async (text) => ({ rows: text.includes("with claimable")
+    ? Array.from({ length: 5 }, (_, i) => ({ id: `pending-${i}`, attempt_count: 1 })) : [] }),
+  exec: async () => undefined,
+}));
+assert.equal(await relayOutboxBatch(async () => undefined, 5, async () => { continuations += 1; }), 5);
+assert.equal(continuations, 1); // A backlog must not wait for another hourly sweep.
 
 const crashSql: string[] = [];
 setDatabaseTransactionRunnerForTests(async (fn) => fn({
@@ -185,11 +207,81 @@ entrypoint.scheduled({}, fakeEnv, fakeContext);
 entrypoint.queue({ messages: [] }, fakeEnv, fakeContext);
 await Promise.all(pending);
 assert.deepEqual(handlerCalls, ["configure", "fetch", "scheduled", "queue"]);
+
+const wakeMessages: unknown[] = [];
+const wakePending: Promise<unknown>[] = [];
+const wakeEnv = {
+  NEON_DATA_API_URL: "https://example.test/neondb/rest/v1",
+  NEON_AUTH_BASE_URL: "https://auth.example.test/neondb/auth",
+  TRUSTED_DATABASE_URL: "postgresql://trusted@example.test/db",
+  OUTBOX_DATABASE: { connectionString: "postgresql://runtime@example.test/db" },
+  GENERATION_QUEUE: { send: async (body: unknown) => { wakeMessages.push(body); } },
+};
+const wakeContext = { waitUntil: (task: Promise<unknown>) => { wakePending.push(task); } };
+const wakeHandler = createCloudflareEntrypoint(async (request) => {
+  if (request.method === "POST") notifyOutboxCommitted();
+  return new Response("ok");
+}, { configure: () => undefined, scheduled: async () => 0, queue: async () => undefined });
+await wakeHandler.fetch(new Request("https://example.test"), wakeEnv, wakeContext);
+assert.equal(wakeMessages.length, 0); // GET must not wake PostgreSQL or send hints.
+await wakeHandler.fetch(new Request("https://example.test", { method: "POST" }), wakeEnv, wakeContext);
+await Promise.all(wakePending);
+assert.deepEqual(wakeMessages, [{ type: "outbox.relay" }]);
+
+// Request contexts cannot leak into concurrent or subsequent requests.
+const contexts: string[] = [];
+await Promise.all(["a", "b"].map(label => withOutboxWakeup(() => { contexts.push(label); }, async () => {
+  await Promise.resolve(); notifyOutboxCommitted();
+})));
+notifyOutboxCommitted();
+assert.deepEqual(contexts.sort(), ["a", "b"]);
+
+const runtimeWake = { body: { type: "outbox.relay" as const }, attempts: 1,
+  ack: () => { wakeAcks += 1; }, retry: () => { wakeRetries += 1; } };
+let wakeAcks = 0;
+let wakeRetries = 0;
+let relayCalls = 0;
+await queuedOutboxConsumer([runtimeWake], wakeEnv, async () => { relayCalls += 1; return 0; });
+assert.equal(relayCalls, 1);
+assert.equal(wakeAcks, 1);
+await queuedOutboxConsumer([runtimeWake], wakeEnv, async () => { throw new Error("transient DB failure"); });
+assert.equal(wakeAcks, 1);
+assert.equal(wakeRetries, 1);
+
+// The commit is the boundary: no notification on RPC failure, and a failed
+// notification never rolls back an already committed generation request.
+const commandCalls: string[] = [];
+globalThis.fetch = async (input, init) => {
+  const name = new URL(new Request(input, init).url).pathname.split("/").at(-1)!;
+  commandCalls.push(name);
+  if (name === "runtime_identity") return Response.json({ authUserId: "user-a", memberId: "member-a", roles: ["contributor"] });
+  if (name === "runtime_source_to_idea_skill_version") return Response.json("skill");
+  if (name === "start_candidate_generation") return Response.json("generation");
+  throw new Error("unexpected RPC");
+};
+const identity = { id: "test", label: "test", authUserId: "user-a", memberId: "member-a", roles: ["contributor"], databaseAuthToken: "test-only" } as never;
+let commitHints = 0;
+const success = await withOutboxWakeup(() => { assert.equal(commandCalls.at(-1), "start_candidate_generation"); commitHints += 1; }, () => startCandidateGeneration(identity, "intake", 1));
+assert.equal(success.ok, true);
+assert.equal(commitHints, 1);
+globalThis.fetch = async () => Response.json({ code: "42501" }, { status: 403 });
+const refused = await withOutboxWakeup(() => { commitHints += 1; }, () => startCandidateGeneration(identity, "intake", 1));
+assert.equal(refused.ok, false);
+assert.equal(commitHints, 1);
+globalThis.fetch = originalFetch;
+let hintFailures = 0;
+const originalWarn = console.warn;
+console.warn = () => { hintFailures += 1; };
+withOutboxWakeup(() => { throw new Error("Queue unavailable"); }, () => notifyOutboxCommitted());
+console.warn = originalWarn;
+assert.equal(hintFailures, 1);
 assert.deepEqual([1, 2, 3, 4, 5, 99].map(retryDelaySeconds), [15, 30, 60, 120, 240, 900]);
 assert.equal(OUTBOX_BATCH_LIMIT, 5);
 assert.equal(OUTBOX_MAX_ATTEMPTS, 5);
 assert.equal(QUEUE_MAX_RETRIES, 5);
 assert.equal(QUEUE_TERMINAL_DELIVERY, 6);
+const config = JSON.parse(await readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"));
+assert.deepEqual(config.triggers.crons, ["17 * * * *"]);
 
 const result = runSimulatedAdapter({
   sourceId: "source-test",

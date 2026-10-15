@@ -75,6 +75,7 @@ export function collectStaticFailures({ config, packageManifest, previewWorkflow
   requireCheck(failures, consumer?.max_retries === 5 && consumer?.retry_delay === 15, "retry Queue non borné");
   requireCheck(failures, Boolean(consumer?.dead_letter_queue), "DLQ absente");
   requireCheck(failures, config.triggers?.crons?.length === 1, "Cron durable absent ou multiple");
+  requireCheck(failures, config.triggers?.crons?.[0] === "17 * * * *", "secours outbox doit rester horaire pour permettre la veille Neon");
   requireCheck(failures, outbox.includes("message.retry();"), "épuisement consommateur n'alimente pas la DLQ");
   requireCheck(failures, provision.includes("revoke all privileges on all tables") && provision.includes("audit-runtime-role-boundaries"), "audit fail-closed des rôles service absent");
   requireCheck(failures, provision.includes("ic_trusted_continuation") && provision.includes("ic_runtime_service"), "séparation trusted/outbox absente");

@@ -1,6 +1,7 @@
 import type { CloudflareRuntimeEnv } from "./cloudflare-runtime";
 import { configureCloudflareDatabase, queuedOutboxConsumer, scheduledOutboxRelay } from "./cloudflare-runtime";
 import type { OutboxQueueMessage } from "./worker";
+import { withOutboxWakeup } from "./outbox-wakeup";
 
 interface ExecutionContextLike { waitUntil(promise: Promise<unknown>): void }
 interface QueueBatchLike { messages: Parameters<typeof queuedOutboxConsumer>[0] }
@@ -16,7 +17,11 @@ export function createCloudflareEntrypoint(
   return {
     fetch(request: Request, env: CloudflareRuntimeEnv, ctx: ExecutionContextLike) {
       runtime.configure(env);
-      return fetchHandler(request, env, ctx);
+      return withOutboxWakeup(() => {
+        ctx.waitUntil(Promise.resolve()
+          .then(() => env.GENERATION_QUEUE.send({ type: "outbox.relay" }))
+          .catch(() => { console.warn("outbox_wakeup_unavailable"); }));
+      }, () => fetchHandler(request, env, ctx));
     },
     scheduled(_controller: unknown, env: CloudflareRuntimeEnv, ctx: ExecutionContextLike) {
       ctx.waitUntil(runtime.scheduled(env));
