@@ -4,6 +4,7 @@ import { dataApiRpc, verifyRuntimeIdentity } from "./data-api";
 import { fingerprintRequest } from "./canonical";
 import { deriveCanonicalSourceFingerprint } from "./source-fingerprint";
 import { toCommandError } from "./sql-error";
+import { notifyOutboxCommitted } from "./outbox-wakeup";
 import type { SyntheticIdentity } from "./identities";
 
 type DatabaseIdentity = SyntheticIdentity & { databaseAuthToken?: string | null };
@@ -134,6 +135,7 @@ export async function startCandidateGeneration(
       expected_source_revision: expectedRevision, idempotency_key: idempotencyKey,
       request_fingerprint_sha256: requestFingerprint,
     }, token);
+    notifyOutboxCommitted();
     return { ok: true, value: { generationId } };
   } catch (error) {
     return toCommandError(error);

@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "idea-commons-web",
+  "account_id": "6fe44318d1b66c5c2a4c81fb7be0a4b4",
   "compatibility_date": "2026-08-26",
   "compatibility_flags": [
     "nodejs_compat"
@@ -44,7 +45,7 @@
     ]
   },
   "triggers": {
-    "crons": ["*/5 * * * *"]
+    "crons": ["17 * * * *"]
   },
   "observability": {
     "enabled": true,
