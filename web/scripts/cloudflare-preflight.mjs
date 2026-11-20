@@ -8,9 +8,14 @@ import { isWorkerVersionId } from "./cloudflare-preview.mjs";
 const execFileAsync = promisify(execFile);
 const scriptPath = fileURLToPath(import.meta.url);
 const webRoot = path.resolve(path.dirname(scriptPath), "..");
+const STEVEN_ACCOUNT_ID = "6fe44318d1b66c5c2a4c81fb7be0a4b4";
 
 function requireCheck(failures, condition, message) {
   if (!condition) failures.push(message);
+}
+
+function isEmptyList(value) {
+  return Array.isArray(value) && value.length === 0;
 }
 
 async function walk(directory) {
@@ -46,10 +51,15 @@ export async function loadStaticInputs(root = webRoot) {
   };
 }
 
-export function collectStaticFailures({ config, packageManifest, previewWorkflow, worker, db, outbox, provision, dataApi, anonymousAuth, boundary, publicBoundary, routes }) {
+export function collectStaticFailures({ config, packageManifest, previewWorkflow, worker, db, outbox, provision, dataApi, anonymousAuth, boundary, publicBoundary, evidence, routes }) {
   const failures = [];
+  const deploymentFrozen = evidence.cloudflare?.deploymentFrozen;
+  requireCheck(failures, typeof deploymentFrozen === "boolean", "état de gel Cloudflare explicite requis");
+  requireCheck(failures, config.account_id === STEVEN_ACCOUNT_ID && config.name === "idea-commons-web", "seul le Worker Idea Commons du compte Steven est autorisé");
+  requireCheck(failures, config.env === undefined, "aucune cible Wrangler alternative autorisée");
   requireCheck(failures, config.main === "worker.ts", "entrypoint Worker custom absent");
   requireCheck(failures, packageManifest.scripts?.["preview:dev"] === "node scripts/cloudflare-preview.mjs", "workflow preview fail-closed absent");
+  requireCheck(failures, packageManifest.scripts?.["deploy:production"]?.startsWith("npm run cloudflare:readiness && "), "préflight obligatoire absent du workflow de déploiement");
   requireCheck(failures, previewWorkflow.includes("WRANGLER_OUTPUT_FILE_PATH") && previewWorkflow.includes('"cloudflare:post-upload"'), "contrôle post-upload obligatoire absent du workflow preview");
   requireCheck(failures, worker.includes("createCloudflareEntrypoint"), "composition fetch/scheduled/queue absente");
   requireCheck(failures, config.vars?.NEON_DATA_API_URL?.endsWith("/neondb/rest/v1"), "endpoint Data API absent ou invalide");
@@ -67,15 +77,22 @@ export function collectStaticFailures({ config, packageManifest, previewWorkflow
   const outboxBinding = config.hyperdrive?.find(({ binding }) => binding === "OUTBOX_DATABASE");
   requireCheck(failures, Boolean(outboxBinding?.id && !outboxBinding.id.includes("PENDING")), "binding Hyperdrive OUTBOX_DATABASE réel absent");
   const producer = config.queues?.producers?.find(({ binding }) => binding === "GENERATION_QUEUE");
-  const consumer = config.queues?.consumers?.find(({ queue }) => queue === producer?.queue);
   requireCheck(failures, Boolean(producer), "producer GENERATION_QUEUE absent");
-  requireCheck(failures, Boolean(consumer), "consumer Queue absent");
-  requireCheck(failures, consumer?.max_batch_size === 5, "batch Queue non borné à 5");
-  requireCheck(failures, consumer?.max_concurrency === 1, "concurrence Queue non bornée à 1");
-  requireCheck(failures, consumer?.max_retries === 5 && consumer?.retry_delay === 15, "retry Queue non borné");
-  requireCheck(failures, Boolean(consumer?.dead_letter_queue), "DLQ absente");
-  requireCheck(failures, config.triggers?.crons?.length === 1, "Cron durable absent ou multiple");
-  requireCheck(failures, config.triggers?.crons?.[0] === "17 * * * *", "secours outbox doit rester horaire pour permettre la veille Neon");
+  if (deploymentFrozen !== false) {
+    requireCheck(failures, config.workers_dev === false, "gel : URL workers.dev à désactiver explicitement");
+    requireCheck(failures, config.preview_urls === false, "gel : URL de versions et de prévisualisation à désactiver explicitement");
+    requireCheck(failures, config.route === undefined && isEmptyList(config.routes), "gel : aucune route ou domaine ne doit être déclaré");
+    requireCheck(failures, isEmptyList(config.triggers?.crons), "gel : triggers.crons doit être une liste vide");
+    requireCheck(failures, isEmptyList(config.queues?.consumers), "gel : queues.consumers doit être une liste vide");
+  } else {
+    const consumer = config.queues?.consumers?.find(({ queue }) => queue === producer?.queue);
+    requireCheck(failures, config.queues?.consumers?.length === 1 && Boolean(consumer), "consumer Queue attendu absent ou multiple");
+    requireCheck(failures, consumer?.max_batch_size === 5, "batch Queue non borné à 5");
+    requireCheck(failures, consumer?.max_concurrency === 1, "concurrence Queue non bornée à 1");
+    requireCheck(failures, consumer?.max_retries === 5 && consumer?.retry_delay === 15, "retry Queue non borné");
+    requireCheck(failures, Boolean(consumer?.dead_letter_queue), "DLQ absente");
+    requireCheck(failures, config.triggers?.crons?.length === 1 && config.triggers.crons[0] === "17 * * * *", "secours outbox doit rester horaire pour permettre la veille Neon");
+  }
   requireCheck(failures, outbox.includes("message.retry();"), "épuisement consommateur n'alimente pas la DLQ");
   requireCheck(failures, provision.includes("revoke all privileges on all tables") && provision.includes("audit-runtime-role-boundaries"), "audit fail-closed des rôles service absent");
   requireCheck(failures, provision.includes("ic_trusted_continuation") && provision.includes("ic_runtime_service"), "séparation trusted/outbox absente");
@@ -220,6 +237,9 @@ export async function main(argv = process.argv.slice(2), {
   const { phase, versionId } = parseOptions(argv);
   const inputs = await loadInputs();
   const failures = collectStaticFailures(inputs);
+  if (phase !== "local" && inputs.evidence.cloudflare?.deploymentFrozen !== false) {
+    failures.push("déploiements Cloudflare gelés pour Idea Commons ; reprise explicite requise");
+  }
   if (phase === "post-upload" && !isWorkerVersionId(versionId)) {
     failures.push("ID de version Worker explicite requis");
   }

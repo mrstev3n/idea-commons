@@ -280,8 +280,6 @@ assert.equal(OUTBOX_BATCH_LIMIT, 5);
 assert.equal(OUTBOX_MAX_ATTEMPTS, 5);
 assert.equal(QUEUE_MAX_RETRIES, 5);
 assert.equal(QUEUE_TERMINAL_DELIVERY, 6);
-const config = JSON.parse(await readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"));
-assert.deepEqual(config.triggers.crons, ["17 * * * *"]);
 
 const result = runSimulatedAdapter({
   sourceId: "source-test",
