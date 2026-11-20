@@ -10,6 +10,35 @@ import { extractVersionUpload, runPreviewWorkflow } from "./cloudflare-preview.m
 
 const inputs = await loadStaticInputs();
 assert.deepEqual(collectStaticFailures(inputs), []);
+assert.equal(inputs.evidence.cloudflare.deploymentFrozen, true);
+for (const [patch, diagnostic] of [
+  [{ workers_dev: true }, /URL workers\.dev/],
+  [{ preview_urls: undefined }, /URL de versions/],
+  [{ routes: [{ pattern: "example.com/*" }] }, /aucune route/],
+  [{ route: "example.com/*" }, /aucune route/],
+  [{ triggers: { crons: ["17 * * * *"] } }, /triggers\.crons/],
+  [{ queues: { ...inputs.config.queues, consumers: [{ queue: "generation" }] } }, /queues\.consumers/],
+  [{ account_id: "other-account" }, /compte Steven/],
+  [{ name: "app" }, /compte Steven/],
+  [{ env: { other: {} } }, /cible Wrangler alternative/],
+] as const) {
+  assert.match(collectStaticFailures({ ...inputs, config: { ...inputs.config, ...patch } }).join("\n"), diagnostic);
+}
+
+const readyInputs = structuredClone(inputs);
+readyInputs.evidence.cloudflare.deploymentFrozen = false;
+assert.match(collectStaticFailures(readyInputs).join("\n"), /consumer Queue attendu absent/);
+readyInputs.config.triggers.crons = ["17 * * * *"];
+readyInputs.config.queues.consumers = [{
+  queue: readyInputs.config.queues.producers[0].queue,
+  max_batch_size: 5,
+  max_batch_timeout: 5,
+  max_retries: 5,
+  dead_letter_queue: readyInputs.evidence.cloudflare.resources.queues[1],
+  max_concurrency: 1,
+  retry_delay: 15,
+}];
+assert.deepEqual(collectStaticFailures(readyInputs), []);
 
 const expectedHyperdrive = inputs.evidence.cloudflare.resources.hyperdrive;
 const remote = {
@@ -21,13 +50,12 @@ const remote = {
   },
   queueList: [...inputs.evidence.cloudflare.resources.queues],
 };
-const unverifiedInputs = structuredClone(inputs);
+const unverifiedInputs = structuredClone(readyInputs);
 unverifiedInputs.evidence.neonDataApi.publicCatalogAnonymous.verified = false;
 assert.match(
   collectPreUploadFailures({ ...unverifiedInputs, ...remote }).join("\n"),
   /preuve distante catalogue anonyme positive\+négative absente/,
 );
-const readyInputs = structuredClone(inputs);
 readyInputs.evidence.neonDataApi.publicCatalogAnonymous.verified = true;
 assert.deepEqual(collectPreUploadFailures({ ...readyInputs, ...remote }), []);
 assert.match(
@@ -100,9 +128,27 @@ assert.match(
 );
 let invalidCliRemoteCalls = 0;
 const previousExitCode = process.exitCode;
+const missingFreezeState = structuredClone(inputs);
+delete missingFreezeState.evidence.cloudflare.deploymentFrozen;
+for (const frozen of [inputs, missingFreezeState]) {
+  for (const args of [["--pre-upload"], ["--post-upload", "--version-id", versionId]]) {
+    const diagnostics: string[] = [];
+    process.exitCode = undefined;
+    await preflightMain(args, {
+      loadInputs: async () => frozen,
+      loadResources: async () => { throw new Error("Unexpected remote resource lookup"); },
+      loadVersion: async () => { throw new Error("Unexpected Worker version lookup"); },
+      logError: (message: string) => { diagnostics.push(message); },
+      logSuccess: () => { throw new Error("Unexpected remote phase success"); },
+    });
+    assert.equal(process.exitCode, 1);
+    assert.match(diagnostics.join("\n"), /déploiements Cloudflare gelés/);
+    assert.doesNotMatch(diagnostics.join("\n"), /Unexpected/);
+  }
+}
 process.exitCode = undefined;
 await preflightMain(["--post-upload", "--version-id", malformedVersionId], {
-  loadInputs: async () => inputs,
+  loadInputs: async () => readyInputs,
   loadResources: async () => { invalidCliRemoteCalls += 1; return remote; },
   loadVersion: async () => { invalidCliRemoteCalls += 1; return version; },
   logError: () => {},

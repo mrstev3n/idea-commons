@@ -87,6 +87,22 @@ Les tests de contrat de l'adaptateur simulé restent à la racine du dépôt :
 
 ## Limites de déploiement
 
+**Déploiements gelés.** La seule cible Wrangler est `idea-commons-web` sur le
+compte Steven. `wrangler.jsonc` désactive `workers.dev` et les URL de version
+et ne déclare aucun domaine, Cron ni consommateur de file. La file et son
+binding producteur restent en place pour une éventuelle reprise ; ce fichier
+ne rattache aucun consommateur et ne retire pas un consommateur existant sur
+le cloud. Ne pas utiliser Wrangler ou vinext directement pour contourner le gel.
+
+Tant que `cloudflare.deploymentFrozen` est vrai ou absent dans
+`runtime-readiness.json`, `preview:dev` et `deploy:production` s'arrêtent avant
+le build et tout appel Cloudflare. `cloudflare:preflight` reste disponible en
+local. Une reprise doit faire l'objet d'un changement explicite et autorisé
+sur Steven : lever le verrou, restaurer le consommateur borné avec sa DLQ et
+le secours horaire `17 * * * *`, et choisir quelles URL ouvrir. Ne pas modifier
+le compte ni le Worker cibles. La procédure ci-dessous ne s'applique qu'après
+cette décision.
+
 La PR #7 est intégrée et les bindings sont composés localement. Le fichier
 `runtime-readiness.json` documente les preuves development acquises et leurs
 limites. `npm run cloudflare:readiness` les exige puis revalide en lecture seule

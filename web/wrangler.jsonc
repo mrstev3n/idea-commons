@@ -6,8 +6,9 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  "workers_dev": true,
-  "preview_urls": true,
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [],
   "main": "worker.ts",
   "vars": {
     "NEON_DATA_API_URL": "https://ep-square-breeze-a2ftwoml.apirest.eu-central-1.aws.neon.tech/neondb/rest/v1"
@@ -32,20 +33,10 @@
         "queue": "idea-commons-generation-development"
       }
     ],
-    "consumers": [
-      {
-        "queue": "idea-commons-generation-development",
-        "max_batch_size": 5,
-        "max_batch_timeout": 5,
-        "max_retries": 5,
-        "dead_letter_queue": "idea-commons-generation-dlq-development",
-        "max_concurrency": 1,
-        "retry_delay": 15
-      }
-    ]
+    "consumers": []
   },
   "triggers": {
-    "crons": ["17 * * * *"]
+    "crons": []
   },
   "observability": {
     "enabled": true,

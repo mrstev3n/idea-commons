@@ -54,6 +54,7 @@
     }
   },
   "cloudflare": {
+    "deploymentFrozen": true,
     "resources": {
       "verified": true,
       "source": {
